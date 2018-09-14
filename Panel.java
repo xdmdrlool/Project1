@@ -3,16 +3,37 @@ package fr.clement.InterfaceGraphique;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
  
-public class Panneau extends JPanel { 
-	private int x0 =100 ; 
-	private int y0 =100;
-	private int r0 =10;
-
+public class Panel extends JPanel { 
+	
+	////Attributs////
+	protected ArrayList<Form> formList= new ArrayList<Form>();
+	
+	
 	public void paintComponent(Graphics g){  
 		super.paintComponent(g);
-		g.fillOval(x0-r0, y0-r0, 2*r0, 2*r0);
+		
+		
+		for (Form form :formList) {
+			form.draw(g);
+		}
+		
+//		g.fillOval(xPlayer-rPlayer, yPlayer-rPlayer, 2*rPlayer, 2*rPlayer);
+		
+//		 ArrayList<Integer> array =new ArrayList<Integer>();
+//		array.add(100);
+//		array.add(100);
+//		array.add(200);
+//		array.add(100);
+//		FormRect rect = new FormRect(Color.RED,array );
+//		rect.draw(g);
+		
+		
+		
+		
 		
 		
 //	    int x1 = this.getWidth()/4;
@@ -48,23 +69,16 @@ public class Panneau extends JPanel {
 //	    g.drawString("Tiens ! je suis la !", 10, 20); 
   }
 
-	public int getX0() {
-		return x0;
+	////////////////////////////////
+	/////// GETTER AND SETTER //////
+	////////////////////////////////
+	
+
+	public ArrayList<Form> getFormList() {
+		return formList;
 	}
-	public void setX0(int x0) {
-		this.x0 = x0;
-	}
-	public int getY0() {
-		return y0;
-	}
-	public void setY0(int y0) {
-		this.y0 = y0;
-	}
-	public int getR0() {
-		return r0;
-	}
-	public void setR0(int r0) {
-		this.r0 = r0;
+	public void setFormList(ArrayList<Form> formList) {
+		this.formList = formList;
 	}        
 
 	

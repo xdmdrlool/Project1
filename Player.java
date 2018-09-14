@@ -1,15 +1,24 @@
 package fr.clement.InterfaceGraphique;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+
 public class Player {
 
-	private String name = "" ;
-	private double health = 20 ;
-	private double attack = 0.5;
-	private int direction =0;
-	private int speed = 300;
+	////Attributs////
+	private String 	name = "" ;
+	private double 	health = 20 ;
+	private double 	attack = 0.5;
+	private int 	direction =0;
+	private int 	speed = 300;
 	private boolean move = false;
 	private boolean dead =false;
+	private Form form;
+	private int xPlayer=100;
+	private int yPlayer=100;
 	
+	////Constructeur////
 	public Player(String name, double health, double attack, int direction, int speed, boolean move) {
 		this.name=name;
 		this.health=health;
@@ -19,13 +28,64 @@ public class Player {
 		this.move=move;
 		
 		
+		int[] array = {xPlayer,yPlayer,50};
+		FormCercle rect = new FormCercle(Color.RED,array );
+
+		
+		this.setForm(rect);
+		
+		
 	}
 	
+	////Methodes////
 	public void damage(double d) {
 		this.health-=d;
 	}
 	
+	public void moveIn(int x ,int y) {
+		this.setxPlayer(x);
+		this.setyPlayer(y);
+	}
 	
+	public void distanceStep(int dx,int dy) {
+		this.moveIn(this.xPlayer+dx, this.yPlayer+dy);
+	}
+	
+	public void actionKeyboard(int key) {
+		
+		switch (key) {
+		
+			case KeyEvent.VK_UP :
+				setDirection(0);
+				setMove(true);
+				break;
+				
+			case KeyEvent.VK_LEFT :
+				setDirection(1);
+				setMove(true);
+				break;
+				
+			case KeyEvent.VK_RIGHT :
+				setDirection(2);
+				setMove(true);
+				break;
+				
+			case KeyEvent.VK_DOWN :
+				setDirection(3);
+				setMove(true);
+				break;
+				
+			default :
+				//statusBar.setText("rien");
+				break;
+			
+		}
+	}
+	
+	
+	////////////////////////////////
+	/////// GETTER AND SETTER //////
+	////////////////////////////////
 	
 	public String getName() {
 		return name;
@@ -57,27 +117,44 @@ public class Player {
 	public void setMove(boolean move) {
 		this.move = move;
 	}
-
-
-
-
 	public int getSpeed() {
 		return speed;
 	}
-
-
-
-
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
-
 	public boolean isDead() {
 		return dead;
 	}
-
 	public void setDead(boolean dead) {
 		this.dead = dead;
+	}
+
+	public Form getForm() {
+		return form;
+	}
+
+	public void setForm(Form form) {
+		this.form = form;
+	}
+
+	public int getxPlayer() {
+		return xPlayer;
+	}
+
+	public void setxPlayer(int xPlayer) {
+		this.xPlayer = xPlayer;
+		this.form.getArg()[0]=xPlayer;
+		
+	}
+
+	public int getyPlayer() {
+		return yPlayer;
+	}
+
+	public void setyPlayer(int yPlayer) {
+		this.yPlayer = yPlayer;
+		this.form.getArg()[1]=yPlayer;
 	}
 
 }
