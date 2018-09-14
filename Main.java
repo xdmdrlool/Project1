@@ -8,8 +8,8 @@ public class Main {
  
 	public static void main(String[] args) {
 		
-		Fenetre fen =new Fenetre(60);
-
+		Window window =new Window(60);
+//		GameLoop gameloop =new GameLoop(60);
 	}
 
 }
