@@ -1,4 +1,4 @@
-package fr.nicolas.snakex;
+package clemnico;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -14,15 +14,18 @@ import javax.swing.JLabel;
 public class Handlerclass implements MouseListener, MouseMotionListener, KeyListener {
 	
 	////Attributs////
-	private Player 	player;
 	private Panel 	panel;
 	private JLabel 	statusBar;
 	
+
+	private Player 	player;
+	private Portal portal;
 	////Constructeur////
-	public  Handlerclass(Panel panel, JLabel statusBar, Player player) {
+	public  Handlerclass(Panel panel, JLabel statusBar, Player player, Portal portal) {
 		this.panel=panel;
 		this.statusBar=statusBar;
 		this.player=player;
+		this.portal=portal;
 		
 	}
 	
@@ -38,6 +41,9 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 		
 		statusBar.setText("Click en "+ xClic +" "+ yClic);
 		
+		//Commandes portail
+		portal.actionMouse(xClic,yClic);
+		panel.repaint();
 	}
 
 	@Override
@@ -45,9 +51,6 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 		int xClic=event.getX();
 		int yClic=event.getY();
 		
-		statusBar.setText(xClic+" "+yClic);
-		panel.setX0(xClic);
-		panel.setY0(yClic);
 		panel.repaint();
 	}
 

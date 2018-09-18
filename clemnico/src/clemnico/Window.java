@@ -81,6 +81,9 @@ public class Window extends JFrame {
 				portal.step();
 				
 				panel.repaint();
+				if (player.getHitbox().colision(portal.getHitbox())) {
+					System.out.println("Ca touche !");
+				}
 			}
 			}, delay, period);
 	}

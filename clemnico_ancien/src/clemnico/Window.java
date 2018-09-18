@@ -1,4 +1,5 @@
-package fr.nicolas.snakex;
+package clemnico;
+
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -8,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,10 +20,11 @@ import javax.swing.JPanel;
 public class Window extends JFrame {
 
 	////Attributs////
-	protected Panel 	panel;
+	public Panel 	panel;
 	private JLabel 	statusBar;
 	private int 	fps;
 	Player player =new Player("Player1", 20, 0.2, 0, 300, false); 
+	Portal portal =new Portal(50,50,50,50,0);
 	
 	////Constructeur////
 	public Window(int fps) {
@@ -36,7 +39,7 @@ public class Window extends JFrame {
 		
 		
 		initPanel();
-		stepGame(player);
+		stepGame(player, portal);
 		
 
 	}
@@ -50,13 +53,37 @@ public class Window extends JFrame {
 		statusBar= new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
 	
-		Handlerclass handler =new Handlerclass(panel, statusBar, player);
+		Handlerclass handler =new Handlerclass(panel, statusBar, player, portal);
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
 		
+		
+		ArrayList<Form> array = new ArrayList<Form>();
+		array.add(player.getForm());
+		array.add(portal.getForm());
+		
+		panel.setFormList(array);
+		
 	}
-
+	
+	private void stepGame(Player player, Portal portal) {
+		
+		Timer chrono =new Timer();
+		int delay=100;
+		int period=1000/this.fps;
+		
+		chrono.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				player.step(period);
+				portal.step();
+				
+				panel.repaint();
+			}
+			}, delay, period);
+	}
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////

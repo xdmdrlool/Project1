@@ -1,4 +1,5 @@
-package fr.clement.InterfaceGraphique;
+package clemnico;
+
 
 import java.awt.Color;
 import java.awt.Graphics;

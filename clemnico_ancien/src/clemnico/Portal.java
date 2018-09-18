@@ -10,7 +10,6 @@ public class Portal {
 	private int width;
 	private double angle;
 	private Form form;
-	private Hitbox hitbox;
 	
 	public Portal(int x, int y, int height, int width, double angle){
 		this.x=x;
@@ -18,7 +17,6 @@ public class Portal {
 		this.width=width;
 		this.height=height;
 		this.angle=angle;
-		this.hitbox=new Hitbox(y,y,height,width);
 		
 		int[] array = {x,y,width, height};
 		FormRect rect= new FormRect(Color.BLUE,array);
@@ -50,16 +48,12 @@ public class Portal {
 	}
 	public void setX(int x) {
 		this.x = x;
-		this.form.getArg()[0]=x;
-		this.hitbox.setX(x);
 	}
 	public int getY() {
 		return y;
 	}
 	public void setY(int y) {
 		this.y = y;
-		this.form.getArg()[1]=y;
-		this.hitbox.setX(x);
 	}
 	public double getAngle() {
 		return angle;
@@ -88,13 +82,5 @@ public class Portal {
 
 	public void setWidth(int width) {
 		this.width = width;
-	}
-
-	public Hitbox getHitbox() {
-		return hitbox;
-	}
-
-	public void setHitbox(Hitbox hitbox) {
-		this.hitbox = hitbox;
 	}
 }

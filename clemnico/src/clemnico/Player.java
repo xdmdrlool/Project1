@@ -2,6 +2,7 @@ package clemnico;
 
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -16,8 +17,11 @@ public class Player {
 	private boolean move = false;
 	private boolean dead =false;
 	private Form form;
-	private int xPlayer=100;
-	private int yPlayer=100;
+	private int x=100;
+	private int y=100;
+	private int width=50;
+	private int height =50;
+	private Hitbox hitbox = new Hitbox(x,y,width,height);
 	
 	////Constructeur////
 	public Player(String name, double health, double attack, int direction, int speed, boolean move) {
@@ -29,11 +33,11 @@ public class Player {
 		this.move=move;
 		
 		
-		int[] array = {xPlayer,yPlayer,50};
-		FormCircle circle = new FormCircle(Color.RED,array );
+		int[] array = {x,y,width,height};
+		FormRect rect = new FormRect(Color.RED,array );
 
 		
-		this.setForm(circle);
+		this.setForm(rect);
 		
 		
 	}
@@ -44,12 +48,12 @@ public class Player {
 	}
 	
 	public void moveIn(int x ,int y) {
-		this.setxPlayer(x);
-		this.setyPlayer(y);
+		this.setX(x);
+		this.setY(y);
 	}
 	
 	public void distanceStep(int dx,int dy) {
-		this.moveIn(this.xPlayer+dx, this.yPlayer+dy);
+		this.moveIn(this.x+dx, this.y+dy);
 	}
 	
 	public void actionKeyboard(int key) {
@@ -84,21 +88,21 @@ public class Player {
 	}
 	
 	public void step(int period) {
-		int dxPlayer= this.getSpeed()*period/1000;
+		int dx= this.getSpeed()*period/1000;
 		if (this.isMove()) {
 			switch (this.getDirection()) {
 		
 				case 0 :
-					this.distanceStep(0,-dxPlayer);
+					this.distanceStep(0,-dx);
 					break;
 				case 1 :
-					this.distanceStep(-dxPlayer,0);
+					this.distanceStep(-dx,0);
 					break;
 				case 2 :
-					this.distanceStep(dxPlayer,0);
+					this.distanceStep(dx,0);
 					break;
 				case 3 :
-					this.distanceStep(0,dxPlayer);
+					this.distanceStep(0,dx);
 					break;
 					
 			}
@@ -160,23 +164,54 @@ public class Player {
 		this.form = form;
 	}
 
-	public int getxPlayer() {
-		return xPlayer;
+	public int getX() {
+		return x;
 	}
 
-	public void setxPlayer(int xPlayer) {
-		this.xPlayer = xPlayer;
-		this.form.getArg()[0]=xPlayer;
+	public void setX(int x) {
+		this.x = x;
+		this.form.getArg()[0]=x;
+		this.hitbox.setX(x);
 		
 	}
 
-	public int getyPlayer() {
-		return yPlayer;
+	public int getY() {
+		return y;
 	}
 
-	public void setyPlayer(int yPlayer) {
-		this.yPlayer = yPlayer;
-		this.form.getArg()[1]=yPlayer;
+	public void setY(int y) {
+		this.y = y;
+		this.form.getArg()[1]=y;
+		this.hitbox.setY(y);
+	}
+
+	public Hitbox getHitbox() {
+		return hitbox;
+	}
+
+	public void setHitbox(Hitbox hitbox) {
+		this.hitbox = hitbox;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+		this.form.getArg()[2]=width;
+		this.hitbox.setWidth(width);
+	}
+
+	public int getHeight() {
+		return height;
+		
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+		this.form.getArg()[3]=height;
+		this.hitbox.setHeight(height);
 	}
 
 }

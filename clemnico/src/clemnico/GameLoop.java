@@ -14,9 +14,10 @@ public class GameLoop{
 	
 	public GameLoop(int fps) {
 		
-		ArrayList<Form> array = new ArrayList<Form>();
-		array.add(player.getForm());
-		window.panel.setFormList(array);
+//		ArrayList<Form> array = new ArrayList<Form>();
+//		array.add(player.getForm());
+//		array.add(window.portal.getForm());
+//		window.panel.setFormList(array);
 		
 		
 		Timer chrono =new Timer();

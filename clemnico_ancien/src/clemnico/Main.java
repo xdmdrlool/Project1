@@ -1,4 +1,4 @@
-package fr.clement.InterfaceGraphique;
+package clemnico;
 
 import java.util.Timer;
 

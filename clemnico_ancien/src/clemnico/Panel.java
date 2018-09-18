@@ -1,4 +1,4 @@
-package fr.clement.InterfaceGraphique;
+package clemnico;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,7 +23,7 @@ public class Panel extends JPanel {
 		
 //		g.fillOval(xPlayer-rPlayer, yPlayer-rPlayer, 2*rPlayer, 2*rPlayer);
 		
-//		 ArrayList<Integer> array =new ArrayList<Integer>();
+//		ArrayList<Integer> array =new ArrayList<Integer>();
 //		array.add(100);
 //		array.add(100);
 //		array.add(200);

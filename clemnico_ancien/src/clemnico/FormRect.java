@@ -1,19 +1,20 @@
-package fr.clement.InterfaceGraphique;
+package clemnico;
+
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-public class FormCercle extends Form {
+public class FormRect extends Form {
 
 	private String type;
 	private Color color;
 	private int[] arg;
 
 
-	public FormCercle(Color color, int[] arg) {
+	public FormRect(Color color, int[] arg) {
 		super(color, arg);
-		this.type="CERCLE";
+		this.type="RECT";
 		this.setColor(color);
 		this.setArg(arg);
 		// TODO Auto-generated constructor stub
@@ -23,9 +24,10 @@ public class FormCercle extends Form {
 	public void draw(Graphics graphic) {
 		int x =this.arg[0];
 		int y =this.arg[1];
-		int r =this.arg[2];
+		int width =this.arg[2];
+		int height =this.arg[3];
 		graphic.setColor(this.color);
-		graphic.fillOval(x-r, y-r, 2*r, 2*r);
+		graphic.fillRect(x, y, width, height);
 	}
 	
 	
@@ -58,7 +60,3 @@ public class FormCercle extends Form {
 
 
 }
-
-
-
-

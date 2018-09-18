@@ -1,4 +1,5 @@
-package fr.clement.InterfaceGraphique;
+package clemnico;
+
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -29,10 +30,10 @@ public class Player {
 		
 		
 		int[] array = {xPlayer,yPlayer,50};
-		FormCercle rect = new FormCercle(Color.RED,array );
+		FormCircle circle = new FormCircle(Color.RED,array );
 
 		
-		this.setForm(rect);
+		this.setForm(circle);
 		
 		
 	}
@@ -82,6 +83,27 @@ public class Player {
 		}
 	}
 	
+	public void step(int period) {
+		int dxPlayer= this.getSpeed()*period/1000;
+		if (this.isMove()) {
+			switch (this.getDirection()) {
+		
+				case 0 :
+					this.distanceStep(0,-dxPlayer);
+					break;
+				case 1 :
+					this.distanceStep(-dxPlayer,0);
+					break;
+				case 2 :
+					this.distanceStep(dxPlayer,0);
+					break;
+				case 3 :
+					this.distanceStep(0,dxPlayer);
+					break;
+					
+			}
+		}
+	}
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
