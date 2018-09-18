@@ -2,9 +2,8 @@ package clemnico;
 
 
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+
 
 public class Player {
 

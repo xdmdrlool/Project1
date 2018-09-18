@@ -1,14 +1,11 @@
 package clemnico;
-
 import java.awt.Rectangle;
-
 public class Hitbox {
 	private int x;
 	private int y;
 	private int width;
 	private int height;
 	private Rectangle form= new Rectangle(0,0,1,1);
-	
 	public Hitbox(int x, int y, int w, int h) {
 		this.setX(x);
 		this.setY(y);
