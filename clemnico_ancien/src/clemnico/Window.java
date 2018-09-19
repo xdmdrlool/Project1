@@ -84,7 +84,6 @@ public class Window extends JFrame {
 				player.step(period);
 				
 				panel.repaint();
-				
 			}
 			}, delay, period);
 	}

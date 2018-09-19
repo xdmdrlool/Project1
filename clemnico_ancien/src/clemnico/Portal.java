@@ -11,14 +11,12 @@ public class Portal {
 	private int angle;
 	private boolean moved;
 	private Form form;
-	private Hitbox hitbox;
 	
 	public Portal(int x, int y, int height, int width){
 		this.x=x;
 		this.y=y;
 		this.width=width;
 		this.height=height;
-		this.hitbox=new Hitbox(y,y,height,width);
 		
 		int[] array = {x,y,width, height, 0};
 		FormRect rect= new FormRect(Color.BLUE,array);
@@ -46,7 +44,6 @@ public class Portal {
 	public void setX(int x) {
 		this.x = x;
 		this.form.getArg()[0]=x;
-		this.hitbox.setX(x);
 	}
 	public int getY() {
 		return y;
@@ -54,7 +51,6 @@ public class Portal {
 	public void setY(int y) {
 		this.y = y;
 		this.form.getArg()[1]=y;
-		this.hitbox.setY(y);
 	}
 	public double getAngle() {
 		return angle;
@@ -89,12 +85,5 @@ public class Portal {
 	}
 	public void setMoved(boolean moved) {
 		this.moved = moved;
-	}
-	public Hitbox getHitbox() {
-		return hitbox;
-	}
-
-	public void setHitbox(Hitbox hitbox) {
-		this.hitbox = hitbox;
 	}
 }

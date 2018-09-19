@@ -82,12 +82,12 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 		if (event.getButton()==MouseEvent.BUTTON1) {
 			portal1.setX(xClic-portal1.getWidth()/2);
 			portal1.setY(yClic-portal1.getHeight()/2);
-			portal1.setRotation(player.getX(), player.getY(),xClic,yClic);
+			portal1.setRotation(player.getxPlayer(), player.getyPlayer(),xClic,yClic);
 		}
 		else if (event.getButton()==MouseEvent.BUTTON3) {
 			portal2.setX(xClic-portal2.getWidth()/2);
 			portal2.setY(yClic-portal2.getHeight()/2);
-			portal2.setRotation(player.getX(), player.getY(),xClic,yClic);
+			portal2.setRotation(player.getxPlayer(), player.getyPlayer(),xClic,yClic);
 		}
 	}
 
@@ -110,10 +110,7 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if (player.getKeyPressed()==e.getKeyCode()) {
-			player.setMove(false);
-			player.setKeyPressed(0);
-		}
+		if (player.getKeyPressed()==e.getKeyCode()) {player.setMove(false);}
 	}
 
 	@Override
