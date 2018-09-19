@@ -3,7 +3,7 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-
+import java.util.ArrayList;
 
 public class Player {
 
@@ -11,97 +11,92 @@ public class Player {
 	private String 	name = "" ;
 	private double 	health = 20 ;
 	private double 	attack = 0.5;
-	private int 	direction =0;
+	private int 	direction = 0;
 	private int 	speed = 300;
 	private boolean move = false;
+	private int keyPressed=0;
 	private boolean dead =false;
 	private Form form;
-	private int x=100;
-	private int y=100;
-	private int width=50;
-	private int height =50;
-	private Hitbox hitbox = new Hitbox(x,y,width,height);
+	private int xPlayer=100;
+	private int yPlayer=100;
 	
 	////Constructeur////
 	public Player(String name, double health, double attack, int direction, int speed, boolean move) {
 		this.name=name;
 		this.health=health;
 		this.attack=attack;
-		this.direction=direction;
+		this.setDirection(direction);
 		this.speed=speed;
-		this.move=move;
+		this.setMove(move);
 		
 		
-		int[] array = {x,y,width,height};
-		FormRect rect = new FormRect(Color.RED,array );
+		int[] array = {xPlayer,yPlayer,20};
+		FormCircle circle = new FormCircle(Color.RED,array );
 
 		
-		this.setForm(rect);
+		this.setForm(circle);
 		
 		
 	}
-	
+
+
 	////Methodes////
 	public void damage(double d) {
 		this.health-=d;
 	}
 	
 	public void moveIn(int x ,int y) {
-		this.setX(x);
-		this.setY(y);
+		this.setxPlayer(x);
+		this.setyPlayer(y);
 	}
 	
 	public void distanceStep(int dx,int dy) {
-		this.moveIn(this.x+dx, this.y+dy);
+		this.moveIn(this.xPlayer+dx, this.yPlayer+dy);
 	}
 	
 	public void actionKeyboard(int key) {
 		
-		switch (key) {
-		
-			case KeyEvent.VK_UP :
-				setDirection(0);
-				setMove(true);
-				break;
-				
-			case KeyEvent.VK_LEFT :
-				setDirection(1);
-				setMove(true);
-				break;
-				
-			case KeyEvent.VK_RIGHT :
-				setDirection(2);
-				setMove(true);
-				break;
-				
-			case KeyEvent.VK_DOWN :
-				setDirection(3);
-				setMove(true);
-				break;
-				
-			default :
-				//statusBar.setText("rien");
-				break;
+		if (key==KeyEvent.VK_UP && keyPressed!=key) {
+			this.setDirection(0);
+			this.setKeyPressed(key);
+			this.setMove(true);
+		}
+		else if (key==KeyEvent.VK_LEFT && keyPressed!=key) {
+			setDirection(1);
+			this.setKeyPressed(key);
+			this.setMove(true);
+		}
+		else if (key==KeyEvent.VK_RIGHT && keyPressed!=key) {
+			setDirection(2);
+			this.setKeyPressed(key);
+			this.setMove(true);
+		}
+		else if (key==KeyEvent.VK_DOWN && keyPressed!=key) {
+			setDirection(3);
+			this.setKeyPressed(key);
+			this.setMove(true);
+		}
+		else {
 			
 		}
 	}
 	
 	public void step(int period) {
-		int dx= this.getSpeed()*period/1000;
+		int dxPlayer= this.getSpeed()*period/1000;
 		if (this.isMove()) {
 			switch (this.getDirection()) {
 		
 				case 0 :
-					this.distanceStep(0,-dx);
+					this.distanceStep(0,-dxPlayer);
 					break;
 				case 1 :
-					this.distanceStep(-dx,0);
+					this.distanceStep(-dxPlayer,0);
 					break;
 				case 2 :
-					this.distanceStep(dx,0);
+					this.distanceStep(dxPlayer,0);
 					break;
 				case 3 :
-					this.distanceStep(0,dx);
+					this.distanceStep(0,dxPlayer);
 					break;
 					
 			}
@@ -130,18 +125,7 @@ public class Player {
 	public void setAttack(double attack) {
 		this.attack = attack;
 	}
-	public int getDirection() {
-		return direction;
-	}
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
-	public boolean isMove() {
-		return move;
-	}
-	public void setMove(boolean move) {
-		this.move = move;
-	}
+
 	public int getSpeed() {
 		return speed;
 	}
@@ -163,54 +147,43 @@ public class Player {
 		this.form = form;
 	}
 
-	public int getX() {
-		return x;
+	public int getxPlayer() {
+		return xPlayer;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-		this.form.getArg()[0]=x;
-		this.hitbox.setX(x);
+	public void setxPlayer(int xPlayer) {
+		this.xPlayer = xPlayer;
+		this.form.getArg()[0]=xPlayer;
 		
 	}
 
-	public int getY() {
-		return y;
+	public int getyPlayer() {
+		return yPlayer;
 	}
 
-	public void setY(int y) {
-		this.y = y;
-		this.form.getArg()[1]=y;
-		this.hitbox.setY(y);
+	public void setyPlayer(int yPlayer) {
+		this.yPlayer = yPlayer;
+		this.form.getArg()[1]=yPlayer;
 	}
 
-	public Hitbox getHitbox() {
-		return hitbox;
+	public int getDirection() {
+		return direction;
 	}
 
-	public void setHitbox(Hitbox hitbox) {
-		this.hitbox = hitbox;
+	public void setDirection(int i) {
+		this.direction = i;
 	}
 
-	public int getWidth() {
-		return width;
+	public boolean isMove() {
+		return move;
 	}
-
-	public void setWidth(int width) {
-		this.width = width;
-		this.form.getArg()[2]=width;
-		this.hitbox.setWidth(width);
+	public void setMove(boolean move) {
+		this.move=move;
 	}
-
-	public int getHeight() {
-		return height;
-		
+	public int getKeyPressed() {
+		return keyPressed;
 	}
-
-	public void setHeight(int height) {
-		this.height = height;
-		this.form.getArg()[3]=height;
-		this.hitbox.setHeight(height);
+	public void setKeyPressed(int keyPressed) {
+		this.keyPressed=keyPressed;
 	}
-
 }

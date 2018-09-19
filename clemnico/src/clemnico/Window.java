@@ -3,13 +3,19 @@ package clemnico;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
+import javax.swing.JPanel;
 
 public class Window extends JFrame {
 
@@ -18,7 +24,8 @@ public class Window extends JFrame {
 	private JLabel 	statusBar;
 	private int 	fps;
 	Player player =new Player("Player1", 20, 0.2, 0, 300, false); 
-	Portal portal =new Portal(50,50,50,50,0);
+	Portal portal1 =new Portal(-500,-500,20,100);
+	Portal portal2 =new Portal(-500,-500,20,100);
 	
 	////Constructeur////
 	public Window(int fps) {
@@ -31,9 +38,11 @@ public class Window extends JFrame {
 	    this.setVisible(true);
 		this.setResizable(true);
 		
+		portal1.getForm().setColor(Color.BLUE);
+		portal2.getForm().setColor(Color.ORANGE);
 		
 		initPanel();
-		stepGame(player, portal);
+		stepGame(player);
 		
 
 	}
@@ -47,7 +56,7 @@ public class Window extends JFrame {
 		statusBar= new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
 	
-		Handlerclass handler =new Handlerclass(panel, statusBar, player, portal);
+		Handlerclass handler =new Handlerclass(panel, statusBar, player, portal1, portal2);
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
@@ -55,13 +64,14 @@ public class Window extends JFrame {
 		
 		ArrayList<Form> array = new ArrayList<Form>();
 		array.add(player.getForm());
-		array.add(portal.getForm());
+		array.add(portal1.getForm());
+		array.add(portal2.getForm());
 		
 		panel.setFormList(array);
 		
 	}
 	
-	private void stepGame(Player player, Portal portal) {
+	private void stepGame(Player player) {
 		
 		Timer chrono =new Timer();
 		int delay=100;
@@ -72,12 +82,8 @@ public class Window extends JFrame {
 			@Override
 			public void run() {
 				player.step(period);
-				portal.step();
 				
 				panel.repaint();
-				if (player.getHitbox().colision(portal.getHitbox())) {
-					System.out.println("Ca touche !");
-				}
 			}
 			}, delay, period);
 	}

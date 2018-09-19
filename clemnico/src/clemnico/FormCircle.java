@@ -3,6 +3,8 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 public class FormCircle extends Form {
 
@@ -16,10 +18,11 @@ public class FormCircle extends Form {
 		this.type="CERCLE";
 		this.setColor(color);
 		this.setArg(arg);
+		// TODO Auto-generated constructor stub
 	}
 
 
-	public void draw(Graphics graphic) {
+	public void draw(Graphics2D graphic) {
 		int x =this.arg[0];
 		int y =this.arg[1];
 		int r =this.arg[2];

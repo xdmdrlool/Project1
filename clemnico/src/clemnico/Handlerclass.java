@@ -19,13 +19,15 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	
 
 	private Player 	player;
-	private Portal portal;
+	private Portal portal1;
+	private Portal portal2;
 	////Constructeur////
-	public  Handlerclass(Panel panel, JLabel statusBar, Player player, Portal portal) {
+	public  Handlerclass(Panel panel, JLabel statusBar, Player player, Portal portal1, Portal portal2) {
 		this.panel=panel;
 		this.statusBar=statusBar;
 		this.player=player;
-		this.portal=portal;
+		this.portal1=portal1;
+		this.portal2=portal2;
 		
 	}
 	
@@ -41,9 +43,7 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 		
 		statusBar.setText("Click en "+ xClic +" "+ yClic);
 		
-		//Commandes portail
-		portal.actionMouse(xClic,yClic);
-		panel.repaint();
+		
 	}
 
 	@Override
@@ -72,9 +72,23 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		statusBar.setText(" "+arg0.getX());;
+	public void mousePressed(MouseEvent event) {
+		statusBar.setText(" "+event.getX());;
 		
+		int xClic=event.getX();
+		int yClic=event.getY();
+		
+		//Commandes portail
+		if (event.getButton()==MouseEvent.BUTTON1) {
+			portal1.setX(xClic-portal1.getWidth()/2);
+			portal1.setY(yClic-portal1.getHeight()/2);
+			portal1.setRotation(player.getxPlayer(), player.getyPlayer(),xClic,yClic);
+		}
+		else if (event.getButton()==MouseEvent.BUTTON3) {
+			portal2.setX(xClic-portal2.getWidth()/2);
+			portal2.setY(yClic-portal2.getHeight()/2);
+			portal2.setRotation(player.getxPlayer(), player.getyPlayer(),xClic,yClic);
+		}
 	}
 
 	@Override
@@ -92,13 +106,11 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 		
 		int key =e.getKeyCode();
 		player.actionKeyboard(key);
-		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		player.setMove(false);
-		
+		if (player.getKeyPressed()==e.getKeyCode()) {player.setMove(false);}
 	}
 
 	@Override

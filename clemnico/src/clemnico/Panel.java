@@ -1,7 +1,9 @@
 package clemnico;
 
-
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -17,7 +19,7 @@ public class Panel extends JPanel {
 		
 		
 		for (Form form :formList) {
-			form.draw(g);
+			form.draw((Graphics2D) g);
 		}
 		
 //		g.fillOval(xPlayer-rPlayer, yPlayer-rPlayer, 2*rPlayer, 2*rPlayer);
