@@ -3,7 +3,7 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
+
 
 public class FormRect extends Form {
 

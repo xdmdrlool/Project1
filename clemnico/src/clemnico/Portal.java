@@ -59,7 +59,7 @@ public class Portal {
 	public void setY(int y) {
 		this.y = y;
 		this.form.getArg()[1]=y;
-		this.hitbox.setX(x);
+		this.hitbox.setY(y);
 	}
 	public double getAngle() {
 		return angle;

@@ -18,5 +18,4 @@ public abstract class Form {
 	public abstract int[] getArg();
 	public abstract void setArg(int[] arg0);
 	
-	
 }	
