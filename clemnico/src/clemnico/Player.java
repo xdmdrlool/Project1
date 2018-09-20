@@ -3,7 +3,7 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+
 
 public class Player {
 
@@ -16,12 +16,12 @@ public class Player {
 	private boolean move = false;
 	private int keyPressed=0;
 	private boolean dead =false;
-	private Form form;
+	private FormCircle form;
 	private int x=100;
 	private int y=100;
-	private int width=50;
-	private int height =50;
-	private Hitbox hitbox = new Hitbox(x,y,width,height);
+	private int width=20;
+	private int height =20;
+	private Hitbox hitbox = new Hitbox(x,y,width,height,0);
 	
 
 
@@ -34,10 +34,8 @@ public class Player {
 		this.setDirection(direction);
 		this.speed=speed;
 		this.setMove(move);
-		
-		
-		int[] array = {x,y,20};
-		FormCircle circle = new FormCircle(Color.RED,array );
+
+		FormCircle circle = new FormCircle(Color.RED,x,y,10 );
 
 		
 		this.setForm(circle);
@@ -62,22 +60,22 @@ public class Player {
 	
 	public void actionKeyboard(int key) {
 		
-		if (key==KeyEvent.VK_UP && keyPressed!=key) {
+		if (key==KeyEvent.VK_Z && keyPressed!=key) {
 			this.setDirection(0);
 			this.setKeyPressed(key);
 			this.setMove(true);
 		}
-		else if (key==KeyEvent.VK_LEFT && keyPressed!=key) {
+		else if (key==KeyEvent.VK_Q && keyPressed!=key) {
 			setDirection(1);
 			this.setKeyPressed(key);
 			this.setMove(true);
 		}
-		else if (key==KeyEvent.VK_RIGHT && keyPressed!=key) {
+		else if (key==KeyEvent.VK_D && keyPressed!=key) {
 			setDirection(2);
 			this.setKeyPressed(key);
 			this.setMove(true);
 		}
-		else if (key==KeyEvent.VK_DOWN && keyPressed!=key) {
+		else if (key==KeyEvent.VK_S && keyPressed!=key) {
 			setDirection(3);
 			this.setKeyPressed(key);
 			this.setMove(true);
@@ -145,11 +143,11 @@ public class Player {
 		this.dead = dead;
 	}
 
-	public Form getForm() {
+	public FormCircle getForm() {
 		return form;
 	}
 
-	public void setForm(Form form) {
+	public void setForm(FormCircle form) {
 		this.form = form;
 	}
 
@@ -159,7 +157,7 @@ public class Player {
 
 	public void setX(int x) {
 		this.x = x;
-		this.form.getArg()[0]=x;
+		this.form.setX(x);;
 		this.hitbox.setX(x);		
 	}
 
@@ -169,7 +167,7 @@ public class Player {
 
 	public void setY(int y) {
 		this.y = y;
-		this.form.getArg()[1]=y;
+		this.form.setY(y);;
 		this.hitbox.setY(y);
 	}
 

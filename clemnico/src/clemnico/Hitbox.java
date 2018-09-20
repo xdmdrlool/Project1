@@ -1,42 +1,45 @@
 package clemnico;
-import java.awt.Rectangle;
+import java.awt.Color;
+
+
 public class Hitbox {
-	private int x;
-	private int y;
-	private int width;
-	private int height;
-	private Rectangle form= new Rectangle(0,0,1,1);
-	public Hitbox(int x, int y, int w, int h) {
+	private int x=0;
+	private int y=0;
+	private int width=10;
+	private int height=10;
+	private double angle;
+	private FormRect form=new FormRect(Color.BLACK,x,y,width,height, 0);
+	public Hitbox(int x, int y, int w, int h,double angle) {
 		this.setX(x);
 		this.setY(y);
 		this.setWidth(w);
 		this.setHeight(h);
-		this.form=new Rectangle(x,y,w,h);
+		this.setAngle(angle);
+
 	}
 
+	
 	public boolean colision(Hitbox hb){
-		int x2=hb.getX();
-		int y2=hb.getY();
-		int w2=hb.getWidth();
-		int h2=hb.getHeight();
-		
-		if((x2 >= this.x + this.width)      // trop à droite
-				|| (x2 + w2 <= this.x) // trop à gauche
-				|| (y2 >= this.y + this.height) // trop en bas
-				|| (y2 + h2 <= this.y))  // trop en haut
-			          return false; 
-			   else
-			          return true;	
+		FormRect form1=this.form;
+		FormRect form2=hb.getForm();
+		FC fC= new FC();
+		return fC.Collision(form1, form2);
 	}
 	
 	public void moveIn(int x,int y) {
 		
 	}
+	
+	
+	////////////////////////////////
+	/////// GETTER AND SETTER //////
+	////////////////////////////////
+	
 
-	public Rectangle getForm() {
+	public FormRect getForm() {
 		return form;
 	}
-	public void setForm(Rectangle form) {
+	public void setForm(FormRect form) {
 		this.form = form;
 	}
 
@@ -47,6 +50,7 @@ public class Hitbox {
 
 	public void setWidth(int width) {
 		this.width = width;
+		this.form.setWidth(width);
 	}
 
 	public int getHeight() {
@@ -55,6 +59,7 @@ public class Hitbox {
 
 	public void setHeight(int height) {
 		this.height = height;
+		this.form.setHeight(height);
 	}
 
 	public int getX() {
@@ -63,7 +68,7 @@ public class Hitbox {
 
 	public void setX(int x) {
 		this.x = x;
-		this.form.x=x;
+		this.form.setX(x);
 	}
 
 	public int getY() {
@@ -72,7 +77,16 @@ public class Hitbox {
 
 	public void setY(int y) {
 		this.y = y;
-		this.form.y=y;
+		this.form.setY(y);
+	}
+
+	public double getAngle() {
+		return angle;
+	}
+
+	public void setAngle(double angle) {
+		this.angle = angle;
+		this.form.setAngle((int) angle);
 	}
 
 

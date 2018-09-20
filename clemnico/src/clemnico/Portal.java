@@ -4,34 +4,29 @@ import java.awt.Color;
 
 public class Portal {
 	
-	private int x;
-	private int y;
-	private int height;
-	private int width;
-	private int angle;
+	private int x=0;
+	private int y=0;
+	private int height=10;
+	private int width=10;
+	private int angle=0;
 	private boolean moved;
-	private Form form;
-	private Hitbox hitbox;
+	private FormRect form= new FormRect(Color.BLUE,x,y,width, height, angle);
+	private Hitbox hitbox=new Hitbox(x,y,height,width,angle);
 	
 	public Portal(int x, int y, int height, int width){
-		this.x=x;
-		this.y=y;
-		this.width=width;
-		this.height=height;
-		this.hitbox=new Hitbox(y,y,height,width);
-		
-		int[] array = {x,y,width, height, 0};
-		FormRect rect= new FormRect(Color.BLUE,array);
-		
-		this.setForm(rect);
+		this.setX(x);
+		this.setY(y);
+		this.setWidth(width);
+		this.setHeight(height);
 	}
 	
 	public void setRotation(int xPlayer, int yPlayer, int xClic, int yClic) {
 		if (xClic==xPlayer) {
-			this.form.getArg()[4]=0;
+			
+			this.setAngle(0);
 		}
 		else {
-			this.form.getArg()[4]=(int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0);
+			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0));
 		}
 	}
 	
@@ -45,7 +40,7 @@ public class Portal {
 	}
 	public void setX(int x) {
 		this.x = x;
-		this.form.getArg()[0]=x;
+		this.form.setX(x);
 		this.hitbox.setX(x);
 	}
 	public int getY() {
@@ -53,7 +48,7 @@ public class Portal {
 	}
 	public void setY(int y) {
 		this.y = y;
-		this.form.getArg()[1]=y;
+		this.form.setY(y);;
 		this.hitbox.setY(y);
 	}
 	public double getAngle() {
@@ -61,11 +56,13 @@ public class Portal {
 	}
 	public void setAngle(int angle) {
 		this.angle = angle;
+		this.form.setAngle(angle);;
+		this.hitbox.setAngle(angle);
 	}
-	public Form getForm() {
+	public FormRect getForm() {
 		return form;
 	}
-	public void setForm(Form form) {
+	public void setForm(FormRect form) {
 		this.form = form;
 	}
 
@@ -75,6 +72,8 @@ public class Portal {
 
 	public void setHeight(int height) {
 		this.height = height;
+		this.form.setHeight(height);;
+		this.hitbox.setHeight(height);
 	}
 
 	public int getWidth() {
@@ -83,6 +82,8 @@ public class Portal {
 
 	public void setWidth(int width) {
 		this.width = width;
+		this.form.setWidth(width);;
+		this.hitbox.setWidth(width);
 	}
 	public boolean isMoved() {
 		return moved;
