@@ -21,7 +21,7 @@ public class Player {
 	private int y=100;
 	private int width=20;
 	private int height =20;
-	private Hitbox hitbox = new Hitbox(x,y,width,height,0);
+	private Hitbox hitbox = new Hitbox("CIRCLE",x,y,10,width,height,0);
 	
 
 

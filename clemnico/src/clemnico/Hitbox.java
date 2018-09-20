@@ -3,25 +3,40 @@ import java.awt.Color;
 
 
 public class Hitbox {
+	private String type;
 	private int x=0;
 	private int y=0;
+	private int rayon=10;
 	private int width=10;
 	private int height=10;
-	private double angle;
-	private FormRect form=new FormRect(Color.BLACK,x,y,width,height, 0);
-	public Hitbox(int x, int y, int w, int h,double angle) {
-		this.setX(x);
-		this.setY(y);
-		this.setWidth(w);
-		this.setHeight(h);
-		this.setAngle(angle);
+	private double angle=0;
+	private Form form;
+	private Color color=Color.BLACK;
+	public Hitbox(String type,int x, int y,int rayon, int w, int h,double angle) {
+		switch (type) {
+			case "RECT" :
+				form=new FormRect(color,x,y,w,h,angle);
+				this.setX(x);
+				this.setY(y);
+				this.setWidth(w);
+				this.setHeight(h);
+				this.setAngle(angle);
+				break;
+			case "CIRCLE" :
+				form=new FormCircle(color,x,y,rayon);
+				this.setX(x);
+				this.setY(y);
+				this.setRayon(rayon);
+		}
+		
 
 	}
 
 	
 	public boolean colision(Hitbox hb){
-		FormRect form1=this.form;
-		FormRect form2=hb.getForm();
+
+		Form form1=this.form;
+		Form form2=hb.getForm();
 		FC fC= new FC();
 		return fC.Collision(form1, form2);
 	}
@@ -36,7 +51,7 @@ public class Hitbox {
 	////////////////////////////////
 	
 
-	public FormRect getForm() {
+	public Form getForm() {
 		return form;
 	}
 	public void setForm(FormRect form) {
@@ -87,6 +102,26 @@ public class Hitbox {
 	public void setAngle(double angle) {
 		this.angle = angle;
 		this.form.setAngle((int) angle);
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+	public int getRayon() {
+		return rayon;
+	}
+
+
+	public void setRayon(int rayon) {
+		this.rayon = rayon;
 	}
 
 

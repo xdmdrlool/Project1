@@ -3,19 +3,13 @@ package clemnico;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+
 
 public class Window extends JFrame {
 
@@ -67,6 +61,10 @@ public class Window extends JFrame {
 		array.add(portal1.getForm());
 		array.add(portal2.getForm());
 		
+		
+		array.add(player.getHitbox().getForm());
+//		array.add(portal1.getHitbox().getForm());
+		
 		panel.setFormList(array);
 		
 	}
@@ -78,14 +76,21 @@ public class Window extends JFrame {
 		int period=1000/this.fps;
 		
 		chrono.schedule(new TimerTask() {
-			
+		int temps=0;
 			@Override
 			public void run() {
+				temps=temps+1;
 				player.step(period);
 				
 				panel.repaint();
+				if (temps%10 ==0) {
+//				System.out.println(portal1.getHitbox().getForm().getAngle());
+				if (player.getHitbox().colision(portal1.getHitbox())) {
+					System.out.println("ca touche");
+				}}
 				
 			}
+				
 			}, delay, period);
 	}
 	

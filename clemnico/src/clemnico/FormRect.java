@@ -13,17 +13,17 @@ public class FormRect extends Form {
 	private int y=100;
 	private int width=20;
 	private int height =20;
-	private int angle=0;
+	private double angle=0;
 	private Graphics2D graphic;
 
 
-	public FormRect(Color color,int x, int y,int w,int h,int angle ) {
+	public FormRect(Color color,int x, int y,int w,int h,double angle ) {
 		super(color);
 		this.type="RECT";
 		this.setColor(color);
 		this.setX(x);
 		this.setY(y);
-		this.setWidth(h);
+		this.setWidth(w);
 		this.setHeight(h);
 		this.setAngle(angle);
 
@@ -72,10 +72,10 @@ public class FormRect extends Form {
 
 
 
-	public int getAngle() {
+	public double getAngle() {
 		return angle;
 	}
-	public void setAngle(int angle) {
+	public void setAngle(double angle) {
 		this.angle = angle;
 	}
 
@@ -128,6 +128,25 @@ public class FormRect extends Form {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+
+
+	@Override
+	public int getRayon() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setRayon(int rayon) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
 
 
 

@@ -8,10 +8,10 @@ public class Portal {
 	private int y=0;
 	private int height=10;
 	private int width=10;
-	private int angle=0;
+	private double angle=0;
 	private boolean moved;
 	private FormRect form= new FormRect(Color.BLUE,x,y,width, height, angle);
-	private Hitbox hitbox=new Hitbox(x,y,height,width,angle);
+	private Hitbox hitbox=new Hitbox("RECT",x,y,0,width,height,angle);
 	
 	public Portal(int x, int y, int height, int width){
 		this.setX(x);
@@ -54,7 +54,7 @@ public class Portal {
 	public double getAngle() {
 		return angle;
 	}
-	public void setAngle(int angle) {
+	public void setAngle(double angle) {
 		this.angle = angle;
 		this.form.setAngle(angle);;
 		this.hitbox.setAngle(angle);

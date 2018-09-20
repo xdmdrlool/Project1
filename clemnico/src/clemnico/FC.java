@@ -1,6 +1,6 @@
 package clemnico;
 
-import clemnico.FC.Point;
+import java.awt.Color;
 
 public class FC {
 
@@ -68,10 +68,6 @@ public class FC {
 		t[3].x=(float) (x0+r*Math.cos(angle+alpha3));
 		t[3].y=(float) (y0+r*Math.sin(angle+alpha3));
 		
-//		System.out.println(x+" "+ y +" "+ w + " "+h + "   "+rect.getAngle());
-//		System.out.println(Math.toDegrees(alpha1)+" "+ Math.toDegrees(alpha1) +" "+ Math.toDegrees(alpha3) + " "+Math.toDegrees(alpha4) );
-//		System.out.println(t[3].x+ " "+t[3].y);
-//		System.out.println(" ");
 		return t;
 	}
 	
@@ -83,7 +79,32 @@ public class FC {
 		return cercle;
 	}
 	
-	
+	public boolean Collision(Form form1, Form form2) {
+		 if (form1.getType()=="RECT") {
+			 FormRect rect1= new FormRect(Color.BLACK,form1.getX(),form1.getY(),form1.getWidth(),form1.getHeight(),form1.getAngle());
+			 if (form2.getType()=="RECT") {
+				 FormRect rect2= new FormRect(Color.BLACK,form2.getX(),form2.getY(),form2.getWidth(),form2.getHeight(),form2.getAngle());
+				 return Collision(rect1,rect2); 
+			 }
+			 else {
+				 FormCircle circle2=new FormCircle(Color.BLACK,form2.getX(),form2.getY(),form2.getRayon());
+				 return Collision(rect1,circle2);
+		 }
+		 }
+		 
+		 else {
+			 FormCircle circle1=new FormCircle(Color.BLACK,form1.getX(),form1.getY(),form1.getRayon());
+			 if (form2.getType()=="RECT") {
+				 FormRect rect2= new FormRect(Color.BLACK,form2.getX(),form2.getY(),form2.getWidth(),form2.getHeight(),form2.getAngle());
+				 return Collision(circle1,rect2);
+		 }
+		 else {
+			 FormCircle circle2=new FormCircle(Color.BLACK,form2.getX(),form2.getY(),form2.getRayon());
+			 return Collision(circle1,circle2);
+		 }
+
+	}
+	}
 	
 	public boolean Collision(FormRect rect1,FormRect rect2  ) {
 
@@ -100,7 +121,11 @@ public class FC {
 	public boolean Collision(FormRect rect,FormCircle circle) {
 		Point[] t=Rect2Array(rect);
 		Cercle cercle= Cirle2Cercle(circle);
-		return CollisionSegment(t[0], t[1], cercle)
+		Point point =new Point();
+		point.x=cercle.x;
+		point.y=cercle.y;
+		return Collision(t,4,point)
+				|| CollisionSegment(t[0], t[1], cercle)
 				|| CollisionSegment(t[1], t[2], cercle)
 				|| CollisionSegment(t[2], t[3], cercle) 
 				|| CollisionSegment(t[3], t[0], cercle);
@@ -250,8 +275,9 @@ public class FC {
 	
 	public boolean CollisionSegment(Point A,Point B,Cercle C)
 	{
-	   if (CollisionDroite(A,B,C) == false)
+			   if (CollisionDroite(A,B,C) == false) {
 	     return false;  // si on ne touche pas la droite, on ne touchera jamais le segment
+	   }
 	   Vecteur AB=new Vecteur(),AC=new Vecteur(),BC=new Vecteur();
 	   AB.x = B.x - A.x;
 	   AB.y = B.y - A.y;
@@ -325,6 +351,7 @@ public class FC {
 
 	public boolean CollisionSegSeg(Point A,Point B,Point O,Point P)
 	{
+	
 	  if (CollisionDroiteSeg(A,B,O,P)==false)
 	     return false;  // inutile d'aller plus loin si le segment [OP] ne touche pas la droite (AB)
 	  Vecteur AB=new Vecteur(),OP=new Vecteur();
@@ -377,7 +404,8 @@ public class FC {
 	   return 1;
 	}
 
-	
-	
+
+
+
 	
 }

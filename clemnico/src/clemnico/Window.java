@@ -83,8 +83,7 @@ public class Window extends JFrame {
 				player.step(period);
 				
 				panel.repaint();
-				if (temps%10 ==0) {
-//				System.out.println(portal1.getHitbox().getForm().getAngle());
+				if (temps%60 ==0) {
 				if (player.getHitbox().colision(portal1.getHitbox())) {
 					System.out.println("ca touche");
 				}}

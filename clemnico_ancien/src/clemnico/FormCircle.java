@@ -10,26 +10,34 @@ public class FormCircle extends Form {
 
 	private String type;
 	private Color color;
-	private int[] arg;
+	private int x=100;
+	private int y=100;
+	private int rayon=20;
 
 
-	public FormCircle(Color color, int[] arg) {
-		super(color, arg);
+	public FormCircle(Color color, int x, int y,int rayon) {
+		super(color);
 		this.type="CERCLE";
 		this.setColor(color);
-		this.setArg(arg);
+		this.setX(x);
+		this.setY(y);
+		this.setRayon(rayon);
 		// TODO Auto-generated constructor stub
 	}
 
 
 	public void draw(Graphics2D graphic) {
-		int x =this.arg[0];
-		int y =this.arg[1];
-		int r =this.arg[2];
+
 		graphic.setColor(this.color);
-		graphic.fillOval(x-r, y-r, 2*r, 2*r);
+		graphic.fillOval(x-rayon, y-rayon, 2*rayon, 2*rayon);
 	}
 	
+	
+	
+	
+	////////////////////////////////
+	/////// GETTER AND SETTER //////
+	////////////////////////////////
 	
 	public String getType() {
 		return type;
@@ -46,13 +54,35 @@ public class FormCircle extends Form {
 	}
 
 
-	public int[] getArg() {
-		return arg;
+
+
+	public int getX() {
+		return x;
 	}
 
 
-	public void setArg(int[] arg) {
-		this.arg = arg;
+	public void setX(int x) {
+		this.x = x;
+	}
+
+
+	public int getY() {
+		return y;
+	}
+
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+
+	public int getRayon() {
+		return rayon;
+	}
+
+
+	public void setRayon(int rayon) {
+		this.rayon = rayon;
 	}
 
 

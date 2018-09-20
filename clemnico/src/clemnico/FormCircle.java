@@ -17,7 +17,7 @@ public class FormCircle extends Form {
 
 	public FormCircle(Color color, int x, int y,int rayon) {
 		super(color);
-		this.type="CERCLE";
+		this.type="CIRCLE";
 		this.setColor(color);
 		this.setX(x);
 		this.setY(y);
@@ -83,6 +83,53 @@ public class FormCircle extends Form {
 
 	public void setRayon(int rayon) {
 		this.rayon = rayon;
+	}
+
+
+	@Override
+	public int getWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+
+
+	@Override
+	public double getAngle() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setAngle(double angle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setWidth(int width) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	@Override
+	public int getHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setHeight(int height) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

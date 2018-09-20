@@ -1,12 +1,12 @@
 package clemnico;
 
+import clemnico.FC.Point;
 
 public class FC {
 
 	public FC() {
 		// TODO Auto-generated constructor stub
 	}
-	
 	
 	
 	public class  Box{
@@ -30,6 +30,89 @@ public class FC {
 	  float x,y;
 	};
 
+	
+	public Box RectDroit2Box(FormRect rect) {
+		Box box=new Box();
+		box.x=rect.getX();
+		box.y=rect.getY();
+		box.w=rect.getWidth();
+		box.h=rect.getHeight();
+		return box;
+		
+	}
+	
+	public Point[] Rect2Array(FormRect rect) {
+		int x =rect.getX();
+		int y =rect.getY();
+		int w =rect.getWidth();
+		int h =rect.getHeight();
+		double angle = Math.toRadians(rect.getAngle());
+		double x0=x+w/2;
+		double y0=y+h/2;
+		double r= Math.sqrt(h*h+w*w)/2;
+		double alpha1=-Math.atan(h*1.0/w);
+		double alpha2=-alpha1;
+		double alpha3=Math.PI+alpha1;
+		double alpha4=Math.PI+alpha2;
+		Point[] t= {new Point(),new Point(),new Point(),new Point()};
+		
+		t[0].x=(float) (x0+r*Math.cos(angle+alpha4));
+		t[0].y=(float) (y0+r*Math.sin(angle+alpha4));
+		
+		t[1].x=(float) (x0+r*Math.cos(angle+alpha1));
+		t[1].y=(float) (y0+r*Math.sin(angle+alpha1));
+		
+		t[2].x=(float) (x0+r*Math.cos(angle+alpha2));
+		t[2].y=(float) (y0+r*Math.sin(angle+alpha2));
+		
+		t[3].x=(float) (x0+r*Math.cos(angle+alpha3));
+		t[3].y=(float) (y0+r*Math.sin(angle+alpha3));
+		
+//		System.out.println(x+" "+ y +" "+ w + " "+h + "   "+rect.getAngle());
+//		System.out.println(Math.toDegrees(alpha1)+" "+ Math.toDegrees(alpha1) +" "+ Math.toDegrees(alpha3) + " "+Math.toDegrees(alpha4) );
+//		System.out.println(t[3].x+ " "+t[3].y);
+//		System.out.println(" ");
+		return t;
+	}
+	
+	public Cercle Cirle2Cercle(FormCircle circle) {
+		Cercle cercle=new Cercle();
+		cercle.x=circle.getX();
+		cercle.y=circle.getY();
+		cercle.rayon=circle.getRayon();
+		return cercle;
+	}
+	
+	
+	
+	public boolean Collision(FormRect rect1,FormRect rect2  ) {
+
+		Point[] list1=Rect2Array(rect1);
+		Point[] list2=Rect2Array(rect2);
+		for (int i=0 ;i<=3;i++) {
+		if (Collision(list1, 4, list2[i]) || Collision(list2, 4, list1[i]) )  {
+			return true;
+		}
+		}
+		return false;
+	}
+	
+	public boolean Collision(FormRect rect,FormCircle circle) {
+		Point[] t=Rect2Array(rect);
+		Cercle cercle= Cirle2Cercle(circle);
+		return CollisionSegment(t[0], t[1], cercle)
+				|| CollisionSegment(t[1], t[2], cercle)
+				|| CollisionSegment(t[2], t[3], cercle) 
+				|| CollisionSegment(t[3], t[0], cercle);
+	}
+	
+	public boolean Collision(FormCircle circle,FormRect rect) {
+		return Collision(rect,circle);
+	}
+	
+	public boolean Collision(FormCircle circle1,FormCircle circle2) {
+		return Collision(Cirle2Cercle(circle1),Cirle2Cercle(circle2));
+	}
 	
 	public boolean Collision(int curseur_x,int curseur_y,Box box){
 
@@ -87,6 +170,9 @@ public class FC {
 	   else
 	      return true;
 	}
+
+	
+	
 	
 	public boolean Collision(Point tab[],int nbp,Point P){
 	  int i;
@@ -98,20 +184,20 @@ public class FC {
 	         B = tab[0];
 	     else           // sinon on relie au suivant.
 	         B = tab[i+1];
-	     Vecteur D,T;
+	     Vecteur D=new Vecteur(),T=new Vecteur();
 	     D.x = B.x - A.x;
 	     D.y = B.y - A.y;
 	     T.x = P.x - A.x;
 	     T.y = P.y - A.y;
 	     float d = D.x*T.y - D.y*T.x;
-	     if (d>	0)
+	     if (d<	0)
 	        return false;  // un point à droite et on arrête tout.
 	  }
 	  return true;  // si on sort du for, c'est qu'aucun point n'est à gauche, donc c'est bon.
 	}
 		
 	public int intersectsegment(Point A,Point B,Point I,Point P){
-	   Vecteur D,E;
+	   Vecteur D=new Vecteur(),E=new Vecteur();
 
 	   D.x = B.x - A.x;
 
@@ -144,10 +230,10 @@ public class FC {
 	}
 	
 	public boolean CollisionDroite(Point A,Point B,Cercle C){
-	   Vecteur u;
+	   Vecteur u=new Vecteur();
 	   u.x = B.x - A.x;
 	   u.y = B.y - A.y;
-	   Vecteur AC;
+	   Vecteur AC =new Vecteur();
 	   AC.x = C.x - A.x;
 	   AC.y = C.y - A.y;
 	   float numerateur = u.x*AC.y - u.y*AC.x;   // norme du vecteur v
@@ -166,7 +252,7 @@ public class FC {
 	{
 	   if (CollisionDroite(A,B,C) == false)
 	     return false;  // si on ne touche pas la droite, on ne touchera jamais le segment
-	   Vecteur AB,AC,BC;
+	   Vecteur AB=new Vecteur(),AC=new Vecteur(),BC=new Vecteur();
 	   AB.x = B.x - A.x;
 	   AB.y = B.y - A.y;
 	   AC.x = C.x - A.x;
@@ -186,20 +272,20 @@ public class FC {
 	}
 
 	public Point ProjectionI(Point A,Point B,Point C){
-	  Vecteur u,AC;
+	  Vecteur u=new Vecteur(),AC=new Vecteur();
 	  u.x = B.x - A.x; 
 	  u.y = B.y - A.y; 
 	  AC.x = C.x - A.x;
 	  AC.y = C.y - A.y;
 	  float ti = (u.x*AC.x + u.y*AC.y)/(u.x*u.x + u.y*u.y);
-	  Point I;
+	  Point I=new Point();
 	  I.x = A.x + ti*u.x;
 	  I.y = A.y + ti*u.y;
 	  return I;
 	}
 	
 	public Vecteur GetNormale(Point A,Point B,Point C){
-	  Vecteur AC,u,N;
+	  Vecteur AC=new Vecteur(),u=new Vecteur(),N=new Vecteur();
 	  u.x = B.x - A.x;  
 	  u.y = B.y - A.y;
 	  AC.x = C.x - A.x;  
@@ -215,7 +301,7 @@ public class FC {
 	}
 	
 	public Vecteur CalculerVecteurV2(Vecteur v,Vecteur N){
-	  Vecteur v2;
+	  Vecteur v2=new Vecteur();
 	  float pscal = (v.x*N.x +  v.y*N.y);
 	  v2.x = v.x -2*pscal*N.x;
 	  v2.y = v.y -2*pscal*N.y;
@@ -224,7 +310,7 @@ public class FC {
 
 	public boolean CollisionDroiteSeg(Point A,Point B,Point O,Point P)
 	{
-	  Vecteur AO,AP,AB;
+	  Vecteur AO=new Vecteur(),AP=new Vecteur(),AB=new Vecteur();
 	  AB.x = B.x - A.x;
 	  AB.y = B.y - A.y;
 	  AP.x = P.x - A.x;
@@ -241,7 +327,7 @@ public class FC {
 	{
 	  if (CollisionDroiteSeg(A,B,O,P)==false)
 	     return false;  // inutile d'aller plus loin si le segment [OP] ne touche pas la droite (AB)
-	  Vecteur AB,OP;
+	  Vecteur AB=new Vecteur(),OP=new Vecteur();
 	  AB.x = B.x - A.x;
 	  AB.y = B.y - A.y;
 	  OP.x = P.x - O.x;
@@ -255,7 +341,7 @@ public class FC {
 
 	public boolean CollisionCercleAABB(Cercle C1,Box box1)
 	{
-	   AABB boxCercle = new AABB();  // retourner la bounding box de l'image porteuse, ou calculer la bounding box.
+	   Box boxCercle = new Box();  // retourner la bounding box de l'image porteuse, ou calculer la bounding box.
 	   boxCercle.x=C1.x-C1.rayon;
 	   boxCercle.y=C1.y-C1.rayon;
 	   boxCercle.w=2*C1.rayon;

@@ -2,34 +2,41 @@ package clemnico;
 
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
+
 
 public class FormRect extends Form {
 
 	private String type;
 	private Color color;
-	private int[] arg;
+	private int x=100;
+	private int y=100;
+	private int width=20;
+	private int height =20;
 	private int angle=0;
 	private Graphics2D graphic;
 
 
-	public FormRect(Color color, int[] arg) {
-		super(color, arg);
+	public FormRect(Color color,int x, int y,int w,int h,int angle ) {
+		super(color);
 		this.type="RECT";
 		this.setColor(color);
-		this.setArg(arg);
+		this.setX(x);
+		this.setY(y);
+		this.setWidth(h);
+		this.setHeight(h);
+		this.setAngle(angle);
+
 		// TODO Auto-generated constructor stub
 	}
 
 
 	public void draw(Graphics2D graphic) {
-		int x =this.arg[0];
-		int y =this.arg[1];
-		int width =this.arg[2];
-		int height =this.arg[3];
-		double angle = Math.toRadians(this.arg[4]);
+		int x =this.x;
+		int y =this.y;
+		int width =this.width;
+		int height =this.height;
+		double angle = Math.toRadians(this.angle);
 		
 		this.setGraphic(graphic);
 		
@@ -41,6 +48,8 @@ public class FormRect extends Form {
 		
 	}
 	
+	
+
 
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
@@ -61,14 +70,6 @@ public class FormRect extends Form {
 	}
 
 
-	public int[] getArg() {
-		return arg;
-	}
-
-
-	public void setArg(int[] arg) {
-		this.arg = arg;
-	}
 
 
 	public int getAngle() {
@@ -86,6 +87,46 @@ public class FormRect extends Form {
 
 	public void setGraphic(Graphics2D graphic) {
 		this.graphic = graphic;
+	}
+
+
+	public int getX() {
+		return x;
+	}
+
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+
+	public int getY() {
+		return y;
+	}
+
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+
+	public int getWidth() {
+		return width;
+	}
+
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+
+	public int getHeight() {
+		return height;
+	}
+
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 
