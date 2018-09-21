@@ -27,10 +27,10 @@ public class Sprite {
 		double angleRad=Math.toRadians(angle);
 		int w=widthSizeDisplay;
 		int h=heightSizeDisplay;
-		int x0=x+w/2;
-		int y0=y+h/2;
+		int x0=x;
+		int y0=y;
 		gg.rotate(angleRad,x0,y0);
-		gg.drawImage(texture,x,y,w,h,null);
+		gg.drawImage(texture,x-w/2,y-h/2,w,h,null);
 		gg.rotate(-angleRad,x0,y0);
 
 		
