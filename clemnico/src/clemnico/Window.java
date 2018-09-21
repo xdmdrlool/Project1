@@ -73,14 +73,14 @@ public class Window extends JFrame {
 		String path1 = "SpriteSheet_Portal.png";
 		int def1 = 64;
 		//                         int[][] liste_arg={  { col, row ,  wSprite=def ,h Sprite=def , wFenetre,hFenetre , angle }   }
-		int[][] liste_arg1= { {0,0,64,64,64,64,0} }; 
+		int[][] liste_arg1= { {0,0,61,10,100,20,0} }; 
 		Animation animation1= createAnimation(path1, def1, liste_arg1);
 		portal1.setAnimation(animation1);
 		
 		String path2 = "SpriteSheet_Portal.png";
 		int def2 = 64;
 		//                         int[][] liste_arg={  { col, row ,  wSprite=def ,h Sprite=def , wFenetre,hFenetre , angle }   }
-		int[][] liste_arg2= { {1,0,64,64,64,64,0} }; 
+		int[][] liste_arg2= { {1,0,60,10,100,20,0} }; 
 		Animation animation2= createAnimation(path2, def2, liste_arg2);
 		portal2.setAnimation(animation2);
 		
