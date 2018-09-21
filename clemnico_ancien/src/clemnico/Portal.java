@@ -8,10 +8,10 @@ public class Portal {
 	private int y=0;
 	private int height=10;
 	private int width=10;
-	private int angle=0;
+	private double angle=0;
 	private boolean moved;
 	private FormRect form= new FormRect(Color.BLUE,x,y,width, height, angle);
-	private Hitbox hitbox=new Hitbox(x,y,height,width,angle);
+	private Hitbox hitbox=new Hitbox("RECT",x,y+height/4,10,height/2,width,angle);
 	
 	public Portal(int x, int y, int height, int width){
 		this.setX(x);
@@ -24,6 +24,9 @@ public class Portal {
 		if (xClic==xPlayer) {
 			
 			this.setAngle(0);
+		}
+		else if (xClic>xPlayer){
+			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) - Math.PI/2.0));
 		}
 		else {
 			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0));
@@ -49,12 +52,12 @@ public class Portal {
 	public void setY(int y) {
 		this.y = y;
 		this.form.setY(y);;
-		this.hitbox.setY(y);
+		this.hitbox.setY(y+height/4);
 	}
 	public double getAngle() {
 		return angle;
 	}
-	public void setAngle(int angle) {
+	public void setAngle(double angle) {
 		this.angle = angle;
 		this.form.setAngle(angle);;
 		this.hitbox.setAngle(angle);
@@ -73,7 +76,7 @@ public class Portal {
 	public void setHeight(int height) {
 		this.height = height;
 		this.form.setHeight(height);;
-		this.hitbox.setHeight(height);
+		this.hitbox.setHeight(height/2);
 	}
 
 	public int getWidth() {
