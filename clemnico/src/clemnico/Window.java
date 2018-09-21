@@ -20,10 +20,10 @@ public class Window extends JFrame {
 	private int 	fps;
 	protected ImageLoader loader=new ImageLoader();
 	
-	Player player =new Player(0,0,"Player1", 20, 0.2, 0, 300, false); 
+	Player player =new Player(100,100,"Player1", 20, 0.2, 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
-	Obstacle obstacle1=new Obstacle(150, 200, 150, 100);
+	Obstacle obstacle1=new Obstacle(200, 250, 150, 100);
 	FC fc=new FC();
 	
 	
@@ -63,10 +63,10 @@ public class Window extends JFrame {
 		///////////////////////
 		///////ANIMATION///////
 		///////////////////////
-		String path = "SpriteSheet_test.png";
+		String path = "SpriteSheet_Player.png";
 		int def = 64;
 		//                         int[][] liste_arg={  { col, row ,  wSprite=def ,h Sprite=def , wFenetre,hFenetre , angle }   }
-		int[][] liste_arg= { {0,0,64,64,64,64,0} , {0,0,64,64,64,64,90} ,{0,0,64,64,64,64,180} ,{0,0,64,64,64,64,270} }; 
+		int[][] liste_arg= { {0,0,64,64,20,20,0} }; 
 		Animation animation= createAnimation(path, def, liste_arg);
 		player.setAnimation(animation);
 		
@@ -84,10 +84,19 @@ public class Window extends JFrame {
 		Animation animation2= createAnimation(path2, def2, liste_arg2);
 		portal2.setAnimation(animation2);
 		
+		String path3 = "SpriteSheet_test_Obstacle2.png";
+		int def3 = 64;
+		//                         int[][] liste_arg={  { col, row ,  wSprite=def ,h Sprite=def , wFenetre,hFenetre , angle }   }
+		int[][] liste_arg3= { {0,0,1,1,150,100,0} }; 
+		Animation animation3= createAnimation(path3, def3, liste_arg3);
+		obstacle1.setAnimation(animation3);
+		
 		ArrayList<Entity> array2 = new ArrayList<Entity>();
+		array2.add(obstacle1);
 		array2.add(player);
 		array2.add(portal1);
 		array2.add(portal2);
+		
 		panel.setEntityList(array2);
 		
 		
@@ -170,7 +179,7 @@ public class Window extends JFrame {
 		int nbSprite= liste_arg.length;
 		Sprite[] spriteTab = new Sprite[nbSprite];
 		for (int i=0; i< nbSprite ;i++) {
-			Sprite sp= new Sprite(ss, liste_arg[i][0], liste_arg[i][1], liste_arg[i][2], liste_arg[i][3], liste_arg[i][4], liste_arg[i][5], liste_arg[i][6]);
+			Sprite sp= new Sprite(ss, liste_arg[i][0], liste_arg[i][1], liste_arg[i][2], liste_arg[i][3], liste_arg[i][4], liste_arg[i][5],(double) liste_arg[i][6]);
 			spriteTab[i]=sp;
 			}
 		return new Animation(spriteTab);

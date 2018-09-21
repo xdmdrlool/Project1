@@ -29,17 +29,17 @@ public class Portal extends Entity {
 			this.setAngle(0);
 		}
 		else if (xClic>xPlayer){
-			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) - Math.PI/2.0));
+			this.setAngle( Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) - Math.PI/2.0));
 		}
 		else {
-			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0));
+			this.setAngle( Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0));
 		}
 	}
 	
 	
 	public void display(Graphics2D gg) {
 		Sprite sprite =animation.getSprite();
-		sprite.render(gg, x, y);
+		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
 	////////////////////////////////
@@ -67,8 +67,9 @@ public class Portal extends Entity {
 	}
 	public void setAngle(double angle) {
 		this.angle = angle;
-		this.form.setAngle(angle);;
+		this.form.setAngle(angle);
 		this.hitbox.setAngle(angle);
+		this.animation.setAngle(angle);
 	}
 	public FormRect getForm() {
 		return form;

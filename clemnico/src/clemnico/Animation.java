@@ -4,6 +4,7 @@ public class Animation {
 	private Sprite[] listeSprite;
 	private int numeroFrame =0 ;
 	private int nbFrame;
+	private double angle;
 	
 	
 	
@@ -60,6 +61,19 @@ public class Animation {
 	}
 	public void setNbFrame(int nbFrame) {
 		this.nbFrame = nbFrame;
+	}
+
+
+	public double getAngle() {
+		return angle;
+	}
+
+
+	public void setAngle(double angle) {
+		this.angle = angle;
+		for (Sprite sp : listeSprite) {
+			sp.setAngle(angle);
+		}
 	}
 
 

@@ -10,11 +10,11 @@ public class Sprite {
 	private BufferedImage texture;
 	private int widthSizeDisplay; // taille dans la fenetre
 	private int heightSizeDisplay;//
-	private  int angle=0;
+	private  double angle=0.;
 	
 	
 	
-	public Sprite(SpriteSheet ss, int x,int y, int width,int height,int widthSizeDisplay, int heightSizeDisplay, int angle) {
+	public Sprite(SpriteSheet ss, int x,int y, int width,int height,int widthSizeDisplay, int heightSizeDisplay, double angle) {
 		setWidthSizeDisplay(widthSizeDisplay);
 		setHeightSizeDisplay(heightSizeDisplay);
 		setAngle(angle);
@@ -76,12 +76,12 @@ public class Sprite {
 	}
 
 
-	public int getAngle() {
+	public double getAngle() {
 		return angle;
 	}
 
 
-	public void setAngle(int angle) {
+	public void setAngle(double angle) {
 		this.angle = angle;
 	}
 

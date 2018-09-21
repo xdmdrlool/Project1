@@ -30,6 +30,10 @@ public class Player extends Entity {
 	////Constructeur////
 	public Player(int x,int y,String name, double health, double attack, int direction, int speed, boolean move) {
 		super(x,y);
+		FormCircle circle = new FormCircle(Color.RED,x,y,10 );
+		setForm(circle);
+		setX(x);
+		setY(y);
 		this.name=name;
 		this.health=health;
 		this.attack=attack;
@@ -37,10 +41,7 @@ public class Player extends Entity {
 		this.speed=speed;
 		setMove(move);
 
-		FormCircle circle = new FormCircle(Color.RED,x,y,10 );
-
 		
-		this.setForm(circle);
 		
 		
 	}
