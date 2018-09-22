@@ -2,7 +2,9 @@ package clemnico;
 
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 public class FormCircle extends Form {
 
@@ -10,16 +12,16 @@ public class FormCircle extends Form {
 	private Color color;
 	private int x=100;
 	private int y=100;
-	private int rayon=20;
+	private int radius=20;
 
 
-	public FormCircle(Color color, int x, int y,int rayon) {
+	public FormCircle(Color color, int x, int y,int radius) {
 		super(color);
 		this.type="CIRCLE";
 		this.setColor(color);
 		this.setX(x);
 		this.setY(y);
-		this.setRayon(rayon);
+		this.setRadius(radius);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -27,7 +29,7 @@ public class FormCircle extends Form {
 	public void draw(Graphics2D graphic) {
 
 		graphic.setColor(this.color);
-		graphic.fillOval(x-rayon, y-rayon, 2*rayon, 2*rayon);
+		graphic.fillOval(x-radius, y-radius, 2*radius, 2*radius);
 	}
 	
 	
@@ -74,13 +76,13 @@ public class FormCircle extends Form {
 	}
 
 
-	public int getRayon() {
-		return rayon;
+	public int getRadius() {
+		return radius;
 	}
 
 
-	public void setRayon(int rayon) {
-		this.rayon = rayon;
+	public void setRadius(int rayon) {
+		this.radius = rayon;
 	}
 
 

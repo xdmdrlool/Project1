@@ -5,18 +5,6 @@ public class Animation {
 	private int numeroFrame =0 ;
 	private int nbFrame;
 	private double angle;
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
 
 	public Animation(Sprite[] listeSprite ) {
 		setListeSprite(listeSprite);
@@ -33,9 +21,6 @@ public class Animation {
 	public Sprite getSprite() {
 		return this.listeSprite[this.numeroFrame];
 	}
-	
-	
-	
 	
 ////////////////////////////////
 /////// GETTER AND SETTER //////

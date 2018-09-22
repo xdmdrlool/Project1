@@ -3,7 +3,7 @@ package clemnico;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class Portal extends Entity {
+public class Portal extends Entity{
 	
 	private int x=0;
 	private int y=0;
@@ -15,32 +15,34 @@ public class Portal extends Entity {
 	private Hitbox hitbox=new Hitbox("RECT",x,y+height/4,10,height/2,width,angle);
 	private Animation animation;
 	
+	////Constructeur////
 	public Portal(int x, int y, int width, int height){
 		super(x,y);
-		setX(x);
-		setY(y);
-		setWidth(width);
-		setHeight(height);
+		this.setX(x);
+		this.setY(y);
+		this.setWidth(width);
+		this.setHeight(height);
 	}
 	
+	////Méthodes////
 	public void setRotation(int xPlayer, int yPlayer, int xClic, int yClic) {
 		if (xClic==xPlayer) {
 			
 			this.setAngle(0);
 		}
 		else if (xClic>xPlayer){
-			this.setAngle( Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) - Math.PI/2.0));
+			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) - Math.PI/2.0));
 		}
 		else {
-			this.setAngle( Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0));
+			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0));
 		}
 	}
-	
 	
 	public void display(Graphics2D gg) {
 		Sprite sprite =animation.getSprite();
 		sprite.render(gg, x+width/2, y+height/2);
 	}
+	
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
@@ -67,7 +69,7 @@ public class Portal extends Entity {
 	}
 	public void setAngle(double angle) {
 		this.angle = angle;
-		this.form.setAngle(angle);
+		this.form.setAngle(angle);;
 		this.hitbox.setAngle(angle);
 		this.animation.setAngle(angle);
 	}
@@ -110,11 +112,9 @@ public class Portal extends Entity {
 	public void setHitbox(Hitbox hitbox) {
 		this.hitbox = hitbox;
 	}
-
 	public Animation getAnimation() {
 		return animation;
 	}
-
 	public void setAnimation(Animation animation) {
 		this.animation = animation;
 	}

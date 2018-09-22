@@ -2,8 +2,9 @@ package clemnico;
 
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-
+import java.util.ArrayList;
 
 public abstract class Form {
 	
@@ -19,8 +20,8 @@ public abstract class Form {
 	public abstract void setX(int x);
 	public abstract int getY();
 	public abstract void setY(int y);
-	public abstract int getRayon();
-	public abstract void setRayon(int rayon);
+	public abstract int getRadius();
+	public abstract void setRadius(int radius);
 	public abstract int getWidth();
 	public abstract void setWidth(int width);
 	public abstract int getHeight();

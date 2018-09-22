@@ -3,6 +3,7 @@ package clemnico;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -20,12 +21,12 @@ public class Window extends JFrame {
 	private int 	fps;
 	protected ImageLoader loader=new ImageLoader();
 	
+	//Objets de la fenêtre
 	Player player =new Player(100,100,20,20,20,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
-	Obstacle obstacle1=new Obstacle(200, 250, 150, 100,45);
+	Obstacle obstacle=new Obstacle(0, 400, 600, 100,0);
 	FC fc=new FC();
-	
 	
 	////Constructeur////
 	public Window(int fps) {
@@ -38,6 +39,8 @@ public class Window extends JFrame {
 	    this.setVisible(true);
 		this.setResizable(true);
 		
+		portal1.getForm().setColor(Color.BLUE);
+		portal2.getForm().setColor(Color.ORANGE);
 		
 		initPanel();
 		stepGame(player);
@@ -46,10 +49,12 @@ public class Window extends JFrame {
 	}
 	
 	////Methodes////
-	private void initPanel() {
+	
+	private void initPanel(){
 		panel=new Panel();
 		panel.setBackground(Color.WHITE);
 		add(panel,BorderLayout.CENTER);
+		
 		statusBar= new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
 	
@@ -58,43 +63,24 @@ public class Window extends JFrame {
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
 		
-		
-
-		///////////////////////
-		///////ANIMATION///////
-		///////////////////////
-		
-	
+		//Animations
 		Animation animation= createAnimation(Animations.AnimationPlayerDefault,player.getWidth(),player.getHeight());
 		player.setAnimation(animation);
-		
-		
 		Animation animation1= createAnimation(Animations.AnimationPortal1Default,portal1.getWidth(),portal1.getHeight());
 		portal1.setAnimation(animation1);
-		
-		
-		
 		Animation animation2= createAnimation(Animations.AnimationPortal2Default,portal2.getWidth(),portal2.getHeight());
 		portal2.setAnimation(animation2);
-		
-		
-		
-		Animation animation3= createAnimation(Animations.AnimationObsatcleDefault,obstacle1.getWidth(),obstacle1.getHeight());
-		obstacle1.setAnimation(animation3);
+		Animation animation3= createAnimation(Animations.AnimationObsatcleDefault,obstacle.getWidth(),obstacle.getHeight());
+		obstacle.setAnimation(animation3);
 		
 		
 		ArrayList<Entity> array2 = new ArrayList<Entity>();
-		array2.add(obstacle1);
+		array2.add(obstacle);
 		array2.add(player);
 		array2.add(portal1);
 		array2.add(portal2);
 		
 		panel.setEntityList(array2);
-		
-		
-		
-		
-		
 		
 	}
 	
@@ -105,64 +91,25 @@ public class Window extends JFrame {
 		int period=1000/this.fps;
 		
 		chrono.schedule(new TimerTask() {
-		long temps=0;
+		long time=0;
 			@Override
 			public void run() {
-				
-				temps=temps+1;
+				time=time+1;
 				player.step(period);
-				panel.repaint();
-				if (temps%30 ==0 ) {
+				//Gestion portails teleportations
+				player.portalInteraction(fc,portal1,portal2);
+
+				//Gestion obstacle
+				player.obstacleInteraction(obstacle);
+				
+				if (time%30 ==0 ) {
 					player.getAnimation().update();					
 				}
-				if (temps%1 ==0 ) {
-				
-					//Obtenir les points A et B des deux portails
-					int xAPortal1=(int) fc.Rect2Array(portal1.getForm())[0].x;
-					int yAPortal1=(int) fc.Rect2Array(portal1.getForm())[0].y;
-					int xBPortal1=(int) fc.Rect2Array(portal1.getForm())[1].x;
-					int yBPortal1=(int) fc.Rect2Array(portal1.getForm())[1].y;
-					int xDPortal1=(int) fc.Rect2Array(portal1.getForm())[3].x;
-					int yDPortal1=(int) fc.Rect2Array(portal1.getForm())[3].y;
-					int xAPortal2=(int) fc.Rect2Array(portal2.getForm())[0].x;
-					int yAPortal2=(int) fc.Rect2Array(portal2.getForm())[0].y;
-					int xBPortal2=(int) fc.Rect2Array(portal2.getForm())[1].x;
-					int yBPortal2=(int) fc.Rect2Array(portal2.getForm())[1].y;
-					int xDPortal2=(int) fc.Rect2Array(portal2.getForm())[3].x;
-					int yDPortal2=(int) fc.Rect2Array(portal2.getForm())[3].y;
-					
-					int distancePortal=10;
-						
-					if (player.getHitbox().colision(portal1.getHitbox())) {
-						double distancePlayerPortal1=Math.sqrt((player.getX()-xAPortal1)*(player.getX()-xAPortal1)+
-															   (player.getY()-yAPortal1)*(player.getY()-yAPortal1));
-						
-						double distancePlayerPortal2=portal2.getWidth()-distancePlayerPortal1;
-						double[] vectorABPortal2= {(xBPortal2-xAPortal2)*1./portal2.getWidth()*1.,(yBPortal2-yAPortal2)*1./portal2.getWidth()*1.};
-						double[] vectorDAPortal2= {(xAPortal2-xDPortal2)*1./portal2.getHeight()*1.,(yAPortal2-yDPortal2)*1./portal2.getHeight()*1.};
-						
-						
-						player.moveIn((int) (xAPortal2+vectorABPortal2[0]*distancePlayerPortal2+distancePortal*vectorDAPortal2[0]),
-									  (int) (yAPortal2+vectorABPortal2[1]*distancePlayerPortal2+distancePortal*vectorDAPortal2[1]));
-					}
-					else if (player.getHitbox().colision(portal2.getHitbox())){
-						double distancePlayerPortal2=Math.sqrt((player.getX()-xAPortal2)*(player.getX()-xAPortal2)+(player.getY()-yAPortal2)*(player.getY()-yAPortal2));
-						
-						double distancePlayerPortal1=portal1.getWidth()-distancePlayerPortal2;
-						double[] vectorABPortal1= {(xBPortal1-xAPortal1)*1./portal1.getWidth()*1.,(yBPortal1-yAPortal1)*1./portal1.getWidth()*1.};
-						double[] vectorDAPortal1= {(xAPortal1-xDPortal1)*1./portal1.getHeight()*1.,(yAPortal1-yDPortal1)*1./portal1.getHeight()*1.};
-						
-						player.moveIn((int) (xAPortal1+vectorABPortal1[0]*distancePlayerPortal1+distancePortal*vectorDAPortal1[0]),
-								      (int) (yAPortal1+vectorABPortal1[1]*distancePlayerPortal1+distancePortal*vectorDAPortal1[1]));
-					}
-				}
-				
+				panel.repaint();
 			}
 				
 			}, delay, period);
 	}
-	
-	
 	
 	public Animation createAnimation(Animations enumAnim, int width,int height) {
 		int[][] listeArg =enumAnim.getListeArg();
@@ -193,17 +140,6 @@ public class Window extends JFrame {
 		return new Animation(spriteTab);
 			
 		}
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	////////////////////////////////

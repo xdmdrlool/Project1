@@ -63,4 +63,3 @@ public enum Animations {
 		this.listeArg = listeArg;
 	}
 }
-

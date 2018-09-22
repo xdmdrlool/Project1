@@ -131,14 +131,14 @@ public class FormRect extends Form {
 
 
 	@Override
-	public int getRayon() {
+	public int getRadius() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
-	public void setRayon(int rayon) {
+	public void setRadius(int radius) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -19,7 +19,7 @@ public class FC {
 	
 	public class Cercle{
 	   int x,y;
-	   int rayon;
+	   int radius;
 	};
 
 	public class Point{
@@ -75,7 +75,7 @@ public class FC {
 		Cercle cercle=new Cercle();
 		cercle.x=circle.getX();
 		cercle.y=circle.getY();
-		cercle.rayon=circle.getRayon();
+		cercle.radius=circle.getRadius();
 		return cercle;
 	}
 	
@@ -87,19 +87,19 @@ public class FC {
 				 return Collision(rect1,rect2); 
 			 }
 			 else {
-				 FormCircle circle2=new FormCircle(Color.BLACK,form2.getX(),form2.getY(),form2.getRayon());
+				 FormCircle circle2=new FormCircle(Color.BLACK,form2.getX(),form2.getY(),form2.getRadius());
 				 return Collision(rect1,circle2);
 		 }
 		 }
 		 
 		 else {
-			 FormCircle circle1=new FormCircle(Color.BLACK,form1.getX(),form1.getY(),form1.getRayon());
+			 FormCircle circle1=new FormCircle(Color.BLACK,form1.getX(),form1.getY(),form1.getRadius());
 			 if (form2.getType()=="RECT") {
 				 FormRect rect2= new FormRect(Color.BLACK,form2.getX(),form2.getY(),form2.getWidth(),form2.getHeight(),form2.getAngle());
 				 return Collision(circle1,rect2);
 		 }
 		 else {
-			 FormCircle circle2=new FormCircle(Color.BLACK,form2.getX(),form2.getY(),form2.getRayon());
+			 FormCircle circle2=new FormCircle(Color.BLACK,form2.getX(),form2.getY(),form2.getRadius());
 			 return Collision(circle1,circle2);
 		 }
 
@@ -178,7 +178,7 @@ public class FC {
 	public boolean CollisionPointCercle(float x ,float y,Cercle C){
 	   int d2 = (int) ((x-C.x)*(x-C.x) + (y-C.y)*(y-C.y));
 
-	   if (d2>C.rayon*C.rayon)
+	   if (d2>C.radius*C.radius)
 
 	      return false;
 
@@ -190,7 +190,7 @@ public class FC {
 
 	public boolean Collision(Cercle C1,Cercle C2){
 	   int d2 = (C1.x-C2.x)*(C1.x-C2.x) + (C1.y-C2.y)*(C1.y-C2.y);
-	   if (d2 > (C1.rayon + C2.rayon)*(C1.rayon + C2.rayon))
+	   if (d2 > (C1.radius + C2.radius)*(C1.radius + C2.radius))
 	      return false;
 	   else
 	      return true;
@@ -266,7 +266,7 @@ public class FC {
 	      numerateur = -numerateur ;   // valeur absolue ; si c'est négatif, on prend l'opposé.
 	   float denominateur = (float) Math.sqrt(u.x*u.x + u.y*u.y);  // norme de u s
 	   float CI = numerateur / denominateur;
-	   if (CI<C.rayon)
+	   if (CI<C.radius)
 	      return true;
 	   else
 	      return false;
@@ -369,10 +369,10 @@ public class FC {
 	public boolean CollisionCercleAABB(Cercle C1,Box box1)
 	{
 	   Box boxCercle = new Box();  // retourner la bounding box de l'image porteuse, ou calculer la bounding box.
-	   boxCercle.x=C1.x-C1.rayon;
-	   boxCercle.y=C1.y-C1.rayon;
-	   boxCercle.w=2*C1.rayon;
-	   boxCercle.h=2*C1.rayon;
+	   boxCercle.x=C1.x-C1.radius;
+	   boxCercle.y=C1.y-C1.radius;
+	   boxCercle.w=2*C1.radius;
+	   boxCercle.h=2*C1.radius;
 	   if (!(Collision(box1,boxCercle)))
 	      return false;   // premier test
 	   if (CollisionPointCercle(box1.x,box1.y,C1)

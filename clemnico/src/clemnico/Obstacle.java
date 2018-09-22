@@ -26,7 +26,7 @@ public class Obstacle extends Entity {
 	
 	public void display(Graphics2D gg) {
 		Sprite sprite =animation.getSprite();
-		sprite.render(gg, x, y);
+		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
 	////////////////////////////////
