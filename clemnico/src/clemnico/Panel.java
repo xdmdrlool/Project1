@@ -1,20 +1,9 @@
 package clemnico;
 
-import java.awt.Color;
-import java.awt.Font;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
  
 public class Panel extends JPanel { 
@@ -34,7 +23,7 @@ public class Panel extends JPanel {
 		super.paintComponent(g);
 		Graphics2D gg= (Graphics2D) g;		
 		for (Entity entity :formList) {
-			entity.display((Graphics2D) g);
+			entity.display(gg);
 		}
 		
 //		g.fillOval(xPlayer-rPlayer, yPlayer-rPlayer, 2*rPlayer, 2*rPlayer);

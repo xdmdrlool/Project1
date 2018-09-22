@@ -28,6 +28,8 @@ public class Animation {
 		this.numeroFrame=(this.numeroFrame+1)%this.nbFrame;
 	}
 	
+	
+	
 	public Sprite getSprite() {
 		return this.listeSprite[this.numeroFrame];
 	}

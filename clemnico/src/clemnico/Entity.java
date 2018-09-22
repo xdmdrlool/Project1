@@ -1,6 +1,5 @@
 package clemnico;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 public abstract class Entity {

@@ -20,7 +20,7 @@ public class Window extends JFrame {
 	private int 	fps;
 	protected ImageLoader loader=new ImageLoader();
 	
-	Player player =new Player(100,100,"Player1", 20, 0.2, 0, 300, false); 
+	Player player =new Player(100,100,20,20,20,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
 	Obstacle obstacle1=new Obstacle(200, 250, 150, 100);
@@ -63,33 +63,25 @@ public class Window extends JFrame {
 		///////////////////////
 		///////ANIMATION///////
 		///////////////////////
-		String path = "SpriteSheet_Player.png";
-		int def = 64;
-		//                         int[][] liste_arg={  { col, row ,  wSprite=def ,h Sprite=def , wFenetre,hFenetre , angle }   }
-		int[][] liste_arg= { {0,0,64,64,20,20,0} }; 
-		Animation animation= createAnimation(path, def, liste_arg);
+		
+	
+		Animation animation= createAnimation(Animations.AnimationPlayerDefault,player.getWidth(),player.getHeight());
 		player.setAnimation(animation);
 		
-		String path1 = "SpriteSheet_Portal.png";
-		int def1 = 64;
-		//                         int[][] liste_arg={  { col, row ,  wSprite=def ,h Sprite=def , wFenetre,hFenetre , angle }   }
-		int[][] liste_arg1= { {0,0,61,10,portal1.getWidth(),portal1.getHeight(),0} }; 
-		Animation animation1= createAnimation(path1, def1, liste_arg1);
+		
+		Animation animation1= createAnimation(Animations.AnimationPortal1Default,portal1.getWidth(),portal1.getHeight());
 		portal1.setAnimation(animation1);
 		
-		String path2 = "SpriteSheet_Portal.png";
-		int def2 = 64;
-		//                         int[][] liste_arg={  { col, row ,  wSprite=def ,h Sprite=def , wFenetre,hFenetre , angle }   }
-		int[][] liste_arg2= { {1,0,60,10,portal1.getWidth(),portal2.getHeight(),0} }; 
-		Animation animation2= createAnimation(path2, def2, liste_arg2);
+		
+		
+		Animation animation2= createAnimation(Animations.AnimationPortal2Default,portal2.getWidth(),portal2.getHeight());
 		portal2.setAnimation(animation2);
 		
-		String path3 = "SpriteSheet_test_Obstacle2.png";
-		int def3 = 64;
-		//                         int[][] liste_arg={  { col, row ,  wSprite=def ,h Sprite=def , wFenetre,hFenetre , angle }   }
-		int[][] liste_arg3= { {0,0,1,1,obstacle1.getWidth(),obstacle1.getHeight(),0} }; 
-		Animation animation3= createAnimation(path3, def3, liste_arg3);
+		
+		
+		Animation animation3= createAnimation(Animations.AnimationObsatcleDefault,obstacle1.getWidth(),obstacle1.getHeight());
 		obstacle1.setAnimation(animation3);
+		
 		
 		ArrayList<Entity> array2 = new ArrayList<Entity>();
 		array2.add(obstacle1);
@@ -172,7 +164,23 @@ public class Window extends JFrame {
 	
 	
 	
-	public Animation createAnimation(String path,int def, int[][] liste_arg) {
+	public Animation createAnimation(Animations enumAnim, int width,int height) {
+		int[][] listeArg =enumAnim.getListeArg();
+		int[][] listeArg2 =new int[listeArg.length][listeArg[0].length+2];
+		for(int i=0;i<listeArg.length;i++) {
+			listeArg2[i][0]=listeArg[i][0];
+			listeArg2[i][1]=listeArg[i][1];
+			listeArg2[i][2]=listeArg[i][2];
+			listeArg2[i][3]=listeArg[i][3];
+			listeArg2[i][4]=width;
+			listeArg2[i][5]=height;
+			listeArg2[i][6]=listeArg[i][4];
+		}
+		return createAnimationGeneral(enumAnim.getPath(), enumAnim.getDef(), listeArg2);	
+	}
+	
+	
+	public Animation createAnimationGeneral(String path,int def, int[][] liste_arg) {
 		BufferedImage img = this.loader.loadImage(path);
 		SpriteSheet ss=new SpriteSheet(img,def);
 //		Sprite sprite2= new Sprite(spriteSheet, 1,0, 64, 64,64,64,45);

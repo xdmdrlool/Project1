@@ -10,8 +10,7 @@ public class Player extends Entity {
 
 	////Attributs////
 	private String 	name = "" ;
-	private double 	health = 20 ;
-	private double 	attack = 0.5;
+
 	private int 	direction = 0;
 	private int 	speed = 300;
 	private boolean move = false;
@@ -22,21 +21,23 @@ public class Player extends Entity {
 	private int y=0;
 	private int width=20;
 	private int height =20;
-	private Hitbox hitbox = new Hitbox("CIRCLE",x,y,10,width,height,0);
+	private int rayon=10;
+	private Hitbox hitbox = new Hitbox("CIRCLE",x,y,rayon,width,height,0);
 	private Animation animation;
 
 
 
 	////Constructeur////
-	public Player(int x,int y,String name, double health, double attack, int direction, int speed, boolean move) {
+	public Player(int x,int y,int width, int height, int rayon,String name, int direction, int speed, boolean move) {
 		super(x,y);
-		FormCircle circle = new FormCircle(Color.RED,x,y,10 );
+		FormCircle circle = new FormCircle(Color.RED,x,y,rayon );
 		setForm(circle);
 		setX(x);
 		setY(y);
+		setWidth(width);
+		setHeight(height);
+		setRayon(rayon);
 		this.name=name;
-		this.health=health;
-		this.attack=attack;
 		setDirection(direction);
 		this.speed=speed;
 		setMove(move);
@@ -54,10 +55,6 @@ public class Player extends Entity {
 		sprite.render(gg, x, y);
 	}
 	
-	
-	public void damage(double d) {
-		this.health-=d;
-	}
 	
 	public void moveIn(int x ,int y) {
 		this.setX(x);
@@ -121,25 +118,63 @@ public class Player extends Entity {
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
 	
+	
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+		this.form.setX(x);;
+		getHitbox().setX(x);		
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+		this.form.setY(y);;
+		getHitbox().setY(y);
+	}
+	public void setRayon(int rayon) {
+		this.rayon = rayon;
+		getHitbox().setRayon(rayon);
+	}
+	public int getRayon() {
+		return rayon;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+
+	public void setWidth(int width) {
+		this.width = width;
+		getHitbox().setWidth(width);
+	}
+
+
+	public int getHeight() {
+		return height;
+	}
+
+
+	public void setHeight(int height) {
+		this.height = height;
+		getHitbox().setHeight(height);
+	}
+	
+	
+	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public double getHealth() {
-		return health;
-	}
-	public void setHealth(double health) {
-		this.health = health;
-	}
-	public double getAttack() {
-		return attack;
-	}
-	public void setAttack(double attack) {
-		this.attack = attack;
-	}
-
 	public int getSpeed() {
 		return speed;
 	}
@@ -159,26 +194,6 @@ public class Player extends Entity {
 
 	public void setForm(FormCircle form) {
 		this.form = form;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-		this.form.setX(x);;
-		this.hitbox.setX(x);		
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-		this.form.setY(y);;
-		this.hitbox.setY(y);
 	}
 
 	public int getDirection() {
@@ -219,4 +234,10 @@ public class Player extends Entity {
 	public void setAnimation(Animation animation) {
 		this.animation = animation;
 	}
+
+
+
+
+
+
 }
