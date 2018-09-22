@@ -15,12 +15,13 @@ public class Obstacle extends Entity {
 	private Hitbox hitbox=new Hitbox("RECT",x,y+height/4,10,height/2,width,angle);
 	private Animation animation;
 	
-	public Obstacle(int x, int y, int width,int height) {
+	public Obstacle(int x, int y, int width,int height,double angle) {
 		super(x,y);
 		setX(x);
 		setY(y);
 		setWidth(width);
 		setHeight(height);
+		setAngle(angle);
 	}
 	
 	public void display(Graphics2D gg) {
@@ -53,8 +54,9 @@ public class Obstacle extends Entity {
 	}
 	public void setAngle(double angle) {
 		this.angle = angle;
-		this.form.setAngle(angle);;
+		this.form.setAngle(angle);
 		this.hitbox.setAngle(angle);
+		if (this.animation != null) {this.animation.setAngle(angle);}		
 	}
 	public FormRect getForm() {
 		return form;
@@ -101,6 +103,7 @@ public class Obstacle extends Entity {
 
 	public void setAnimation(Animation animation) {
 		this.animation = animation;
+		this.animation.setAngle(this.getAngle());
 	}
 
 

@@ -23,7 +23,7 @@ public class Window extends JFrame {
 	Player player =new Player(100,100,20,20,20,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
-	Obstacle obstacle1=new Obstacle(200, 250, 150, 100);
+	Obstacle obstacle1=new Obstacle(200, 250, 150, 100,45);
 	FC fc=new FC();
 	
 	
