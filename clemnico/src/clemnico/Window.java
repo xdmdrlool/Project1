@@ -3,6 +3,7 @@ package clemnico;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -21,7 +22,7 @@ public class Window extends JFrame {
 	protected ImageLoader loader=new ImageLoader();
 	
 	//Objets de la fenêtre
-	Player player =new Player(100,100,40,40,40,"Player1", 0, 300, false); 
+	Player player =new Player(100,100,20,20,20,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
 	Obstacle obstacle=new Obstacle(0, 400, 600, 100,0);
@@ -33,7 +34,7 @@ public class Window extends JFrame {
 		this.fps=fps;
 		
 		this.setTitle("Ma fenetre");
-		this.setSize(1500, 1000);
+		this.setSize(400, 500);
 		this.setLocationRelativeTo(null);
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);             
 	    this.setVisible(true);
@@ -74,14 +75,14 @@ public class Window extends JFrame {
 		obstacle.setAnimation(animation3);
 		Animation animation4= createAnimation(Animations.AnimationObsatcleDefault,obstacle2.getWidth(),obstacle2.getHeight());
 		obstacle2.setAnimation(animation4);
-		ArrayList<Entity> array2 = new ArrayList<Entity>();
-		array2.add(obstacle);
-		array2.add(obstacle2);
-		array2.add(player);
-		array2.add(portal1);
-		array2.add(portal2);
-		
-		panel.setEntityList(array2);
+		ArrayList<Entity> array = new ArrayList<Entity>();
+		array.add(obstacle);
+		array.add(obstacle2);
+		array.add(player);
+		array.add(portal1);
+		array.add(portal2);
+				
+		panel.setEntityList(array);
 		
 	}
 	
@@ -101,8 +102,8 @@ public class Window extends JFrame {
 				player.portalInteraction(fc,portal1,portal2);
 
 				//Gestion obstacle
-				player.obstacleInteraction(obstacle2);
 				player.obstacleInteraction(obstacle);
+				player.obstacleInteraction(obstacle2);
 				
 				if (time%30 ==0 ) {
 					player.getAnimation().update();					
@@ -132,6 +133,7 @@ public class Window extends JFrame {
 	public Animation createAnimationGeneral(String path,int def, int[][] liste_arg) {
 		BufferedImage img = this.loader.loadImage(path);
 		SpriteSheet ss=new SpriteSheet(img,def);
+//		Sprite sprite2= new Sprite(spriteSheet, 1,0, 64, 64,64,64,45);
 		int nbSprite= liste_arg.length;
 		Sprite[] spriteTab = new Sprite[nbSprite];
 		for (int i=0; i< nbSprite ;i++) {

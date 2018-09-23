@@ -72,7 +72,7 @@ public class Player extends Entity{
 		
 		if (key==KeyEvent.VK_Z && !inTheAir) {
 			setInTheAir(false);
-			setVy(-50);
+			setVy(-20);
 			setY(y-10);
 			setVx(directionX*vx);
 			
@@ -94,78 +94,75 @@ public class Player extends Entity{
 		double g=-9.81;
 		double t=timeInAir/100.0;
 		
-		setY((int)(y-0.5*g*t*t+vy*t));
 		setVy((int)(vy-g*t));
 		setX(x+vx);
+		setY(y+vy);
 	}
 	
 	//Gestion de l'interaction joueur/portail
 	public void portalInteraction(FC fc,Portal portal1, Portal portal2) {
-		//Obtenir les points A et B des deux portails (axe, point, portail)
-		int xA1=(int) fc.Rect2Array(portal1.getForm())[0].x;
-		int yA1=(int) fc.Rect2Array(portal1.getForm())[0].y;
-		int xB1=(int) fc.Rect2Array(portal1.getForm())[1].x;
-		int yB1=(int) fc.Rect2Array(portal1.getForm())[1].y;
-		int xD1=(int) fc.Rect2Array(portal1.getForm())[3].x;
-		int yD1=(int) fc.Rect2Array(portal1.getForm())[3].y;
-		int xA2=(int) fc.Rect2Array(portal2.getForm())[0].x;
-		int yA2=(int) fc.Rect2Array(portal2.getForm())[0].y;
-		int xB2=(int) fc.Rect2Array(portal2.getForm())[1].x;
-		int yB2=(int) fc.Rect2Array(portal2.getForm())[1].y;
-		int xD2=(int) fc.Rect2Array(portal2.getForm())[3].x;
-		int yD2=(int) fc.Rect2Array(portal2.getForm())[3].y;
-		
-		//Détermine la vitesse min et la distance entre le joueur et le portail de sortie
-		int distancePortal=10;
-		int vMinOut=10;
-		
-		//Norme de la vitesse
-		double vOut=Math.min(Math.sqrt(vx*vx+vy*vy), vMinOut);
-		
-		//Téléportation portail 1 (bleu) vers portail 2 (orange)
-		if (hitbox.colision(portal1.getHitbox())) {
+				
+		//S'il y a interaction avec l'un des deux portails
+		if (hitbox.colision(portal1.getHitbox()) || hitbox.colision(portal2.getHitbox())) {
+			
+			//Détermine le portail d'entrée et de sortie
+			Portal portalIn,portalOut;
+			if (hitbox.colision(portal1.getHitbox())) 	{portalIn=portal1;	portalOut=portal2;}
+			else 										{portalIn=portal2;	portalOut=portal1;}
+			
+			//Obtenir les points A et B des deux portails (axe, point, portail)
+			//portalIn = 1 et portalOut = 2 
+			int xA1=(int) fc.Rect2Array(portalIn.getForm())[0].x;
+			int yA1=(int) fc.Rect2Array(portalIn.getForm())[0].y;
+			int xB1=(int) fc.Rect2Array(portalIn.getForm())[1].x;
+			int yB1=(int) fc.Rect2Array(portalIn.getForm())[1].y;
+			int xD1=(int) fc.Rect2Array(portalIn.getForm())[3].x;
+			int yD1=(int) fc.Rect2Array(portalIn.getForm())[3].y;
+			int xA2=(int) fc.Rect2Array(portalOut.getForm())[0].x;
+			int yA2=(int) fc.Rect2Array(portalOut.getForm())[0].y;
+			int xB2=(int) fc.Rect2Array(portalOut.getForm())[1].x;
+			int yB2=(int) fc.Rect2Array(portalOut.getForm())[1].y;
+			int xD2=(int) fc.Rect2Array(portalOut.getForm())[3].x;
+			int yD2=(int) fc.Rect2Array(portalOut.getForm())[3].y;
+			
+			//Détermine la vitesse min et la distance entre le joueur et le portail de sortie
+			int distancePortal=10;
+			int vMinOut=10;
+			
+			//Détermine la position du joueur sur la tangente du portail
 			double distancePlayerA1=Math.sqrt((x-xA1)*(x-xA1)+(y-yA1)*(y-yA1));
 			double distancePlayerD1=Math.sqrt((x-xD1)*(x-xD1)+(y-yD1)*(y-yD1));
-			double distancePlayerA2=portal2.getWidth()-distancePlayerA1;
+			double distancePlayerA2=portalOut.getWidth()-distancePlayerA1;
 			
-			//Vecteurs normalisés AB et DA du portail 2
-			double[] vectorAB2= {(xB2-xA2)*1./portal2.getWidth()*1.,(yB2-yA2)*1./portal2.getWidth()*1.};
-			double[] vectorDA2= {(xA2-xD2)*1./portal2.getHeight()*1.,(yA2-yD2)*1./portal2.getHeight()*1.};
+			//Détermine la norme de la vitesse en sortie
+			double vNormIn=Math.sqrt(vx*vx+vy*vy); 						//Norme de la vitesse d'entrée
+			double[] vectorVIn= {vx*1./vNormIn*1.,vy*1./vNormIn*1.};	//Vecteur vitesse normalisé
+			double vNormOut=Math.max(vNormIn, vMinOut);					//Vitesse minorée en sortie de portail
+			
+			//Vecteurs normalisés AB et DA du portail In et Out
+			double[] vectorAB1= {(xB1-xA1)*1./portalIn.getWidth()*1.,(yB1-yA1)*1./portalIn.getWidth()*1.};
+			double[] vectorAB2= {(xB2-xA2)*1./portalOut.getWidth()*1.,(yB2-yA2)*1./portalOut.getWidth()*1.};
+			double[] vectorDA2= {(xA2-xD2)*1./portalOut.getHeight()*1.,(yA2-yD2)*1./portalOut.getHeight()*1.};
+			
+			//Détermine l'orientation de la vitesse en sortie en fonction de celle en entrée
+			double thetaIn=Math.acos(vectorAB1[0]*vectorVIn[0]+vectorAB1[1]*vectorVIn[1]);
+			double thetaOut=(thetaIn-Math.PI);
+			double[] vectorVOut= {(vectorAB2[0]*Math.cos(thetaOut)-vectorAB2[1]*Math.sin(thetaOut)),
+							      (vectorAB2[0]*Math.sin(thetaOut)+vectorAB2[1]*Math.cos(thetaOut))};
+			int[] vOut= {(int) (vectorVOut[0]*vNormOut), (int) (vectorVOut[1]*vNormOut)};
+			
 			//Détermine le côté du portail où passe le joueur
 			if (distancePlayerA1<distancePlayerD1) {
 				setX((int) (xA2+vectorAB2[0]*distancePlayerA2+distancePortal*vectorDA2[0]));
 				setY((int) (yA2+vectorAB2[1]*distancePlayerA2+distancePortal*vectorDA2[1]));
-				setVx((int)(vectorDA2[0]*vOut));
-				setVy((int)(vectorDA2[1]*vOut));
+				setVx(vOut[0]);
+				setVy(vOut[1]);
 			}
 			else {
-				setX((int) (xA2+vectorAB2[0]*distancePlayerA2-(distancePortal+portal2.getHeight())*vectorDA2[0]));
-				setY((int) (yA2+vectorAB2[1]*distancePlayerA2-(distancePortal+portal2.getHeight())*vectorDA2[1]));
-				setVx((int)(-vectorDA2[0]*vOut));
-				setVy((int)(-vectorDA2[1]*vOut));
-			}
-		}
-		//Téléportation portail 2 (orange) vers portail 1 (bleu)
-		else if (hitbox.colision(portal2.getHitbox())){
-			double distancePlayerA2=Math.sqrt((x-xA2)*(x-xA2)+(y-yA2)*(y-yA2));
-			double distancePlayerD2=Math.sqrt((x-xD2)*(x-xD2)+(y-yD2)*(y-yD2));
-			double distancePlayerA1=portal1.getWidth()-distancePlayerA2;
-			
-			//Vecteurs normalisés AB et DA du portail 2
-			double[] vectorAB1= {(xB1-xA1)*1./portal1.getWidth()*1.,(yB1-yA1)*1./portal1.getWidth()*1.};
-			double[] vectorDA1= {(xA1-xD1)*1./portal1.getHeight()*1.,(yA1-yD1)*1./portal1.getHeight()*1.};
-			//Détermine le côté du portail où passe le joueur
-			if (distancePlayerA2<distancePlayerD2) {
-				setX((int) (xA1+vectorAB1[0]*distancePlayerA1+distancePortal*vectorDA1[0]));
-				setY((int) (yA1+vectorAB1[1]*distancePlayerA1+distancePortal*vectorDA1[1]));
-				setVx((int)(vectorDA1[0]*vOut));
-				setVy((int)(vectorDA1[1]*vOut));
-			}
-			else {
-				setX((int) (xA1+vectorAB1[0]*distancePlayerA1-(distancePortal+portal1.getHeight())*vectorDA1[0]));
-				setY((int) (yA1+vectorAB1[1]*distancePlayerA1-(distancePortal+portal1.getHeight())*vectorDA1[1]));
-				setVx((int)(-vectorDA1[0]*vOut));
-				setVy((int)(-vectorDA1[1]*vOut));
+				setX((int) (xA2+vectorAB2[0]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[0]));
+				setY((int) (yA2+vectorAB2[1]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[1]));
+				setVx(-vOut[0]);
+				setVy(-vOut[1]);
 			}
 		}
 	}
@@ -196,7 +193,7 @@ public class Player extends Entity{
 			
 			
 			int vxOnGround=3;       //Mouvement latéral du joueur
-			double AirControl=0.7;  //En pourcentage
+			double AirControl=0.8;  //En pourcentage
 			if (moveX) {
 				if (isInTheAir()) {
 					setX(x+(int)(this.directionX*AirControl*vxOnGround));
