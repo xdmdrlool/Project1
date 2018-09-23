@@ -6,15 +6,22 @@ public enum Animations {
 	// def = taille du carreau de la grille de la SpriteSheet
 	// listeArg= {  { colonne , ligne ,  wSprite(default=def) ,hSprite(default=def) ,  angle } ,  ...    }
 	
+	AnimationPlayerDefault2("SpriteSheet_Player3.png" , 64 , new int[][]  { { 0 , 0 , 19 , 19 , 0 } , { 1 , 0 , 19 , 19 , 0 } }    ),
+	
 	
 	AnimationPlayerDefault("SpriteSheet_Player.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } }   ),
+	
+	AnimationPlayerWalk("SpriteSheet_Player2.png" , 64 , new int[][]  { { 0 , 0 , 25 , 54 , 0 }, { 1 , 0 , 25 , 54 , 0 } }   ),
 	
 	AnimationPortal1Default("SpriteSheet_Portal.png", 64 , new int[][] { { 0 , 0 , 61 , 10 , 0 } } ),
 	
 	AnimationPortal2Default("SpriteSheet_Portal.png", 64 , new int[][] { { 1 , 0 , 61 , 10 , 0 } } ),
 	
-	AnimationObsatcleDefault("SpriteSheet_test_Obstacle2.png",64, new int[][] { {0 , 0 , 1 , 1 , 0 } });
+	AnimationObsatcleDefault("SpriteSheet_Obstacle.png",64, new int[][] { {0 , 0 , 58 , 14 , 0 } });
 	
+	
+	
+
 	
 	
 	

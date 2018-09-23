@@ -138,6 +138,74 @@ public class FC {
 	public boolean Collision(FormCircle circle1,FormCircle circle2) {
 		return Collision(Cirle2Cercle(circle1),Cirle2Cercle(circle2));
 	}
+
+	
+	
+	
+	public Point calculIntersectionSeg(Point A,Point B,Point C,Point D) {
+		double denom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
+		  if (denom == 0.0) { // Lines are parallel.
+		     return null;
+		  }
+		  double ua = ((D.x - C.x) * (A.y - C.y) - (D.y - C.y) * (A.x - C.x))/denom;
+		  double ub = ((B.x - A.x) * (A.y - C.y) - (B.y - A.y) * (A.x - C.x))/denom;
+		    if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
+		        Point P=new Point();
+		        P.x= (float) (A.x + ua*(B.x - A.x));
+		        P.y= (float) (A.y + ua*(B.y - A.y));
+		        return P;
+		    }
+
+		  return null;
+	}
+	
+	
+	public  Point projectionPointSeg(Point S1,Point S2,Point P ){	
+		float sx1=S1.x,sy1=S1.y,sx2=S2.x,sy2=S2.y,px=P.x,py=P.y;
+	    double xDelta = sx2 - sx1;
+	    double yDelta = sy2 - sy1;
+
+	    double u = ((px - sx1) * xDelta + (py - sy1) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
+	    if (u<0||u>1) {return null;};
+	    Point closestPoint =new Point();
+	    
+	    closestPoint.x =  Math.round(sx1 + u * xDelta);
+	    closestPoint.y =  Math.round(sy1 + u * yDelta);
+	    
+	    
+
+	    return closestPoint;
+	  }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    ////////////////////////////////////
+	////// FONCTIONS GENERALES /////////
+	////////////////////////////////////
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public boolean Collision(int curseur_x,int curseur_y,Box box){
 

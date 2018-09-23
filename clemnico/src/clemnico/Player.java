@@ -196,7 +196,7 @@ public class Player extends Entity{
 			
 			
 			int vxOnGround=3;       //Mouvement latéral du joueur
-			double AirControl=0.5;  //En pourcentage
+			double AirControl=0.7;  //En pourcentage
 			if (moveX) {
 				if (isInTheAir()) {
 					setX(x+(int)(this.directionX*AirControl*vxOnGround));
