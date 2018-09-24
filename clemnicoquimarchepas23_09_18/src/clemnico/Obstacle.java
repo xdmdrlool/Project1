@@ -46,8 +46,8 @@ public class Obstacle extends Entity {
 	}
 	public void setY(int y) {
 		this.y = y;
-		this.form.setY(y);;
-		this.hitbox.setY(y+height/4);
+		this.form.setY(y);
+		this.hitbox.setY(y);
 	}
 	public double getAngle() {
 		return angle;

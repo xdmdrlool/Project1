@@ -22,12 +22,12 @@ public class Window extends JFrame {
 	protected ImageLoader loader=new ImageLoader();
 	
 	//Objets de la fenêtre
-	Player player =new Player(100,100,20,20,20,"Player1", 0, 300, false); 
+	Player player =new Player(100,320,100,100,100,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
 	Obstacle obstacle=new Obstacle(0, 400, 600, 100,0);
 	Obstacle obstacle2=new Obstacle(600, 400, 200, 100,0);
-	Obstacle[] obstacles= {obstacle, obstacle2};
+	Obstacle[] obstacles= {obstacle};
 	FC fc=new FC();
 	
 	////Constructeur////
@@ -35,7 +35,7 @@ public class Window extends JFrame {
 		this.fps=fps;
 		
 		this.setTitle("Ma fenetre");
-		this.setSize(1500, 1000);
+		this.setSize(500, 600);
 		this.setLocationRelativeTo(null);
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);             
 	    this.setVisible(true);
@@ -103,8 +103,8 @@ public class Window extends JFrame {
 				player.portalInteraction(fc,portal1,portal2);
 
 				//Gestion obstacle
-				player.obstacleInteraction(fc, obstacles);
-				
+				player.obstacleInteraction2(fc, obstacles);
+				System.out.println(player.getY());
 				if (time%30 ==0 ) {
 					player.getAnimation().update();					
 				}
@@ -113,6 +113,11 @@ public class Window extends JFrame {
 				
 			}, delay, period);
 	}
+
+	
+	
+	
+	
 	
 	public Animation createAnimation(Animations enumAnim, int width,int height) {
 		int[][] listeArg =enumAnim.getListeArg();

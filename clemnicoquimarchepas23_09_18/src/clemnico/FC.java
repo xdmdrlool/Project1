@@ -2,8 +2,13 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
+
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 
 public class FC {
+
+
 
 	public FC() {
 		// TODO Auto-generated constructor stub
@@ -32,6 +37,18 @@ public class FC {
 		return Math.sqrt((A.x-B.x)*(A.x-B.x)+(A.y-B.y)*(A.y-B.y));
 	}
 
+	public float norm(Vecteur A) {
+		return (float) Math.sqrt(A.x*A.x+A.y*A.y);
+	}
+	
+	public void normalize(Vecteur A) {
+		float r= norm(A);
+		if (r!=0) {
+		A.x= A.x/r;
+		A.y= A.y/r;
+		}
+		
+	}
 	
 	public Box RectDroit2Box(FormRect rect) {
 		Box box=new Box();
@@ -48,6 +65,7 @@ public class FC {
 		int y =rect.getY();
 		int w =rect.getWidth();
 		int h =rect.getHeight();
+		if (rect.getAngle()==0) {return (new Point[] {new Point(x,y),new Point(x+w,y),new Point(x+w,y+h),new Point(x,y+h)});}
 		double angle = Math.toRadians(rect.getAngle());
 		double x0=x+w/2;
 		double y0=y+h/2;
@@ -190,7 +208,199 @@ public class FC {
 	    return closestPoint;
 	  }
 	
+	public  Point projectionPointDroite(Point S1,Point S2,Point P ){	
+		float sx1=S1.x,sy1=S1.y,sx2=S2.x,sy2=S2.y,px=P.x,py=P.y;
+	    double xDelta = sx2 - sx1;
+	    double yDelta = sy2 - sy1;
+
+	    double u = ((px - sx1) * xDelta + (py - sy1) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
+	    Point closestPoint =new Point();
+	    
+	    closestPoint.x =  (int) (sx1 + u * xDelta);
+	    closestPoint.y =  (int) (sy1 + u * yDelta);
+	    
+	    
+
+	    return closestPoint;
+	  }
 	
+	
+	
+	
+	
+	public Vecteur calculVecteurCollisionRectDroitObstacleDroitAvecFrottement(FormRect rectangle0,FormRect rectangle, FormRect obstacle) {
+		Point[] rect0 = Rect2Array(rectangle0);
+		Point[] rect = Rect2Array(rectangle);
+		Point[] obs = Rect2Array(obstacle);
+		
+		ArrayList<Integer> listPointInObs =new ArrayList<>();
+		if (Collision(obs, 4, rect[0])) {listPointInObs.add(0);}
+		if (Collision(obs, 4, rect[1])) {listPointInObs.add(1);}
+		if (Collision(obs, 4, rect[2])) {listPointInObs.add(2);}
+		if (Collision(obs, 4, rect[3])) {listPointInObs.add(3);}
+		
+		switch (listPointInObs.size()) {
+		
+		case 2 :
+			int t= listPointInObs.get(0);
+			Point A0 =rect0[t],A =rect[t];
+			Point I =new Point();
+			for (int j=0;j<4;j++) {
+				Point S1=obs[j],S2=obs[(j+3)%4];
+				Point J =calculIntersectionSeg(A0, A, S1, S2);
+				if (J!=null) {I=J;}
+			}
+			Vecteur vec=new Vecteur();
+			vec.x=I.x-A.x;vec.y=I.y-A.y;
+			return vec; 
+			
+		case 1 :
+			int t1= listPointInObs.get(0);
+			Point B0 =rect0[t1],B =rect[t1];
+			Point P =new Point();
+			int n=0;
+			for (int j=0;j<4;j++) {
+				if (Collision(rect, 4 , obs[j])) { P=obs[j];n=j;}
+			}
+			
+			Vecteur B0B =new Vecteur(),B0P=new Vecteur();
+			B0B.x=B.x-B0.x;B0B.y=B.y-B0.y;
+			B0P.x=P.x-B0.x;B0P.y=P.y-B0.y;
+			Point P2;
+			if (determinant(B0P,B0B)<0) {P2=obs[(n+3)%4];}
+			else {P2=obs[(n+3)%4];}
+			Point Inter =calculIntersectionSeg(B0, B, P, P2);
+			Vecteur vec2=new Vecteur();
+			vec2.x=Inter.x-B.x;vec2.y=Inter.y-B.y;
+			return vec2;
+			
+		default :
+			return null;
+			}
+		
+	}
+	
+	public Vecteur calculVecteurCollisionRectDroitObstacleDroitSansFrottement(FormRect rectangle0,FormRect rectangle, FormRect obstacle) {
+		Point[] rect0 = Rect2Array(rectangle0);
+		Point[] rect = Rect2Array(rectangle);
+		Point[] obs = Rect2Array(obstacle);
+
+		ArrayList<Integer> listPointInObs =new ArrayList<>();
+		if (Collision(obs, 4, rect[0])) {listPointInObs.add(0);}
+		if (Collision(obs, 4, rect[1])) {listPointInObs.add(1);}
+		if (Collision(obs, 4, rect[2])) {listPointInObs.add(2);}
+		if (Collision(obs, 4, rect[3])) {listPointInObs.add(3);}
+		
+		switch (listPointInObs.size()) {
+		
+		case 2 :
+
+			int t= listPointInObs.get(0);;
+			Point A0 =rect0[t],A =rect[t];
+			Point I =new Point();
+			for (int j=0;j<4;j++) {
+				Point S1=obs[j],S2=obs[(j+3)%4];
+				Point J =calculIntersectionSeg(A0, A, S1, S2);
+				if (J!=null) {I=ProjectionI(S1, S2, A);}
+			}
+			Vecteur vec=new Vecteur();
+			vec.x=I.x-A.x;vec.y=I.y-A.y;
+			return vec; 
+			
+		case 1 :
+
+			int t1= listPointInObs.get(0);
+			Point B0 =rect0[t1],B =rect[t1];
+			Point P =new Point();
+			int n=0;
+			for (int j=0;j<4;j++) {
+				if (Collision(rect, 4 , obs[j])) { P=obs[j];n=j;}
+			}
+			Vecteur B0B =new Vecteur(),B0P=new Vecteur();
+			B0B.x=B.x-B0.x;B0B.y=B.y-B0.y;
+			B0P.x=P.x-B0.x;B0P.y=P.y-B0.y;
+			Point P2;
+			if (determinant(B0P,B0B)<0) {P2=obs[(n+1)%4];}
+			else {P2=obs[(n+3)%4];}
+			Point I1 =projectionPointSeg(P, P2, B);
+			Vecteur vec2=new Vecteur();
+			vec2.x=I1.x-B.x;vec2.y=I1.y-B.y;
+			return vec2;
+			
+		default :
+			return null;
+			}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	public Vecteur calculVecteurCollisionCircleObstacleDroitSansFrottement(FormCircle circle, FormRect obstacle) {
+		Cercle C =new Cercle();
+		C.x=circle.getX();C.y=circle.getY();C.radius=circle.getRadius();
+		
+		Point[] obs = Rect2Array(obstacle);
+
+		ArrayList<Integer> listPointObsCollision =new ArrayList<>();
+		if (CollisionSegment(obs[0], obs[1], C)) {listPointObsCollision.add(0);}
+		if (CollisionSegment(obs[1], obs[2], C)) {listPointObsCollision.add(1);}
+		if (CollisionSegment(obs[2], obs[3], C)) {listPointObsCollision.add(2);}
+		if (CollisionSegment(obs[3], obs[0], C)) {listPointObsCollision.add(3);}
+
+		switch (listPointObsCollision.size()) {
+		
+		case 2 :
+			Point P0=new Point(C.x,C.y);
+			int t= listPointObsCollision.get(1);;
+			Point S =obs[t];
+			Point Sprime= obs[(t+2)%4];
+			Vecteur CS =new Vecteur(),CSprime=new Vecteur();
+			CS.x=S.x-C.x;CS.y=S.y-C.y;
+			CSprime.x=Sprime.x-C.x;CSprime.y=Sprime.y-C.y;
+			Point I=new Point();
+			if (determinant(CS,CSprime)>0) { 
+				 I=projectionPointDroite(S, obs[(t+3)%4],P0);
+				}
+			else {  
+				I=projectionPointDroite(S, obs[(t+1)%4],P0);
+			}
+
+			
+			Vecteur IC=new Vecteur();
+			IC.x=C.x-I.x;IC.y=C.y-I.y;
+			Vecteur IS=new Vecteur();
+			IS.x=S.x-S.x;IS.y=C.y-S.y;
+			normalize(IC);
+			float normIS =norm(IS);
+			float normIC = (float) Math.sqrt(C.radius*C.radius-normIS*normIS);
+			Vecteur vec=new Vecteur();
+			vec.x=IC.x*normIC;vec.y=IC.y*normIC;
+			return vec;
+			
+		case 1 :
+
+			int t1= listPointObsCollision.get(0);
+			Point S1 =obs[t1],S2 =obs[(t1+1)%4];	
+			Point C1=new Point(C.x,C.y);
+			Point I1 =projectionPointSeg(S1, S2,C1);
+			Vecteur I1C=new Vecteur();
+			I1C.x=C.x-I1.x;
+			I1C.y=C.y-I1.y;
+			float normI1C =norm(I1C);
+			Vecteur vec2=new Vecteur();
+			vec2.x=I1C.x*(C.radius/normI1C-1);vec2.y=I1C.y*(C.radius/normI1C-1);
+			
+			return vec2;
+			
+		default :
+			return null;
+			}
+		
+	}
 	
 	
 	
@@ -210,9 +420,11 @@ public class FC {
 	////////////////////////////////////
 	
 	
+
 	
-	
-	
+	public float determinant(Vecteur vec1, Vecteur vec2) {
+		return vec1.x*vec2.y-vec1.y*vec2.x;
+	}
 	
 	
 	
@@ -347,7 +559,7 @@ public class FC {
 	      numerateur = -numerateur ;   // valeur absolue ; si c'est négatif, on prend l'opposé.
 	   float denominateur = (float) Math.sqrt(u.x*u.x + u.y*u.y);  // norme de u s
 	   float CI = numerateur / denominateur;
-	   if (CI<C.radius)
+	   if (CI<=C.radius)
 	      return true;
 	   else
 	      return false;

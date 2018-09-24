@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import clemnico.FC.Vecteur;
+
 
 public class Player extends Entity{
 
@@ -27,14 +29,15 @@ public class Player extends Entity{
 	private int vy=0;
 	private int width=20;
 	private int height =20;
-	private int radius=10;
+	private int radius=60;
 	private Hitbox hitbox = new Hitbox("CIRCLE",x,y,radius,width,height,0);
 	private Animation animation;
+	private FC fc=new FC();
 
 
 
 	////Constructeur////
-	public Player(int x,int y,int width, int height, int rayon,String name, int direction, int speed, boolean move) {
+	public Player(int x,int y,int width, int height, int radius,String name, int direction, int speed, boolean move) {
 		super(x,y);
 		FormCircle circle = new FormCircle(Color.RED,x,y,radius );
 		setForm(circle);
@@ -96,7 +99,7 @@ public class Player extends Entity{
 	
 	//Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
-		double g=-9.81;
+		double g=-3;
 		double t=timeInAir/100.0;
 		
 		setVy((int)(vy-g*t));
@@ -177,7 +180,6 @@ public class Player extends Entity{
 	public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 		
 		for (Obstacle obstacle: obstacles) {
-			
 			//S'il y a collision avec un obstacle
 			if (this.getHitbox().colision(obstacle.getHitbox())) {
 				this.setVy(0);
@@ -201,7 +203,6 @@ public class Player extends Entity{
 	}
 	
 	public void correctionInteractionRect(FC fc, FormRect rect) {
-		
 		Point pointPlayer1=new Point(xBefore,yBefore);
 		Point pointPlayer2=new Point(x,y);
 		
@@ -228,7 +229,53 @@ public class Player extends Entity{
 	}
 	
 	
+public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
+		Vecteur vecteurCorrection=null;
+		for (Obstacle obstacle: obstacles) {
+			//S'il y a collision avec un obstacle
+			FormCircle cer=(FormCircle) getHitbox().getForm();
+			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
+//			System.out.println("x :"+cer.getX()+"  y:"+cer.getY()+"  r:"+cer.getRadius());
+//			System.out.println("x :"+obs.getX()+"  y:"+obs.getY()+"  w:"+obs.getWidth()+"  h:"+obs.getHeight());
+			vecteurCorrection=fc.calculVecteurCollisionCircleObstacleDroitSansFrottement(cer,obs);
+			if (vecteurCorrection !=null) {
+//				System.out.println(x+" "+y);
+//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
+				if (vecteurCorrection.y<=0) {setInTheAir(false);}
+				if (vecteurCorrection.x!=0) {setVx(0);}
+				if (vecteurCorrection.y!=0) {setVy(0);}
+				int newX=(int) (getX()+vecteurCorrection.x);
+				int newY=(int) (getY()+vecteurCorrection.y);
+//				System.out.println("x: "+newX+"  y: "+newY);
+//				System.out.println("air : "+isInTheAir());
+				setX(newX);
+				setY(newY);
+			}
+			else {setTimeInAir(getTimeInAir()+1);setInTheAir(true);}
+		}
+				
+//				
+//				//Si l'obstacle est un sol ou un plafond
+//				if(yBefore<=y) {
+//					this.setTimeInAir(0);
+//					this.setInTheAir(false);
+//				}
+//				correctionInteractionRect(fc, obstacle.getForm());
+//				break;
+//			}
+//			else {
+//				this.setInTheAir(true);
+//				this.setTimeInAir(this.getTimeInAir()+1);
+//			}
+//		}
+//		setxBefore(x);
+//		setyBefore(y);
+	}
 	
+	
+	
+	
+
 	
 	//Action de joueur pour un pas de la boucle
 		public void step(int period) {
@@ -290,7 +337,7 @@ public class Player extends Entity{
 	public void setX(int x) {
 		this.x = x;
 		this.form.setX(x);;
-		this.hitbox.setX(x);		
+		this.hitbox.setX(x);	
 	}
 
 	public int getY() {
@@ -339,6 +386,7 @@ public class Player extends Entity{
 
 
 	public void setInTheAir(boolean inTheAir) {
+		if (!this.inTheAir && inTheAir) {setTimeInAir(0);}
 		this.inTheAir = inTheAir;
 	}
 

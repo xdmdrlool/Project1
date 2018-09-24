@@ -8,7 +8,7 @@ public enum Animations {
 	
 	AnimationPlayerDefault2("SpriteSheet_Player3.png" , 64 , new int[][]  { { 0 , 0 , 19 , 19 , 0 } , { 1 , 0 , 19 , 19 , 0 } }    ),
 	
-	AnimationPlayerDefault("SpriteSheet_Player.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } }   ),
+	AnimationPlayerDefault("SpriteSheet_Player.png" , 64 , new int[][]  { { 0 , 0 , 63 , 63 , 0 } }   ),
 	
 	AnimationPlayerWalk("SpriteSheet_Player2.png" , 64 , new int[][]  { { 0 , 0 , 25 , 54 , 0 }, { 1 , 0 , 25 , 54 , 0 } }   ),
 	
