@@ -1,8 +1,16 @@
 package clemnico;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.util.ArrayList;
+
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
+
+import sun.security.tools.keytool.CertAndKeyGen;
 
 public class FC {
+
+
 
 	public FC() {
 		// TODO Auto-generated constructor stub
@@ -22,14 +30,27 @@ public class FC {
 	   int radius;
 	};
 
-	public class Point{
-	  float x,y;
-	};
-
 	public class Vecteur{
 	  float x,y;
 	};
+	
+	//Calcule la distance euclidienne entre deux points
+	public double distance(Point A, Point B) {
+		return Math.sqrt((A.x-B.x)*(A.x-B.x)+(A.y-B.y)*(A.y-B.y));
+	}
 
+	public float norm(Vecteur A) {
+		return (float) Math.sqrt(A.x*A.x+A.y*A.y);
+	}
+	
+	public void normalize(Vecteur A) {
+		float r= norm(A);
+		if (r!=0) {
+		A.x= A.x/r;
+		A.y= A.y/r;
+		}
+		
+	}
 	
 	public Box RectDroit2Box(FormRect rect) {
 		Box box=new Box();
@@ -46,6 +67,7 @@ public class FC {
 		int y =rect.getY();
 		int w =rect.getWidth();
 		int h =rect.getHeight();
+		if (rect.getAngle()==0) {return (new Point[] {new Point(x,y),new Point(x+w,y),new Point(x+w,y+h),new Point(x,y+h)});}
 		double angle = Math.toRadians(rect.getAngle());
 		double x0=x+w/2;
 		double y0=y+h/2;
@@ -56,17 +78,10 @@ public class FC {
 		double alpha4=Math.PI+alpha2;
 		Point[] t= {new Point(),new Point(),new Point(),new Point()};
 		
-		t[0].x=(float) (x0+r*Math.cos(angle+alpha4));
-		t[0].y=(float) (y0+r*Math.sin(angle+alpha4));
-		
-		t[1].x=(float) (x0+r*Math.cos(angle+alpha1));
-		t[1].y=(float) (y0+r*Math.sin(angle+alpha1));
-		
-		t[2].x=(float) (x0+r*Math.cos(angle+alpha2));
-		t[2].y=(float) (y0+r*Math.sin(angle+alpha2));
-		
-		t[3].x=(float) (x0+r*Math.cos(angle+alpha3));
-		t[3].y=(float) (y0+r*Math.sin(angle+alpha3));
+		t[0].setLocation(new Point((int) (x0+r*Math.cos(angle+alpha4)),(int) (y0+r*Math.sin(angle+alpha4))));
+		t[1].setLocation(new Point((int) (x0+r*Math.cos(angle+alpha1)),(int) (y0+r*Math.sin(angle+alpha1))));
+		t[2].setLocation(new Point((int) (x0+r*Math.cos(angle+alpha2)),(int) (y0+r*Math.sin(angle+alpha2))));
+		t[3].setLocation(new Point((int) (x0+r*Math.cos(angle+alpha3)),(int) (y0+r*Math.sin(angle+alpha3))));
 		
 		return t;
 	}
@@ -142,21 +157,40 @@ public class FC {
 	
 	
 	
-	public Point calculIntersectionSeg(Point A,Point B,Point C,Point D) {
-		double denom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
-		  if (denom == 0.0) { // Lines are parallel.
-		     return null;
-		  }
-		  double ua = ((D.x - C.x) * (A.y - C.y) - (D.y - C.y) * (A.x - C.x))/denom;
-		  double ub = ((B.x - A.x) * (A.y - C.y) - (B.y - A.y) * (A.x - C.x))/denom;
-		    if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
-		        Point P=new Point();
-		        P.x= (float) (A.x + ua*(B.x - A.x));
-		        P.y= (float) (A.y + ua*(B.y - A.y));
-		        return P;
-		    }
+	public Point calculIntersectionSeg(Point A, Point B, Point C, Point D) {
+		if (!CollisionSegSeg(A, B, C, D)) {return null;}
+		float xIntersect=-1;
+		float yIntersect=-1;
+		
+		if (A.x!=B.x && C.x!=D.x) {
+			//Pentes des segments
+			float a1=(float) ((A.y-B.y)*1./(A.x-B.x)*1.);
+			float a2=(float) ((C.y-D.y)*1./(C.x-D.x)*1.);
+			if (a1==a2) {return null;}
+			//Ordonnees à l'origine
+			float b1=A.y-a1*A.x;
+			float b2=C.y-a2*C.x;
+			xIntersect=(b2-b1)/(a1-a2);
+			yIntersect=a1*xIntersect+b1;
+		}
+		else if(A.x==B.x && C.x!=D.x) {
+			float a2=(float) ((C.y-D.y)*1./(C.x-D.x)*1.);
+			float b2=C.y-a2*C.x;
+			xIntersect=A.x;
+			yIntersect=a2*xIntersect+b2;
 
-		  return null;
+		}
+		else if(A.x!=B.x && C.x==D.x) {
+			float a1=(float) ((A.y-B.y)*1./(A.x-B.x)*1.);
+			float b1=A.y-a1*A.x;
+			xIntersect=C.x;
+			yIntersect=a1*xIntersect+b1;
+		}
+		else {
+			return null;
+		}
+		return new Point(Math.round(xIntersect), Math.round(yIntersect));
+			
 	}
 	
 	
@@ -169,8 +203,24 @@ public class FC {
 	    if (u<0||u>1) {return null;};
 	    Point closestPoint =new Point();
 	    
-	    closestPoint.x =  Math.round(sx1 + u * xDelta);
-	    closestPoint.y =  Math.round(sy1 + u * yDelta);
+	    closestPoint.x =  (int) (Math.round(sx1 + u * xDelta));
+	    closestPoint.y =  (int) (Math.round(sy1 + u * yDelta));
+	    
+	    
+
+	    return closestPoint;
+	  }
+	
+	public  Point projectionPointDroite(Point S1,Point S2,Point P ){	
+		float sx1=S1.x,sy1=S1.y,sx2=S2.x,sy2=S2.y,px=P.x,py=P.y;
+	    double xDelta = sx2 - sx1;
+	    double yDelta = sy2 - sy1;
+
+	    double u = ((px - sx1) * xDelta + (py - sy1) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
+	    Point closestPoint =new Point();
+	    
+	    closestPoint.x =  (int) (sx1 + u * xDelta);
+	    closestPoint.y =  (int) (sy1 + u * yDelta);
 	    
 	    
 
@@ -178,6 +228,153 @@ public class FC {
 	  }
 	
 	
+	
+	public Vecteur calculVecteurCollisionRectDroitObstacleDroit(FormRect rectangle0,FormRect rectangle, FormRect obstacle) {
+		Point[] rect0 = Rect2Array(rectangle0);
+		Point[] rect = Rect2Array(rectangle);
+		Point[] obs = Rect2Array(obstacle);
+		Vecteur vec=new Vecteur();
+		ArrayList<Integer> listPointInObs =new ArrayList<>();
+		if (Collision(obs, 4, rect[0])) {listPointInObs.add(0);}
+		if (Collision(obs, 4, rect[1])) {listPointInObs.add(1);}
+		if (Collision(obs, 4, rect[2])) {listPointInObs.add(2);}
+		if (Collision(obs, 4, rect[3])) {listPointInObs.add(3);}
+		
+		switch (listPointInObs.size()) {
+		
+		case 2 :
+			
+			int t= listPointInObs.get(0);;
+			Point A0 =rect0[t],A =rect[t];
+//			if (A0.x==A.x && A0.y==A.y) {vec.x=0;vec.y=0;return vec;}
+			Point I =null;
+			for (int j=0;j<4;j++) {
+				Point S1=obs[j],S2=obs[(j+1)%4];
+				Point J =calculIntersectionSeg(A0, A, S1, S2);
+				if (J!=null) {I=projectionPointSeg(S1, S2, A);}
+	
+			}
+			if (I==null) {vec.x=0;vec.y=0;return vec;}
+			vec.x=I.x-A.x;vec.y=I.y-A.y;
+			return vec; 
+			
+		case 1 :
+			
+			int t1= listPointInObs.get(0);
+			Point B0 =rect0[t1],B =rect[t1];
+			if (B0.x==B.x && B0.y==B.y) {vec.x=0;vec.y=0;return vec;}
+			Point P =new Point();
+			int n=0;
+			for (int j=0;j<4;j++) {
+				if (Collision(rect, 4 , obs[j])) { P=obs[j];n=j;}
+			}
+			
+//			System.out.println(P.toString());
+			Vecteur BB0 =new Vecteur(),BP=new Vecteur();
+			BB0.x=B0.x-B.x;BB0.y=B0.y-B.y;
+			BP.x=P.x-B.x;BP.y=P.y-B.y;
+			Point P2;
+			
+			float det =determinant(BP,BB0);
+//			System.out.println("det :"+det);
+			if (det==0) {vec.x=0;vec.y=0;return vec;}
+			if (det>0) {P2=obs[(n+1)%4];}
+			else {P2=obs[(n+3)%4];}
+//			System.out.println(P2.toString());
+			Point I1 =projectionPointSeg(P, P2, B);
+			
+			vec.x=I1.x-B.x;vec.y=I1.y-B.y;
+			return vec;
+			
+		default :
+			return null;
+			}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	public Vecteur calculVecteurCollisionCircleObstacleDroit(FormCircle circle, FormRect obstacle) {
+		Cercle C =new Cercle();
+		C.x=circle.getX();C.y=circle.getY();C.radius=circle.getRadius();
+		
+		Point[] obs = Rect2Array(obstacle);
+
+		ArrayList<Integer> listPointObsCollision =new ArrayList<>();
+		if (CollisionSegment(obs[0], obs[1], C)) {listPointObsCollision.add(0);}
+		if (CollisionSegment(obs[1], obs[2], C)) {listPointObsCollision.add(1);}
+		if (CollisionSegment(obs[2], obs[3], C)) {listPointObsCollision.add(2);}
+		if (CollisionSegment(obs[3], obs[0], C)) {listPointObsCollision.add(3);}
+
+		switch (listPointObsCollision.size()) {
+		
+		case 2 :
+			Point P0=new Point(C.x,C.y);
+			int t= listPointObsCollision.get(1);;
+			Point S =obs[t];
+			Point Sprime= obs[(t+2)%4];
+			Vecteur CS =new Vecteur(),CSprime=new Vecteur();
+			CS.x=S.x-C.x;CS.y=S.y-C.y;
+			CSprime.x=Sprime.x-C.x;CSprime.y=Sprime.y-C.y;
+			Point I=new Point();
+			Point S2=new Point();
+			if (determinant(CS,CSprime)>0) { 
+				 I=projectionPointDroite(S, obs[(t+3)%4],P0);
+				 S2=obs[(t+3)%4];
+				}
+			else {  
+				I=projectionPointDroite(S, obs[(t+1)%4],P0);
+				S2=obs[(t+1)%4];}
+			
+			
+			Vecteur IC=new Vecteur();
+			IC.x=C.x-I.x;IC.y=C.y-I.y;
+			Vecteur IS=new Vecteur();
+			IS.x=S.x-S.x;IS.y=C.y-S.y;
+			normalize(IC);
+			float normIS =norm(IS);
+			Vecteur vec=new Vecteur();
+			float normIC= norm(IC);
+			normalize(IC);
+			
+			
+			// Test I dans [S1S2]
+			Cercle crcle =new Cercle();crcle.x=I.x;crcle.y=I.y;crcle.radius=1;
+			if (CollisionSegment(S,S2, crcle)) {
+				 normIC = (float) C.radius-normIC;
+				vec.x=IC.x*normIC;vec.y=IC.y*normIC;
+				return vec;}
+			
+			else {
+				 normIC = (float) Math.sqrt(C.radius*C.radius-normIS*normIS)-normIC;
+				vec.x=IC.x*normIC;vec.y=IC.y*normIC;
+				return vec;
+				}
+			
+		case 1 :
+
+			int t1= listPointObsCollision.get(0);
+			Point S1 =obs[t1],S3 =obs[(t1+1)%4];	
+			Point C1=new Point(C.x,C.y);
+			Point I1 =projectionPointSeg(S1, S3,C1);
+			Vecteur I1C=new Vecteur();
+			I1C.x=C.x-I1.x;
+			I1C.y=C.y-I1.y;
+			float normI1C =norm(I1C);
+			Vecteur vec2=new Vecteur();
+			vec2.x=I1C.x*(C.radius/normI1C-1);vec2.y=I1C.y*(C.radius/normI1C-1);
+			
+			return vec2;
+			
+		default :
+			return null;
+			}
+		
+	}
 	
 	
 	
@@ -197,9 +394,11 @@ public class FC {
 	////////////////////////////////////
 	
 	
+
 	
-	
-	
+	public float determinant(Vecteur vec1, Vecteur vec2) {
+		return vec1.x*vec2.y-vec1.y*vec2.x;
+	}
 	
 	
 	
@@ -334,7 +533,7 @@ public class FC {
 	      numerateur = -numerateur ;   // valeur absolue ; si c'est négatif, on prend l'opposé.
 	   float denominateur = (float) Math.sqrt(u.x*u.x + u.y*u.y);  // norme de u s
 	   float CI = numerateur / denominateur;
-	   if (CI<C.radius)
+	   if (CI<=C.radius)
 	      return true;
 	   else
 	      return false;
@@ -373,8 +572,8 @@ public class FC {
 	  AC.y = C.y - A.y;
 	  float ti = (u.x*AC.x + u.y*AC.y)/(u.x*u.x + u.y*u.y);
 	  Point I=new Point();
-	  I.x = A.x + ti*u.x;
-	  I.y = A.y + ti*u.y;
+	  I.x = (int) (A.x + ti*u.x);
+	  I.y = (int) (A.y + ti*u.y);
 	  return I;
 	}
 	

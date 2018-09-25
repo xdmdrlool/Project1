@@ -122,6 +122,7 @@ public class Hitbox {
 
 	public void setRayon(int rayon) {
 		this.rayon = rayon;
+		this.form.setRadius(rayon);
 	}
 
 

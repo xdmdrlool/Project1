@@ -16,6 +16,9 @@ public class Animation {
 		this.numeroFrame=(this.numeroFrame+1)%this.nbFrame;
 	}
 	
+	public void reset() {
+		this.numeroFrame=0;
+	}
 	
 	
 	public Sprite getSprite() {

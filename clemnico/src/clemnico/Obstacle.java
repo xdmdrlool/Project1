@@ -3,6 +3,9 @@ package clemnico;
 import java.awt.Color;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Obstacle extends Entity {
 	
@@ -12,8 +15,9 @@ public class Obstacle extends Entity {
 	private int width=10;
 	private double angle=0;
 	private FormRect form= new FormRect(Color.darkGray,x,y,width, height, angle);
-	private Hitbox hitbox=new Hitbox("RECT",x,y+height/4,10,height/2,width,angle);
-	private Animation animation;
+	private Hitbox hitbox=new Hitbox("RECT",x,y,10,height,width,angle);
+	private Animation currentAnimation;
+	public Map<NameAnimation,Animation> ListAnimation=new  HashMap<>();
 	
 	public Obstacle(int x, int y, int width,int height,double angle) {
 		super(x,y);
@@ -25,7 +29,7 @@ public class Obstacle extends Entity {
 	}
 	
 	public void display(Graphics2D gg) {
-		Sprite sprite =animation.getSprite();
+		Sprite sprite =currentAnimation.getSprite();
 		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
@@ -47,7 +51,7 @@ public class Obstacle extends Entity {
 	public void setY(int y) {
 		this.y = y;
 		this.form.setY(y);;
-		this.hitbox.setY(y+height/4);
+		this.hitbox.setY(y);
 	}
 	public double getAngle() {
 		return angle;
@@ -56,7 +60,7 @@ public class Obstacle extends Entity {
 		this.angle = angle;
 		this.form.setAngle(angle);
 		this.hitbox.setAngle(angle);
-		if (this.animation != null) {this.animation.setAngle(angle);}		
+		if (this.currentAnimation != null) {this.currentAnimation.setAngle(angle);}		
 	}
 	public FormRect getForm() {
 		return form;
@@ -72,7 +76,7 @@ public class Obstacle extends Entity {
 	public void setHeight(int height) {
 		this.height = height;
 		this.form.setHeight(height);;
-		this.hitbox.setHeight(height/2);
+		this.hitbox.setHeight(height);
 	}
 
 	public int getWidth() {
@@ -95,18 +99,31 @@ public class Obstacle extends Entity {
 
 
 
-	public Animation getAnimation() {
-		return animation;
+
+	public Animation getCurrentAnimation() {
+		return currentAnimation;
 	}
 
-
-
-	public void setAnimation(Animation animation) {
-		this.animation = animation;
-		this.animation.setAngle(this.getAngle());
+	public void setCurrentAnimation(NameAnimation name) {
+		this.currentAnimation=ListAnimation.get(name);
+		this.currentAnimation.reset();
+		this.currentAnimation.setAngle(this.getAngle());
 	}
+		
+		public Map<NameAnimation,Animation> getListAnimation() {
+			return ListAnimation;
+		}
 
 
+		public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
+			ListAnimation = listAnimation;
+		}
+
+
+
+		public void addAnimation(NameAnimation name,Animation animation) {
+			this.ListAnimation.put(name,animation);
+		}
 }
 
 

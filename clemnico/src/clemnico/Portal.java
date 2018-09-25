@@ -2,6 +2,9 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Portal extends Entity{
 	
@@ -13,7 +16,8 @@ public class Portal extends Entity{
 	private boolean moved;
 	private FormRect form= new FormRect(Color.BLUE,x,y,width, height, angle);
 	private Hitbox hitbox=new Hitbox("RECT",x,y+height/4,10,height/2,width,angle);
-	private Animation animation;
+	private Animation currentAnimation;
+	public Map<NameAnimation,Animation> ListAnimation=new  HashMap<>();
 	
 	////Constructeur////
 	public Portal(int x, int y, int width, int height){
@@ -39,7 +43,7 @@ public class Portal extends Entity{
 	}
 	
 	public void display(Graphics2D gg) {
-		Sprite sprite =animation.getSprite();
+		Sprite sprite =currentAnimation.getSprite();
 		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
@@ -71,7 +75,7 @@ public class Portal extends Entity{
 		this.angle = angle;
 		this.form.setAngle(angle);;
 		this.hitbox.setAngle(angle);
-		this.animation.setAngle(angle);
+		this.currentAnimation.setAngle(angle);
 	}
 	public FormRect getForm() {
 		return form;
@@ -112,10 +116,27 @@ public class Portal extends Entity{
 	public void setHitbox(Hitbox hitbox) {
 		this.hitbox = hitbox;
 	}
-	public Animation getAnimation() {
-		return animation;
+	public Animation getCurrentAnimation() {
+		return currentAnimation;
 	}
-	public void setAnimation(Animation animation) {
-		this.animation = animation;
+
+	public void setCurrentAnimation(NameAnimation name) {
+		this.currentAnimation=ListAnimation.get(name);
+		this.currentAnimation.reset();
+		
+	}
+	public Map<NameAnimation,Animation> getListAnimation() {
+		return ListAnimation;
+	}
+
+
+	public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
+		ListAnimation = listAnimation;
+	}
+
+
+
+	public void addAnimation(NameAnimation name,Animation animation) {
+		this.ListAnimation.put(name,animation);
 	}
 }

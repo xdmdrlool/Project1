@@ -1,6 +1,7 @@
 package clemnico;
 
 import java.awt.Graphics2D;
+import java.util.Map;
 
 public abstract class Entity {
 
@@ -13,7 +14,10 @@ public abstract class Entity {
 	public abstract void setY(int y);
 	public abstract Hitbox getHitbox();
 	public abstract void setHitbox(Hitbox hitbox);
-	public abstract Animation getAnimation();
-	public abstract void setAnimation(Animation animation);
+	public abstract Map<NameAnimation,Animation> getListAnimation();
+	public abstract void setListAnimation(Map<NameAnimation,Animation> listAnimation);
+	public abstract Animation getCurrentAnimation();
+	public abstract void setCurrentAnimation(NameAnimation name);
+	public abstract void addAnimation(NameAnimation name,Animation animation);
 	public abstract void display(Graphics2D g);
 }

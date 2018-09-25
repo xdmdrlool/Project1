@@ -3,7 +3,12 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
+
+import clemnico.FC.Vecteur;
 
 
 public class Player extends Entity{
@@ -17,29 +22,36 @@ public class Player extends Entity{
 	private int timeInAir=0;
 	private int keyPressed=0;
 	private boolean dead =false;
-	private FormCircle form;
+	private FormRect form;
 	private int x=100;
 	private int y=100;
+	private int xBefore=x;
+	private int yBefore=y;
 	private int vx=0;
 	private int vy=0;
+	private int vxMax=100;
+	private int vyMax=30;
 	private int width=20;
 	private int height =20;
-	private int rayon=10;
-	private Hitbox hitbox = new Hitbox("CIRCLE",x,y,rayon,width,height,0);
-	private Animation animation;
-
+	private int radius=60;
+	private Hitbox hitbox = new Hitbox("RECT",x,y,radius,width,height,0);
+	private FC fc=new FC();
+	private Animation currentAnimation;
+	public Map<NameAnimation,Animation> ListAnimation=new  HashMap<>();
 
 
 	////Constructeur////
-	public Player(int x,int y,int width, int height, int rayon,String name, int direction, int speed, boolean move) {
+	public Player(int x,int y,int width, int height, int radius,String name, int direction, int speed, boolean move) {
 		super(x,y);
-		FormCircle circle = new FormCircle(Color.RED,x,y,rayon );
-		setForm(circle);
+		FormRect rect = new FormRect(Color.RED,x,y,width,height,0 );
+		setForm(rect);
 		setX(x);
 		setY(y);
+		setxBefore(x);
+		setyBefore(y);
 		setWidth(width);
 		setHeight(height);
-		setRayon(rayon);
+		setRadius(radius);
 		this.name=name;
 		setDirectionX(direction);
 		this.speed=speed;
@@ -53,8 +65,8 @@ public class Player extends Entity{
 
 	////Methodes////
 	public void display(Graphics2D gg) {
-		Sprite sprite =animation.getSprite();
-		sprite.render(gg, x, y);
+		Sprite sprite =currentAnimation.getSprite();
+		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
 	public void moveIn(int x ,int y) {
@@ -73,7 +85,7 @@ public class Player extends Entity{
 		if (key==KeyEvent.VK_Z && !inTheAir) {
 			setInTheAir(false);
 			setVy(-20);
-			setY(y-10);
+			setY(y-20);
 			setVx(directionX*vx);
 			
 		}
@@ -91,8 +103,8 @@ public class Player extends Entity{
 	
 	//Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
-		double g=-9.81;
-		double t=timeInAir/100.0;
+		double g=-3;
+		double t=timeInAir/10.0;
 		
 		setVy((int)(vy-g*t));
 		setX(x+vx);
@@ -112,18 +124,18 @@ public class Player extends Entity{
 			
 			//Obtenir les points A et B des deux portails (axe, point, portail)
 			//portalIn = 1 et portalOut = 2 
-			int xA1=(int) fc.Rect2Array(portalIn.getForm())[0].x;
-			int yA1=(int) fc.Rect2Array(portalIn.getForm())[0].y;
-			int xB1=(int) fc.Rect2Array(portalIn.getForm())[1].x;
-			int yB1=(int) fc.Rect2Array(portalIn.getForm())[1].y;
-			int xD1=(int) fc.Rect2Array(portalIn.getForm())[3].x;
-			int yD1=(int) fc.Rect2Array(portalIn.getForm())[3].y;
-			int xA2=(int) fc.Rect2Array(portalOut.getForm())[0].x;
-			int yA2=(int) fc.Rect2Array(portalOut.getForm())[0].y;
-			int xB2=(int) fc.Rect2Array(portalOut.getForm())[1].x;
-			int yB2=(int) fc.Rect2Array(portalOut.getForm())[1].y;
-			int xD2=(int) fc.Rect2Array(portalOut.getForm())[3].x;
-			int yD2=(int) fc.Rect2Array(portalOut.getForm())[3].y;
+			int xA1=fc.Rect2Array(portalIn.getForm())[0].x;
+			int yA1=fc.Rect2Array(portalIn.getForm())[0].y;
+			int xB1=fc.Rect2Array(portalIn.getForm())[1].x;
+			int yB1=fc.Rect2Array(portalIn.getForm())[1].y;
+			int xD1=fc.Rect2Array(portalIn.getForm())[3].x;
+			int yD1=fc.Rect2Array(portalIn.getForm())[3].y;
+			int xA2=fc.Rect2Array(portalOut.getForm())[0].x;
+			int yA2=fc.Rect2Array(portalOut.getForm())[0].y;
+			int xB2=fc.Rect2Array(portalOut.getForm())[1].x;
+			int yB2=fc.Rect2Array(portalOut.getForm())[1].y;
+			int xD2=fc.Rect2Array(portalOut.getForm())[3].x;
+			int yD2=fc.Rect2Array(portalOut.getForm())[3].y;
 			
 			//Détermine la vitesse min et la distance entre le joueur et le portail de sortie
 			int distancePortal=10;
@@ -152,6 +164,7 @@ public class Player extends Entity{
 			int[] vOut= {(int) (vectorVOut[0]*vNormOut), (int) (vectorVOut[1]*vNormOut)};
 			
 			//Détermine le côté du portail où passe le joueur
+			correctionInteractionRect(fc, portalIn.getForm());
 			if (distancePlayerA1<distancePlayerD1) {
 				setX((int) (xA2+vectorAB2[0]*distancePlayerA2+distancePortal*vectorDA2[0]));
 				setY((int) (yA2+vectorAB2[1]*distancePlayerA2+distancePortal*vectorDA2[1]));
@@ -168,22 +181,100 @@ public class Player extends Entity{
 	}
 	
 	//Gestion intéraction entre joueur et les obstacles
-	public void obstacleInteraction(Obstacle obstacle) {
-		if (this.getHitbox().colision(obstacle.getHitbox())) {
-			this.setInTheAir(false);
-			this.setTimeInAir(0);
-			this.setVy(0);
-			this.setVx(0);
+	public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
+		
+		for (Obstacle obstacle: obstacles) {
+			//S'il y a collision avec un obstacle
+			if (this.getHitbox().colision(obstacle.getHitbox())) {
+				this.setVy(0);
+				this.setVx(0);
+				
+				//Si l'obstacle est un sol ou un plafond
+				if(yBefore<=y) {
+					this.setTimeInAir(0);
+					this.setInTheAir(false);
+				}
+				correctionInteractionRect(fc, obstacle.getForm());
+				break;
+			}
+			else {
+				this.setInTheAir(true);
+				this.setTimeInAir(this.getTimeInAir()+1);
+			}
 		}
-		else {
-			this.setInTheAir(true);
-			this.setTimeInAir(this.getTimeInAir()+1);
-			
+		setxBefore(x);
+		setyBefore(y);
+	}
+	
+	public void correctionInteractionRect(FC fc, FormRect rect) {
+		Point pointPlayer1=new Point(xBefore,yBefore);
+		Point pointPlayer2=new Point(x,y);
+		
+		Point A=new Point(fc.Rect2Array(rect)[0].x,fc.Rect2Array(rect)[0].y);
+		Point B=new Point(fc.Rect2Array(rect)[1].x,fc.Rect2Array(rect)[1].y);
+		Point C=new Point(fc.Rect2Array(rect)[2].x,fc.Rect2Array(rect)[2].y);
+		Point D=new Point(fc.Rect2Array(rect)[3].x,fc.Rect2Array(rect)[3].y);
+		
+		double dmin=10000;
+		Point correctedPosition=new Point(-1,-1);
+		
+		if (fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);}
+		if (fc.calculIntersectionSeg(B,C,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);}
+		if (fc.calculIntersectionSeg(C,D,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);}
+		if (fc.calculIntersectionSeg(D,A,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);}
+		if (correctedPosition.x!=-1 && correctedPosition.y!=-1) {
+			setX(correctedPosition.x-radius);
+			setY(correctedPosition.y-radius);
 		}
 	}
 	
 	
+public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
+		Vecteur vecteurCorrection=null;
+		boolean toucheUneSurface=false;
+		boolean varInTheAir=true;
+//		System.out.println("NOUV");
+		for (Obstacle obstacle: obstacles) {
+			//S'il y a collision avec un obstacle
+			FormRect rect0=new FormRect(Color.RED, xBefore, yBefore, width, height, 0);
+			FormRect rect=(FormRect) getHitbox().getForm();
+			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
+			vecteurCorrection=fc.calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
+			if (vecteurCorrection !=null) {
+//				System.out.println("xB :"+xBefore+"   yB : "+yBefore);
+//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
+				if (vecteurCorrection.y<=0) {varInTheAir=false;}
+				if (vecteurCorrection.x!=0) {setVx(0);}
+				if (vecteurCorrection.y!=0) {setVy(0);}
+//				System.out.println("x :"+getHitbox().getForm().getX()+"   y : "+getHitbox().getForm().getY()+"     vy : "+vy+"     "+varInTheAir);
+
+				int newX=(int) (getX()+vecteurCorrection.x);
+				int newY=(int) (getY()+vecteurCorrection.y);
+				if (vecteurCorrection.x!=0|| vecteurCorrection.y!=0) {toucheUneSurface=true;}
+//				System.out.println("x: "+newX+"  y: "+newY);
+//				System.out.println("air : "+isInTheAir());
+				setX(newX);
+				setY(newY);
+			}
+			
+
+		}
+		setTimeInAir(getTimeInAir()+1);
+		setInTheAir(varInTheAir);
+		setxBefore(x);setyBefore(y);
+		if (toucheUneSurface) {setxBefore(x);setyBefore(y);}
+		
+				
+	}
 	
+	
+	
+	
+
 	
 	//Action de joueur pour un pas de la boucle
 		public void step(int period) {
@@ -193,7 +284,7 @@ public class Player extends Entity{
 			
 			
 			int vxOnGround=3;       //Mouvement latéral du joueur
-			double AirControl=0.8;  //En pourcentage
+			double AirControl=1.0;  //En pourcentage
 			if (moveX) {
 				if (isInTheAir()) {
 					setX(x+(int)(this.directionX*AirControl*vxOnGround));
@@ -230,11 +321,11 @@ public class Player extends Entity{
 		this.dead = dead;
 	}
 
-	public FormCircle getForm() {
+	public FormRect getForm() {
 		return form;
 	}
 
-	public void setForm(FormCircle form) {
+	public void setForm(FormRect form) {
 		this.form = form;
 	}
 
@@ -245,7 +336,7 @@ public class Player extends Entity{
 	public void setX(int x) {
 		this.x = x;
 		this.form.setX(x);;
-		this.hitbox.setX(x);		
+		this.hitbox.setX(x);	
 	}
 
 	public int getY() {
@@ -294,6 +385,7 @@ public class Player extends Entity{
 
 
 	public void setInTheAir(boolean inTheAir) {
+		if (!this.inTheAir && inTheAir) {setTimeInAir(0);}
 		this.inTheAir = inTheAir;
 	}
 
@@ -304,6 +396,8 @@ public class Player extends Entity{
 
 
 	public void setVx(int vx) {
+		if (vx>0) {vx=Math.min(vx , vxMax );}
+		else {vx=- Math.min(-vx, vxMax);}
 		this.vx = vx;
 	}
 
@@ -314,6 +408,8 @@ public class Player extends Entity{
 
 
 	public void setVy(int vy) {
+		if (vy>0) {vy=Math.min(vy , vyMax );}
+		else {vy=- Math.min(-vy, vyMax);}
 		this.vy = vy;
 	}
 
@@ -345,24 +441,63 @@ public class Player extends Entity{
 		this.hitbox.setHeight(height);
 	}
 
+	
 
-	public Animation getAnimation() {
-		return animation;
+
+	public int getRadius() {
+		return radius;
 	}
 
 
-	public void setAnimation(Animation animation) {
-		this.animation = animation;
+	public void setRadius(int radius) {
+		this.radius = radius;
+		this.form.setRadius(radius);
+		this.hitbox.setRayon(radius);
 	}
 
 
-	public int getRayon() {
-		return rayon;
+	public int getxBefore() {
+		return xBefore;
 	}
 
 
-	public void setRayon(int rayon) {
-		this.rayon = rayon;
-		this.hitbox.setRayon(rayon);
+	public void setxBefore(int xBefore) {
+		this.xBefore = xBefore;
+	}
+
+
+	public int getyBefore() {
+		return yBefore;
+	}
+
+
+	public void setyBefore(int yBefore) {
+		this.yBefore = yBefore;
+	}
+	public void setCurrentAnimation(NameAnimation name) {
+		this.currentAnimation=ListAnimation.get(name);
+		this.currentAnimation.reset();
+		
+	}
+	public Map<NameAnimation,Animation> getListAnimation() {
+		return ListAnimation;
+	}
+
+
+	public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
+		ListAnimation = listAnimation;
+	}
+
+
+
+	public void addAnimation(NameAnimation string,Animation animation) {
+		this.ListAnimation.put(string,animation);
+	}
+
+
+	@Override
+	public Animation getCurrentAnimation() {
+		return this.currentAnimation;
 	}
 }
+

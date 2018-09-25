@@ -22,11 +22,12 @@ public class Window extends JFrame {
 	protected ImageLoader loader=new ImageLoader();
 	
 	//Objets de la fenêtre
-	Player player =new Player(100,100,20,20,20,"Player1", 0, 300, false); 
+	Player player =new Player(400,200,100,100,100,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
-	Obstacle obstacle=new Obstacle(0, 400, 600, 100,0);
-	Obstacle obstacle2=new Obstacle(600, 400, 200, 100,0);
+	Obstacle obstacle=new Obstacle(300, 600, 600, 100,0);
+	Obstacle obstacle2=new Obstacle(600, 200, 200, 250,0);
+	Obstacle[] obstacles= {obstacle,obstacle2};
 	FC fc=new FC();
 	
 	////Constructeur////
@@ -34,7 +35,7 @@ public class Window extends JFrame {
 		this.fps=fps;
 		
 		this.setTitle("Ma fenetre");
-		this.setSize(400, 500);
+		this.setSize(1500, 1000);
 		this.setLocationRelativeTo(null);
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);             
 	    this.setVisible(true);
@@ -65,16 +66,25 @@ public class Window extends JFrame {
 		addKeyListener(handler);
 		
 		//Animations
-		Animation animation= createAnimation(Animations.AnimationPlayerDefault2,player.getWidth(),player.getHeight());
-		player.setAnimation(animation);
+		Animation animation= createAnimation(Animations.AnimationPlayerDefault,player.getWidth(),player.getHeight());
+		player.addAnimation(NameAnimation.DEFAULT,animation);
 		Animation animation1= createAnimation(Animations.AnimationPortal1Default,portal1.getWidth(),portal1.getHeight());
-		portal1.setAnimation(animation1);
+		portal1.addAnimation(NameAnimation.DEFAULT,animation1);
 		Animation animation2= createAnimation(Animations.AnimationPortal2Default,portal2.getWidth(),portal2.getHeight());
-		portal2.setAnimation(animation2);
+		portal2.addAnimation(NameAnimation.DEFAULT,animation2);
 		Animation animation3= createAnimation(Animations.AnimationObsatcleDefault,obstacle.getWidth(),obstacle.getHeight());
-		obstacle.setAnimation(animation3);
+		obstacle.addAnimation(NameAnimation.DEFAULT,animation3);
 		Animation animation4= createAnimation(Animations.AnimationObsatcleDefault,obstacle2.getWidth(),obstacle2.getHeight());
-		obstacle2.setAnimation(animation4);
+		obstacle2.addAnimation(NameAnimation.DEFAULT,animation4);
+				
+		Animation animation5= createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight());
+		player.addAnimation(NameAnimation.JUMP,animation5);
+				
+		player.setCurrentAnimation(NameAnimation.DEFAULT);
+		portal1.setCurrentAnimation(NameAnimation.DEFAULT);
+		portal2.setCurrentAnimation(NameAnimation.DEFAULT);
+		obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
+		obstacle2.setCurrentAnimation(NameAnimation.DEFAULT);
 		ArrayList<Entity> array = new ArrayList<Entity>();
 		array.add(obstacle);
 		array.add(obstacle2);
@@ -99,20 +109,24 @@ public class Window extends JFrame {
 				time=time+1;
 				player.step(period);
 				//Gestion portails teleportations
-				player.portalInteraction(fc,portal1,portal2);
+//				player.portalInteraction(fc,portal1,portal2);
 
 				//Gestion obstacle
-				player.obstacleInteraction(obstacle);
-				player.obstacleInteraction(obstacle2);
-				
+				player.obstacleInteraction2(fc, obstacles);
+//				System.out.println(player.getForm().getX()+"   "+player.getForm().getY()+"   "+player.getTimeInAir());
 				if (time%30 ==0 ) {
-					player.getAnimation().update();					
+					player.getCurrentAnimation().update();					
 				}
 				panel.repaint();
 			}
 				
 			}, delay, period);
 	}
+
+	
+	
+	
+	
 	
 	public Animation createAnimation(Animations enumAnim, int width,int height) {
 		int[][] listeArg =enumAnim.getListeArg();
