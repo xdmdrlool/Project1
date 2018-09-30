@@ -16,9 +16,23 @@ public enum Animations {
 	
 	AnimationPlayerSpin("SpriteSheet_Player_Spin.png" , 64 , new int[][]  { { 0 , 0 , 32 , 32 , 0 } , { 1 , 0 , 32 , 32 , 0 } , { 2 , 0 , 32 , 32 , 0 } , { 3 , 0 , 32 , 32 , 0 } } , new int[] {10,10,10,10}   ),
 	
-	AnimationPlayerWalk("SpriteSheet_Player2.png" , 64 , new int[][]  { { 0 , 0 , 25 , 54 , 0 }, { 1 , 0 , 25 , 54 , 0 } },new int[] {1,1}   ),
+	AnimationPlayerWalkR("SpriteSheetPunkPlayer.png" , 64 , new int[][]  {
+		{ 0 , 0 , 34 , 50 , 0 }, { 1 , 0 , 34 , 50 , 0 },{2 , 0 , 34 , 50 , 0 },{ 3 , 0 , 34 , 50 , 0 },
+		{ 0 , 1 , 34 , 50 , 0 }, { 1 , 1 , 34 , 50 , 0 },{2 , 1 , 34 , 50 , 0 },{ 3 , 1 , 34 , 50 , 0 },
+		{ 0 , 2 , 34 , 50 , 0 }, { 1 , 2 , 34 , 50 , 0 },{2 , 2 , 34 , 50 , 0 },{ 3 , 2 , 34 , 50 , 0 },
+		{ 0 , 3 , 34 , 50 , 0 }
+		
+	},
+			new int[] {2,2,2,2,2,2,2,2,2,2,2,2,2}   ),
 
-	
+	AnimationPlayerWalkL("SpriteSheetPunkPlayer.png" , 64 , new int[][]  {
+		{ 7 , 0 , 34 , 50 , 0 }, { 6 , 0 , 34 , 50 , 0 },{5 , 0 , 34 , 50 , 0 },{ 4 , 0 , 34 , 50 , 0 },
+		{ 7 , 1 , 34 , 50 , 0 }, { 6 , 1 , 34 , 50 , 0 },{5 , 1 , 34 , 50 , 0 },{ 4 , 1 , 34 , 50 , 0 },
+		{ 7 , 2 , 34 , 50 , 0 }, { 6 , 2 , 34 , 50 , 0 },{5 , 2 , 34 , 50 , 0 },{ 4 , 2 , 34 , 50 , 0 },
+		{ 7 , 3 , 34 , 50 , 0 }
+		
+	},
+			new int[] {2,2,2,2,2,2,2,2,2,2,2,2,2}   ),
 	
 	
 	AnimationPortal1Default("SpriteSheet_Portal.png", 64 , new int[][] { { 0 , 0 , 61 , 10 , 0 } },new int[] {1} ),

@@ -22,7 +22,7 @@ public class Window extends JFrame {
 	protected ImageLoader loader=new ImageLoader();
 	
 	//Objets de la fenêtre
-	Player player =new Player(400,200,50,50,50,"Player1", 0, 300, false); 
+	Player player =new Player(400,200,100,100,50,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
 	Obstacle obstacle=new Obstacle(300, 600, 600, 100,0);
@@ -73,8 +73,8 @@ public class Window extends JFrame {
 		player.addAnimation(NameAnimation.DEFAULT,animation);
 		player.addAnimation(NameAnimation.JUMPL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
 		player.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
-		player.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
-		player.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
+		player.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerWalkL,player.getWidth(),player.getHeight()));
+		player.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerWalkR,player.getWidth(),player.getHeight()));
 		player.addAnimation(NameAnimation.FALLL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
 		player.addAnimation(NameAnimation.FALLR,createAnimation(Animations.AnimationPlayerSpin,player.getWidth(),player.getHeight()));
 
