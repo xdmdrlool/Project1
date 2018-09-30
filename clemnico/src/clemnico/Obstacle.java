@@ -105,25 +105,33 @@ public class Obstacle extends Entity {
 	}
 
 	public void setCurrentAnimation(NameAnimation name) {
-		this.currentAnimation=ListAnimation.get(name);
-		this.currentAnimation.reset();
+		Animation anime = ListAnimation.get(name);
+		if (this.currentAnimation!=anime) {
+			this.currentAnimation=anime;
+			this.currentAnimation.reset();}
 		this.currentAnimation.setAngle(this.getAngle());
 	}
 		
-		public Map<NameAnimation,Animation> getListAnimation() {
-			return ListAnimation;
-		}
+	public Map<NameAnimation,Animation> getListAnimation() {
+		return ListAnimation;
+	}
 
 
-		public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
-			ListAnimation = listAnimation;
-		}
+	public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
+		ListAnimation = listAnimation;
+	}
 
 
 
-		public void addAnimation(NameAnimation name,Animation animation) {
-			this.ListAnimation.put(name,animation);
-		}
+	public void addAnimation(NameAnimation name,Animation animation) {
+		this.ListAnimation.put(name,animation);
+	}
+	
+	public void chooseAnimation() {
+		NameAnimation name=NameAnimation.DEFAULT;
+		setCurrentAnimation(name);
+
+	}
 }
 
 

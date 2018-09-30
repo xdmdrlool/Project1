@@ -103,8 +103,8 @@ public class Player extends Entity{
 	
 	//Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
-		double g=-3;
-		double t=timeInAir/40.0;
+		double g=-9;
+		double t=timeInAir/60.0;
 		
 		setVy((int)(vy-g*t));
 		setX(x+vx);
@@ -113,7 +113,7 @@ public class Player extends Entity{
 	
 	//Gestion de l'interaction joueur/portail
 	public void portalInteraction(FC fc,Portal portal1, Portal portal2) {
-				
+		
 		//S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
 			
@@ -224,10 +224,10 @@ public class Player extends Entity{
 		
 		double dmin=10000;
 		Point correctedPosition=new Point(-1,-1);
-		System.out.print(A.x+" ");
-		System.out.println(A.y);
-		System.out.print(D.x+" ");
-		System.out.println(D.y);
+//		System.out.print(A.x+" ");
+//		System.out.println(A.y);
+//		System.out.print(D.x+" ");
+//		System.out.println(D.y);
 		
 		if (fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
 			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);
@@ -260,6 +260,7 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
 		boolean varInTheAir=true;
+//		System.out.println("");
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a collision avec un obstacle
 			FormRect rect0=new FormRect(Color.RED, xBefore, yBefore, width, height, 0);
@@ -274,7 +275,7 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 //				System.out.println("xB :"+xBefore+"   yB : "+yBefore);
 //				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
-				if (directionCollision.x!=0 || directionCollision.y>0) {setVx(0);}
+				if (directionCollision.x!=0 ||directionCollision.y>0) {setVx(0);}
 				if (directionCollision.y!=0) {setVy(0);}
 				
 
@@ -312,7 +313,7 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 			
 			
 			int vxOnGround=6;       //Mouvement latéral du joueur
-			double AirControl=1.2;  //En pourcentage
+			double AirControl=1.0;  //En pourcentage
 			if (moveX) {
 				if (isInTheAir()) {
 					setX(x+(int)(this.directionX*AirControl*vxOnGround));
@@ -322,7 +323,9 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 					setX(this.x+this.vx);
 				}
 			}
+			chooseAnimation();
 		}
+		
 	
 	
 	////////////////////////////////
@@ -414,8 +417,9 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 
 
 	public void setInTheAir(boolean inTheAir) {
-		if (!this.inTheAir && inTheAir) {setTimeInAir(0);}
-		this.inTheAir = inTheAir;
+		if (this.inTheAir != inTheAir) {
+			 setTimeInAir(0);
+			this.inTheAir = inTheAir;}
 	}
 
 
@@ -504,9 +508,10 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 		this.yBefore = yBefore;
 	}
 	public void setCurrentAnimation(NameAnimation name) {
-		this.currentAnimation=ListAnimation.get(name);
-		this.currentAnimation.reset();
-		
+		Animation anime = ListAnimation.get(name);
+		if (this.currentAnimation!=anime) {
+			this.currentAnimation=anime;
+			this.currentAnimation.reset();}
 	}
 	public Map<NameAnimation,Animation> getListAnimation() {
 		return ListAnimation;
@@ -527,6 +532,17 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 	@Override
 	public Animation getCurrentAnimation() {
 		return this.currentAnimation;
+	}
+	
+	
+	public void chooseAnimation() {
+		NameAnimation name=NameAnimation.DEFAULT;
+		if (inTheAir) {
+			if (vy<=0) {if (vx>=0) {name=NameAnimation.JUMPR;}else {name=NameAnimation.JUMPL;}}
+			else  {if (vx>=0) {name=NameAnimation.FALLR;}else {name=NameAnimation.FALLL;}}}
+		
+		else {if (vx>0) {name=NameAnimation.WALKR;}else if (vx<0) {name=NameAnimation.WALKL;}}
+		setCurrentAnimation(name);
 	}
 }
 

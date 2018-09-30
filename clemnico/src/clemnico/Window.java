@@ -22,12 +22,15 @@ public class Window extends JFrame {
 	protected ImageLoader loader=new ImageLoader();
 	
 	//Objets de la fenêtre
-	Player player =new Player(400,200,40,40,100,"Player1", 0, 300, false); 
+	Player player =new Player(400,200,50,50,50,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
 	Obstacle obstacle=new Obstacle(300, 600, 600, 100,0);
-	Obstacle obstacle2=new Obstacle(900, 453, 200, 250,0);
-	Obstacle[] obstacles= {obstacle,obstacle2};
+	Obstacle obstacle2=new Obstacle(900, 453, 200, 247,0);
+	Obstacle obstacle3=new Obstacle(250, 500, 100, 100,0);
+	Obstacle[] obstacles= {obstacle,obstacle2,obstacle3};
+	
+	GeneralEnemy enemy= new GeneralEnemy(400, 400, 50,50, "Player1", 0, 300, false);
 	FC fc=new FC();
 	
 	////Constructeur////
@@ -45,7 +48,7 @@ public class Window extends JFrame {
 		portal2.getForm().setColor(Color.ORANGE);
 		
 		initPanel();
-		stepGame(player);
+		stepGame(player,enemy);
 		
 
 	}
@@ -60,7 +63,7 @@ public class Window extends JFrame {
 		statusBar= new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
 	
-		Handlerclass handler =new Handlerclass(panel, statusBar, player, portal1, portal2, obstacles);
+		Handlerclass handler =new Handlerclass(panel, statusBar, player, portal1, portal2,obstacles);
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
@@ -68,35 +71,49 @@ public class Window extends JFrame {
 		//Animations
 		Animation animation= createAnimation(Animations.AnimationPlayerDefault,player.getWidth(),player.getHeight());
 		player.addAnimation(NameAnimation.DEFAULT,animation);
-		Animation animation1= createAnimation(Animations.AnimationPortal1Default,portal1.getWidth(),portal1.getHeight());
-		portal1.addAnimation(NameAnimation.DEFAULT,animation1);
-		Animation animation2= createAnimation(Animations.AnimationPortal2Default,portal2.getWidth(),portal2.getHeight());
-		portal2.addAnimation(NameAnimation.DEFAULT,animation2);
-		Animation animation3= createAnimation(Animations.AnimationObsatcleDefault,obstacle.getWidth(),obstacle.getHeight());
-		obstacle.addAnimation(NameAnimation.DEFAULT,animation3);
-		Animation animation4= createAnimation(Animations.AnimationObsatcleDefault,obstacle2.getWidth(),obstacle2.getHeight());
-		obstacle2.addAnimation(NameAnimation.DEFAULT,animation4);
-				
-		Animation animation5= createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight());
-		player.addAnimation(NameAnimation.JUMP,animation5);
+		player.addAnimation(NameAnimation.JUMPL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
+		player.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationTest,player.getWidth(),player.getHeight()));
+		player.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
+		player.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
+		player.addAnimation(NameAnimation.FALLL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
+		player.addAnimation(NameAnimation.FALLR,createAnimation(Animations.AnimationPlayerSpin,player.getWidth(),player.getHeight()));
+
+		portal1.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationPortal1Default,portal1.getWidth(),portal1.getHeight()));
+		portal2.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationPortal2Default,portal2.getWidth(),portal2.getHeight()));
+		obstacle.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle.getWidth(),obstacle.getHeight()));
+		obstacle2.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle2.getWidth(),obstacle2.getHeight()));
+		obstacle3.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle3.getWidth(),obstacle3.getHeight()));
+		
+		enemy.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
+		enemy.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
+		enemy.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
+		enemy.addAnimation(NameAnimation.FALLR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
+		enemy.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
+		
+
 				
 		player.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal1.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal2.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle2.setCurrentAnimation(NameAnimation.DEFAULT);
+		obstacle3.setCurrentAnimation(NameAnimation.DEFAULT);
+		enemy.setCurrentAnimation(NameAnimation.DEFAULT);
 		ArrayList<Entity> array = new ArrayList<Entity>();
 		array.add(obstacle);
 		array.add(obstacle2);
+		array.add(obstacle3);
 		array.add(player);
 		array.add(portal1);
 		array.add(portal2);
+		
+		array.add(enemy);
 				
 		panel.setEntityList(array);
 		
 	}
 	
-	private void stepGame(Player player) {
+	private void stepGame(Player player, GeneralEnemy enemy) {
 		
 		Timer chrono =new Timer();
 		int delay=100;
@@ -108,11 +125,14 @@ public class Window extends JFrame {
 			public void run() {
 				time=time+1;
 				player.step(period);
+				enemy.step(period);
 				//Gestion portails teleportations
 				player.portalInteraction(fc,portal1,portal2);
+//				System.out.println(player.getX()+" "+player.isInTheAir());
 
 				//Gestion obstacle
 				player.obstacleInteraction2(fc, obstacles);
+				enemy.obstacleInteraction2(fc, obstacles);
 //				System.out.println(player.getForm().getX()+"   "+player.getForm().getY()+"   "+player.getTimeInAir());
 				if (time%30 ==0 ) {
 					player.getCurrentAnimation().update();					
@@ -147,7 +167,6 @@ public class Window extends JFrame {
 	public Animation createAnimationGeneral(String path,int def, int[][] liste_arg) {
 		BufferedImage img = this.loader.loadImage(path);
 		SpriteSheet ss=new SpriteSheet(img,def);
-//		Sprite sprite2= new Sprite(spriteSheet, 1,0, 64, 64,64,64,45);
 		int nbSprite= liste_arg.length;
 		Sprite[] spriteTab = new Sprite[nbSprite];
 		for (int i=0; i< nbSprite ;i++) {

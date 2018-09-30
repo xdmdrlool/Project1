@@ -1,12 +1,12 @@
 package clemnico;
 
 public enum Animations {
-
+ 
 	// path= "NomDeLaSpriteSheet.png" 
 	// def = taille du carreau de la grille de la SpriteSheet
-	// listeArg= {  { co lonne , ligne ,  wSprite(default=def) ,hSprite(default=def) ,  angle } ,  ...    }
+	// listeArg= {  { colonne , ligne ,  wSprite(default=def) ,hSprite(default=def) ,  angle } ,  ...    }
 	
-	
+	AnimationTest("SpriteSheet_test.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } }   ),
 	
 	AnimationPlayerDefault("SpriteSheet_test.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } }   ),
 	
@@ -28,7 +28,13 @@ public enum Animations {
 	
 	
 	
-	AnimationObsatcleDefault("SpriteSheet_Obstacle.png",64, new int[][] { {0 , 0 , 58 , 14 , 0 } });
+	AnimationObsatcleDefault("SpriteSheet_Obstacle.png",64, new int[][] { {0 , 0 , 58 , 14 , 0 } }),
+	
+	AnimationObsatcleDefault2("SpriteSheet_Obstacle2.png",64, new int[][] { {0 , 0 , 51 , 51 , 0 } });
+	
+	
+	
+	;
 	
 	
 	

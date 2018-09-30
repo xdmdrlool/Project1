@@ -20,4 +20,5 @@ public abstract class Entity {
 	public abstract void setCurrentAnimation(NameAnimation name);
 	public abstract void addAnimation(NameAnimation name,Animation animation);
 	public abstract void display(Graphics2D g);
+	public abstract void chooseAnimation();
 }

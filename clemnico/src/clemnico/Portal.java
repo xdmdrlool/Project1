@@ -49,6 +49,7 @@ public class Portal extends Entity{
 		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
+
 	public boolean obstacleInteraction(Obstacle[] obstacles) {
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a collision avec un obstacle
@@ -58,6 +59,7 @@ public class Portal extends Entity{
 		}
 		return false;
 	}
+	
 	
 	//Déplace le portail que s'il n'est pas en contact avec un obstacle
 	public void movePortal(Obstacle[] obstacles,Player player, int xClic, int yClic) {
@@ -76,7 +78,7 @@ public class Portal extends Entity{
 			setAngle(angleBefore);
 		}
 	}
-	
+
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
@@ -150,9 +152,10 @@ public class Portal extends Entity{
 	}
 
 	public void setCurrentAnimation(NameAnimation name) {
-		this.currentAnimation=ListAnimation.get(name);
-		this.currentAnimation.reset();
-		
+		Animation anime = ListAnimation.get(name);
+		if (this.currentAnimation!=anime) {
+			this.currentAnimation=anime;
+			this.currentAnimation.reset();}
 	}
 	public Map<NameAnimation,Animation> getListAnimation() {
 		return ListAnimation;
@@ -167,5 +170,10 @@ public class Portal extends Entity{
 
 	public void addAnimation(NameAnimation name,Animation animation) {
 		this.ListAnimation.put(name,animation);
+	}
+	
+	public void chooseAnimation() {
+		NameAnimation name=NameAnimation.DEFAULT;
+		setCurrentAnimation(name);
 	}
 }

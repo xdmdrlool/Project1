@@ -41,6 +41,10 @@ public class Hitbox {
 		return fC.Collision(form1, form2);
 	}
 	
+	public void moveIn(int x,int y) {
+		
+	}
+	
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////

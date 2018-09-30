@@ -8,8 +8,12 @@ import javax.swing.ImageIcon;
 public class ImageLoader {
 
 		
-	public  BufferedImage loadImage(String path)  {		
-		Image image = (new ImageIcon(getClass().getResource(path))).getImage();
+	public  BufferedImage loadImage(String path)  {	
+		Image image=null;
+		try {
+		image = (new ImageIcon(getClass().getResource(path))).getImage();
+		}
+		catch (Exception e) {System.out.println("Image introuvable : "+path);};
 		return toBufferedImage(image);
 	}
 	

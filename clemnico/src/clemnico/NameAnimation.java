@@ -5,8 +5,12 @@ public enum NameAnimation {
 	DEFAULT(),
 	WALKL(),
 	WALKR(),
-	JUMP(),
-	FALL(),
+	JUMPL(),
+	JUMPR(),
+	SPINL(),
+	SPINR(),
+	FALLL(),
+	FALLR(),
 	
 	;
 	

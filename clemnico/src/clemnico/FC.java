@@ -188,7 +188,6 @@ public class FC {
 		else {
 			return null;
 		}
-
 		return new Point(Math.round(xIntersect), Math.round(yIntersect));
 			
 	}
@@ -243,25 +242,22 @@ public class FC {
 		if (Collision(obs, 4, rect[1])) {listPointInObs.add(1);}
 		if (Collision(obs, 4, rect[2])) {listPointInObs.add(2);}
 		if (Collision(obs, 4, rect[3])) {listPointInObs.add(3);}
-		
 		switch (listPointInObs.size()) {
-		
 		case 2 :
-
 			int t= listPointInObs.get(0);
-			int t0=listPointInObs.get(1);
+			int t0= listPointInObs.get(1);
 			Point A0 =rect0[t],A =rect[t];
 			Point A01 =rect0[t0],A1 =rect[t0];
-			
 			Point A02 =new Point((A0.x+A01.x)/2,(A0.y+A01.y)/2);
 			Point A2 =new Point((A.x+A1.x)/2,(A.y+A1.y)/2);
+//			System.out.println("A02 "+ A02.x+" "+A02.y);
+//			System.out.println("A2  "+A2.x+" "+A2.y);
 			Point I =null;
 			for (int j=0;j<4;j++) {
 				Point S1=obs[j],S2=obs[(j+1)%4];
 				Point J =calculIntersectionSeg(A02, A2, S1, S2);
 				if (J!=null) {I=projectionPointSeg(S1, S2, A2);}
 			}
-			
 			if (I==null) {vec.x=0;vec.y=0;}
 			else {vec.x=I.x-A2.x;vec.y=I.y-A2.y;}
 //			System.out.println(I.x+" "+I.y);
@@ -269,9 +265,7 @@ public class FC {
 			if (vec.x!=0 || vec.y!=0) {direction.x=-vec.x;direction.y=-vec.y;}
 			else {direction.x=(rect[t].x+rect[listPointInObs.get(1)].x)/2-Middle.x;direction.y=(rect[t].y+rect[listPointInObs.get(1)].y)/2-Middle.y;}
 			break;
-			
 		case 1 :
-			
 			int t1= listPointInObs.get(0);
 			Point B0 =rect0[t1],B =rect[t1];
 			Point P =new Point();
@@ -279,21 +273,16 @@ public class FC {
 			for (int j=0;j<4;j++) {
 				if (Collision(rect, 4 , obs[j])) { P=obs[j];n=j;}
 			}
-			
-
 			Vecteur BB0 =new Vecteur(),BP=new Vecteur();
 			BB0.x=B0.x-B.x;BB0.y=B0.y-B.y;
 			BP.x=P.x-B.x;BP.y=P.y-B.y;
-			
 			Point S= obs[(n+2)%4];
 			Vecteur SB =new Vecteur(),SP=new Vecteur();
 			SB.x=B.x-S.x;SB.y=B.y-S.y;
 			SP.x=S.x-P.x;SP.y=S.y-P.y;
-			
 			Point P2=null;
 			float det =determinant(BP,BB0);
 			float det2 =determinant(SB,SP);
-			
 			if (B0.x==B.x && B0.y==B.y) {
 				if (det2>=0) {P2=obs[(n+1)%4]; direction.x=-(P2.y-P.y);direction.y=(P2.x-P.x);}
 				else {P2=obs[(n+3)%4];direction.x=(P2.y-P.y);direction.y=-(P2.x-P.x);}
@@ -302,15 +291,10 @@ public class FC {
 				if (det>0 ||(det==0 &&det2>0)) {P2=obs[(n+1)%4]; direction.x=-(P2.y-P.y);direction.y=(P2.x-P.x);}
 				else {P2=obs[(n+3)%4];direction.x=(P2.y-P.y);direction.y=-(P2.x-P.x);}
 			}
-			
 			Point I1 =projectionPointSeg(P, P2, B);
-			
 			if ((B0.x==B.x && B0.y==B.y)||det==0) {vec.x=0;vec.y=0;}
 			else {vec.x=I1.x-B.x;vec.y=I1.y-B.y;}
-
 			break;
-			 
-			
 		default :
 			return null;
 			}
