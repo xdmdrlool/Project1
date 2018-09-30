@@ -188,6 +188,7 @@ public class FC {
 		else {
 			return null;
 		}
+
 		return new Point(Math.round(xIntersect), Math.round(yIntersect));
 			
 	}
@@ -247,9 +248,10 @@ public class FC {
 		
 		case 2 :
 
-			int t= listPointInObs.get(0);;
+			int t= listPointInObs.get(0);
+			int t0=listPointInObs.get(1);
 			Point A0 =rect0[t],A =rect[t];
-			Point A01 =rect0[(t+1)%4],A1 =rect[(t+1)%4];
+			Point A01 =rect0[t0],A1 =rect[t0];
 			
 			Point A02 =new Point((A0.x+A01.x)/2,(A0.y+A01.y)/2);
 			Point A2 =new Point((A.x+A1.x)/2,(A.y+A1.y)/2);

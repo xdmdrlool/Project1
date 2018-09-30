@@ -104,7 +104,7 @@ public class Player extends Entity{
 	//Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
 		double g=-3;
-		double t=timeInAir/10.0;
+		double t=timeInAir/40.0;
 		
 		setVy((int)(vy-g*t));
 		setX(x+vx);
@@ -115,11 +115,11 @@ public class Player extends Entity{
 	public void portalInteraction(FC fc,Portal portal1, Portal portal2) {
 				
 		//S'il y a interaction avec l'un des deux portails
-		if (hitbox.colision(portal1.getHitbox()) || hitbox.colision(portal2.getHitbox())) {
+		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
 			
 			//Détermine le portail d'entrée et de sortie
 			Portal portalIn,portalOut;
-			if (hitbox.colision(portal1.getHitbox())) 	{portalIn=portal1;	portalOut=portal2;}
+			if (hitbox.collision(portal1.getHitbox())) 	{portalIn=portal1;	portalOut=portal2;}
 			else 										{portalIn=portal2;	portalOut=portal1;}
 			
 			//Obtenir les points A et B des deux portails (axe, point, portail)
@@ -137,13 +137,18 @@ public class Player extends Entity{
 			int xD2=fc.Rect2Array(portalOut.getForm())[3].x;
 			int yD2=fc.Rect2Array(portalOut.getForm())[3].y;
 			
+			//Coordonnées du joueur modifiées
+			int xj=x+width;
+			int yj=y+height;
+			
 			//Détermine la vitesse min et la distance entre le joueur et le portail de sortie
-			int distancePortal=10;
-			int vMinOut=10;
+			int distancePortal=width;
+			int vMinOut=5;
+			
 			
 			//Détermine la position du joueur sur la tangente du portail
-			double distancePlayerA1=Math.sqrt((x-xA1)*(x-xA1)+(y-yA1)*(y-yA1));
-			double distancePlayerD1=Math.sqrt((x-xD1)*(x-xD1)+(y-yD1)*(y-yD1));
+			double distancePlayerA1=Math.sqrt((xj-xA1)*(xj-xA1)+(yj-yA1)*(yj-yA1));
+			double distancePlayerD1=Math.sqrt((xj-xD1)*(xj-xD1)+(yj-yD1)*(yj-yD1));
 			double distancePlayerA2=portalOut.getWidth()-distancePlayerA1;
 			
 			//Détermine la norme de la vitesse en sortie
@@ -166,12 +171,13 @@ public class Player extends Entity{
 			//Détermine le côté du portail où passe le joueur
 			correctionInteractionRect(fc, portalIn.getForm());
 			if (distancePlayerA1<distancePlayerD1) {
-				setX((int) (xA2+vectorAB2[0]*distancePlayerA2+distancePortal*vectorDA2[0]));
-				setY((int) (yA2+vectorAB2[1]*distancePlayerA2+distancePortal*vectorDA2[1]));
+				setX((int) (xA2+vectorAB2[0]*distancePlayerA2+(distancePortal)*vectorDA2[0]));
+				setY((int) (yA2+vectorAB2[1]*distancePlayerA2+(distancePortal)*vectorDA2[1]));
 				setVx(vOut[0]);
 				setVy(vOut[1]);
 			}
 			else {
+				
 				setX((int) (xA2+vectorAB2[0]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[0]));
 				setY((int) (yA2+vectorAB2[1]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[1]));
 				setVx(-vOut[0]);
@@ -185,7 +191,7 @@ public class Player extends Entity{
 		
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a collision avec un obstacle
-			if (this.getHitbox().colision(obstacle.getHitbox())) {
+			if (this.getHitbox().collision(obstacle.getHitbox())) {
 				this.setVy(0);
 				this.setVx(0);
 				
@@ -207,6 +213,7 @@ public class Player extends Entity{
 	}
 	
 	public void correctionInteractionRect(FC fc, FormRect rect) {
+
 		Point pointPlayer1=new Point(xBefore,yBefore);
 		Point pointPlayer2=new Point(x,y);
 		
@@ -217,18 +224,34 @@ public class Player extends Entity{
 		
 		double dmin=10000;
 		Point correctedPosition=new Point(-1,-1);
+		System.out.print(A.x+" ");
+		System.out.println(A.y);
+		System.out.print(D.x+" ");
+		System.out.println(D.y);
 		
 		if (fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
-			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);}
-		if (fc.calculIntersectionSeg(B,C,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
-			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);}
-		if (fc.calculIntersectionSeg(C,D,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
-			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);}
-		if (fc.calculIntersectionSeg(D,A,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
-			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);}
-		if (correctedPosition.x!=-1 && correctedPosition.y!=-1) {
-			setX(correctedPosition.x-radius);
-			setY(correctedPosition.y-radius);
+			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);
+			dmin=fc.distance(A, B);}
+		
+		
+		if (fc.calculIntersectionSeg(B,C,pointPlayer1,pointPlayer2)!=null && fc.distance(B, C)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(B,C,pointPlayer1,pointPlayer2);
+			dmin=fc.distance(B, C);}
+		
+		
+		if (fc.calculIntersectionSeg(C,D,pointPlayer1,pointPlayer2)!=null && fc.distance(C, D)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(C,D,pointPlayer1,pointPlayer2);
+			dmin=fc.distance(C, D);}
+		
+		
+		if (fc.calculIntersectionSeg(D,A,pointPlayer1,pointPlayer2)!=null && fc.distance(D, A)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(D,A,pointPlayer1,pointPlayer2);
+			dmin=fc.distance(D, A);}
+
+		if (correctedPosition.getX()!=-1 && correctedPosition.getY()!=-1) {
+			setX((int)(correctedPosition.x+width*1./2.));
+			setY((int)(correctedPosition.y+height*1./2.));
+			
 		}
 	}
 	
@@ -251,7 +274,7 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 //				System.out.println("xB :"+xBefore+"   yB : "+yBefore);
 //				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
-				if (directionCollision.x!=0) {setVx(0);}
+				if (directionCollision.x!=0 || directionCollision.y>0) {setVx(0);}
 				if (directionCollision.y!=0) {setVy(0);}
 				
 
@@ -288,8 +311,8 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 			if (inTheAir) {fall();}
 			
 			
-			int vxOnGround=3;       //Mouvement latéral du joueur
-			double AirControl=1.0;  //En pourcentage
+			int vxOnGround=6;       //Mouvement latéral du joueur
+			double AirControl=1.2;  //En pourcentage
 			if (moveX) {
 				if (isInTheAir()) {
 					setX(x+(int)(this.directionX*AirControl*vxOnGround));

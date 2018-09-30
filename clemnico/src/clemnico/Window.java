@@ -22,7 +22,7 @@ public class Window extends JFrame {
 	protected ImageLoader loader=new ImageLoader();
 	
 	//Objets de la fenêtre
-	Player player =new Player(400,200,100,100,100,"Player1", 0, 300, false); 
+	Player player =new Player(400,200,40,40,100,"Player1", 0, 300, false); 
 	Portal portal1 =new Portal(-500,-500,100,20);
 	Portal portal2 =new Portal(-500,-500,100,20);
 	Obstacle obstacle=new Obstacle(300, 600, 600, 100,0);
@@ -60,7 +60,7 @@ public class Window extends JFrame {
 		statusBar= new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
 	
-		Handlerclass handler =new Handlerclass(panel, statusBar, player, portal1, portal2);
+		Handlerclass handler =new Handlerclass(panel, statusBar, player, portal1, portal2, obstacles);
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
@@ -109,7 +109,7 @@ public class Window extends JFrame {
 				time=time+1;
 				player.step(period);
 				//Gestion portails teleportations
-//				player.portalInteraction(fc,portal1,portal2);
+				player.portalInteraction(fc,portal1,portal2);
 
 				//Gestion obstacle
 				player.obstacleInteraction2(fc, obstacles);

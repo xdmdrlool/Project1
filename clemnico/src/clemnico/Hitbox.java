@@ -33,16 +33,12 @@ public class Hitbox {
 	}
 
 	
-	public boolean colision(Hitbox hb){
+	public boolean collision(Hitbox hb){
 
 		Form form1=this.form;
 		Form form2=hb.getForm();
 		FC fC= new FC();
 		return fC.Collision(form1, form2);
-	}
-	
-	public void moveIn(int x,int y) {
-		
 	}
 	
 	

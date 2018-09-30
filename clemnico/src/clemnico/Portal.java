@@ -29,16 +29,18 @@ public class Portal extends Entity{
 	}
 	
 	////Méthodes////
-	public void setRotation(int xPlayer, int yPlayer, int xClic, int yClic) {
+	
+	//Renvoie l'angle du portail enfonction de la position du joueur et du clic
+	public int angleRotation(int xPlayer, int yPlayer, int xClic, int yClic) {
 		if (xClic==xPlayer) {
 			
-			this.setAngle(0);
+			return 0;
 		}
 		else if (xClic>xPlayer){
-			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) - Math.PI/2.0));
+			return ((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) - Math.PI/2.0));
 		}
 		else {
-			this.setAngle((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0));
+			return ((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) + Math.PI/2.0));
 		}
 	}
 	
@@ -47,6 +49,33 @@ public class Portal extends Entity{
 		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
+	public boolean obstacleInteraction(Obstacle[] obstacles) {
+		for (Obstacle obstacle: obstacles) {
+			//S'il y a collision avec un obstacle
+			if (this.getHitbox().collision(obstacle.getHitbox())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//Déplace le portail que s'il n'est pas en contact avec un obstacle
+	public void movePortal(Obstacle[] obstacles,Player player, int xClic, int yClic) {
+		int xBefore=x;
+		int yBefore=y;
+		double angleBefore=angle;
+		
+		setX(xClic-width/2);
+		setY(yClic-height/2);
+		setAngle(angleRotation(player.getX(), player.getY(),xClic,yClic));
+		
+		setAngle(angle);
+		if(obstacleInteraction(obstacles)) {
+			setX(xBefore);
+			setY(yBefore);
+			setAngle(angleBefore);
+		}
+	}
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
