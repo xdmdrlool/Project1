@@ -85,7 +85,7 @@ public class Player extends Entity{
 		if (key==KeyEvent.VK_Z && !inTheAir) {
 			setInTheAir(false);
 			setVy(-20);
-			setY(y-20);
+			setY(y-1);
 			setVx(directionX*vx);
 			
 		}
@@ -101,9 +101,33 @@ public class Player extends Entity{
 		}
 	}
 	
+	
+
+	//Action de joueur pour un pas de la boucle
+	public void step(int period) {
+		
+		//Mouvement vertical du joueur
+		if (inTheAir) {fall();}
+		
+		
+		int vxOnGround=6;       //Mouvement latéral du joueur
+		double AirControl=1.0;  //En pourcentage
+		if (moveX) {
+			if (isInTheAir()) {
+				setX(x+(int)(this.directionX*AirControl*vxOnGround));
+			}
+			else {
+				setVx(this.directionX*vxOnGround);
+				setX(this.x+this.vx);
+			}
+		}
+		chooseAnimation();
+	}
+	
+	
 	//Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
-		double g=-9;
+		double g=-5;
 		double t=timeInAir/60.0;
 		
 		setVy((int)(vy-g*t));
@@ -138,11 +162,11 @@ public class Player extends Entity{
 			int yD2=fc.Rect2Array(portalOut.getForm())[3].y;
 			
 			//Coordonnées du joueur modifiées
-			int xj=x+width;
-			int yj=y+height;
+			int xj=x+width/2;
+			int yj=y+height/2;
 			
 			//Détermine la vitesse min et la distance entre le joueur et le portail de sortie
-			int distancePortal=width;
+			int distancePortal=(int) ( width/1.42);
 			int vMinOut=5;
 			
 			
@@ -171,15 +195,15 @@ public class Player extends Entity{
 			//Détermine le côté du portail où passe le joueur
 			correctionInteractionRect(fc, portalIn.getForm());
 			if (distancePlayerA1<distancePlayerD1) {
-				setX((int) (xA2+vectorAB2[0]*distancePlayerA2+(distancePortal)*vectorDA2[0]));
-				setY((int) (yA2+vectorAB2[1]*distancePlayerA2+(distancePortal)*vectorDA2[1]));
+				setX((int) (xA2+vectorAB2[0]*distancePlayerA2+(distancePortal)*vectorDA2[0])-width/2);
+				setY((int) (yA2+vectorAB2[1]*distancePlayerA2+(distancePortal)*vectorDA2[1])-height/2);
 				setVx(vOut[0]);
 				setVy(vOut[1]);
 			}
 			else {
 				
-				setX((int) (xA2+vectorAB2[0]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[0]));
-				setY((int) (yA2+vectorAB2[1]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[1]));
+				setX((int) (xA2+vectorAB2[0]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[0])-width/2);
+				setY((int) (yA2+vectorAB2[1]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[1])-height/2);
 				setVx(-vOut[0]);
 				setVy(-vOut[1]);
 			}
@@ -292,6 +316,7 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 			
 
 		}
+//		System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);	
 		setTimeInAir(getTimeInAir()+1);
 		setInTheAir(varInTheAir);
 		setxBefore(x);setyBefore(y);
@@ -302,30 +327,6 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 	
 	
 	
-	
-
-	
-	//Action de joueur pour un pas de la boucle
-		public void step(int period) {
-			
-			//Mouvement vertical du joueur
-			if (inTheAir) {fall();}
-			
-			
-			int vxOnGround=6;       //Mouvement latéral du joueur
-			double AirControl=1.0;  //En pourcentage
-			if (moveX) {
-				if (isInTheAir()) {
-					setX(x+(int)(this.directionX*AirControl*vxOnGround));
-				}
-				else {
-					setVx(this.directionX*vxOnGround);
-					setX(this.x+this.vx);
-				}
-			}
-			chooseAnimation();
-		}
-		
 	
 	
 	////////////////////////////////

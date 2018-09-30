@@ -25,7 +25,7 @@ public class GeneralEnemy extends Enemy {
 	private int y=100;
 	private int xBefore=x;
 	private int yBefore=y;
-	private int vx=6;
+	private int vx=5;
 	private int vy=0;
 	private int vxMax=100;
 	private int vyMax=30;
@@ -73,10 +73,21 @@ public class GeneralEnemy extends Enemy {
 	}
 	
 	
+	//Action de joueur pour un pas de la boucle
+	public void step(int period) {
+		
+		//Mouvement vertical du joueur
+		if (inTheAir) {fall();}
+		
+		setX(this.x+this.vx);
+		chooseAnimation();
+	}
+
+	
 	//Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
-		double g=-2;
-		double t=timeInAir/10.0;
+		double g=-5;
+		double t=timeInAir/60.0;
 		setVy((int)(vy-g*t));
 		setX(x+vx);
 		setY(y+vy);
@@ -132,16 +143,7 @@ public class GeneralEnemy extends Enemy {
 	
 
 	
-	//Action de joueur pour un pas de la boucle
-		public void step(int period) {
-			
-			//Mouvement vertical du joueur
-			if (inTheAir) {fall();}
-			
-			setX(this.x+this.vx);
-			chooseAnimation();
-		}
-	
+
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////

@@ -33,7 +33,6 @@ public class Portal extends Entity{
 	//Renvoie l'angle du portail enfonction de la position du joueur et du clic
 	public int angleRotation(int xPlayer, int yPlayer, int xClic, int yClic) {
 		if (xClic==xPlayer) {
-			
 			return 0;
 		}
 		else if (xClic>xPlayer){
@@ -69,7 +68,7 @@ public class Portal extends Entity{
 		
 		setX(xClic-width/2);
 		setY(yClic-height/2);
-		setAngle(angleRotation(player.getX(), player.getY(),xClic,yClic));
+		setAngle(angleRotation(player.getX()+width/2, player.getY()+height/2,xClic,yClic));
 		
 		setAngle(angle);
 		if(obstacleInteraction(obstacles)) {

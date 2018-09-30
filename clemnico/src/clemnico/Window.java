@@ -72,7 +72,7 @@ public class Window extends JFrame {
 		Animation animation= createAnimation(Animations.AnimationPlayerDefault,player.getWidth(),player.getHeight());
 		player.addAnimation(NameAnimation.DEFAULT,animation);
 		player.addAnimation(NameAnimation.JUMPL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
-		player.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationTest,player.getWidth(),player.getHeight()));
+		player.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
 		player.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
 		player.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
 		player.addAnimation(NameAnimation.FALLL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
@@ -134,9 +134,9 @@ public class Window extends JFrame {
 				player.obstacleInteraction2(fc, obstacles);
 				enemy.obstacleInteraction2(fc, obstacles);
 //				System.out.println(player.getForm().getX()+"   "+player.getForm().getY()+"   "+player.getTimeInAir());
-				if (time%30 ==0 ) {
-					player.getCurrentAnimation().update();					
-				}
+				
+				player.getCurrentAnimation().update();					
+				
 				panel.repaint();
 			}
 				
@@ -160,11 +160,11 @@ public class Window extends JFrame {
 			listeArg2[i][5]=height;
 			listeArg2[i][6]=listeArg[i][4];
 		}
-		return createAnimationGeneral(enumAnim.getPath(), enumAnim.getDef(), listeArg2);	
+		return createAnimationGeneral(enumAnim.getPath(), enumAnim.getDef(), listeArg2,enumAnim.getListeTime());	
 	}
 	
 	
-	public Animation createAnimationGeneral(String path,int def, int[][] liste_arg) {
+	public Animation createAnimationGeneral(String path,int def, int[][] liste_arg, int [] listeTime) {
 		BufferedImage img = this.loader.loadImage(path);
 		SpriteSheet ss=new SpriteSheet(img,def);
 		int nbSprite= liste_arg.length;
@@ -173,7 +173,7 @@ public class Window extends JFrame {
 			Sprite sp= new Sprite(ss, liste_arg[i][0], liste_arg[i][1], liste_arg[i][2], liste_arg[i][3], liste_arg[i][4], liste_arg[i][5],(double) liste_arg[i][6]);
 			spriteTab[i]=sp;
 			}
-		return new Animation(spriteTab);
+		return new Animation(spriteTab,listeTime);
 			
 		}
 	

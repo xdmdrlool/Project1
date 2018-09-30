@@ -2,18 +2,24 @@ package clemnico;
 
 public class Animation {
 	private Sprite[] listeSprite;
+	private int[] listeTime;
 	private int numeroFrame =0 ;
+	private int timeinframe =0;
 	private int nbFrame;
 	private double angle;
 
-	public Animation(Sprite[] listeSprite ) {
+	public Animation(Sprite[] listeSprite,int[] listeTime ) {
 		setListeSprite(listeSprite);
+		setListeTime(listeTime);
 		setNbFrame(listeSprite.length);
 	}
 	
 	
 	public void update() {
+		this.timeinframe++;
+		if (timeinframe==listeTime[numeroFrame]) {
 		this.numeroFrame=(this.numeroFrame+1)%this.nbFrame;
+		this.timeinframe=0;}
 	}
 	
 	public void reset() {
@@ -66,5 +72,22 @@ public class Animation {
 		}
 	}
 
+
+	public int getTimeinframe() {
+		return timeinframe;
+	}
+
+
+	public void setTimeinframe(int timeinframe) {
+		this.timeinframe = timeinframe;
+	}
+	public int[] getListeTime() {
+		return listeTime;
+	}
+
+
+	public void setListeTime(int[] listeTime) {
+		this.listeTime = listeTime;
+	}
 
 }
