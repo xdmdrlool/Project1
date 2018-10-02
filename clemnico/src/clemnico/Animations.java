@@ -23,7 +23,7 @@ public enum Animations {
 		{ 0 , 3 , 34 , 50 , 0 }
 		
 	},
-			new int[] {2,2,2,2,2,2,2,2,2,2,2,2,2}   ),
+			new int[] {3,3,3,3,3,3,3,3,3,3,3,3,3}   ),
 
 	AnimationPlayerWalkL("SpriteSheetPunkPlayer.png" , 64 , new int[][]  {
 		{ 7 , 0 , 34 , 50 , 0 }, { 6 , 0 , 34 , 50 , 0 },{5 , 0 , 34 , 50 , 0 },{ 4 , 0 , 34 , 50 , 0 },
@@ -32,7 +32,7 @@ public enum Animations {
 		{ 7 , 3 , 34 , 50 , 0 }
 		
 	},
-			new int[] {2,2,2,2,2,2,2,2,2,2,2,2,2}   ),
+			new int[] {3,3,3,3,3,3,3,3,3,3,3,3,3}   ),
 	
 	
 	AnimationPortal1Default("SpriteSheet_Portal.png", 64 , new int[][] { { 0 , 0 , 61 , 10 , 0 } },new int[] {1} ),

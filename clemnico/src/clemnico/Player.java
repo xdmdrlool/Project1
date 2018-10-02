@@ -1,6 +1,5 @@
 package clemnico;
 
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -10,40 +9,38 @@ import java.util.Map;
 
 import clemnico.FC.Vecteur;
 
+public class Player extends Entity {
 
-public class Player extends Entity{
-
-	////Attributs////
-	private String 	name = "" ;
-	private int 	directionX = 0;
-	private int 	speed = 300;
+	//// Attributs////
+	private String name = "";
+	private int directionX = 0;
+	private int speed = 300;
 	private boolean moveX = false;
-	private boolean inTheAir=false;
-	private int timeInAir=0;
-	private int keyPressed=0;
-	private boolean dead =false;
+	private boolean inTheAir = false;
+	private int timeInAir = 0;
+	private int keyPressed = 0;
+	private boolean dead = false;
 	private FormRect form;
-	private int x=100;
-	private int y=100;
-	private int xBefore=x;
-	private int yBefore=y;
-	private int vx=0;
-	private int vy=0;
-	private int vxMax=100;
-	private int vyMax=30;
-	private int width=20;
-	private int height =20;
-	private int radius=60;
-	private Hitbox hitbox = new Hitbox("RECT",x,y,radius,width,height,0);
-	private FC fc=new FC();
+	private int x = 100;
+	private int y = 100;
+	private int xBefore = x;
+	private int yBefore = y;
+	private int vx = 0;
+	private int vy = 0;
+	private int vxMax = 100;
+	private int vyMax = 30;
+	private int width = 20;
+	private int height = 20;
+	private int radius = 60;
+	private Hitbox hitbox = new Hitbox("RECT", x, y, radius, width, height, 0);
+	private FC fc = new FC();
 	private Animation currentAnimation;
-	public Map<NameAnimation,Animation> ListAnimation=new  HashMap<>();
-
+	public Map<NameAnimation, Animation> ListAnimation = new HashMap<>();
 
 	////Constructeur////
-	public Player(int x,int y,int width, int height, int radius,String name, int direction, int speed, boolean move) {
-		super(x,y);
-		FormRect rect = new FormRect(Color.RED,x,y,width,height,0 );
+	public Player(int x, int y, int width, int height, int radius, String name, int direction, int speed, boolean move) {
+		super(x, y);
+		FormRect rect = new FormRect(Color.RED, x, y, width, height, 0);
 		setForm(rect);
 		setX(x);
 		setY(y);
@@ -52,49 +49,45 @@ public class Player extends Entity{
 		setWidth(width);
 		setHeight(height);
 		setRadius(radius);
-		this.name=name;
+		this.name = name;
 		setDirectionX(direction);
-		this.speed=speed;
+		this.speed = speed;
 		setMoveX(move);
-
-		
-		
-		
 	}
 
 
-	////Methodes////
-	public void display(Graphics2D gg) {
-		Sprite sprite =currentAnimation.getSprite();
-		sprite.render(gg, x+width/2, y+height/2);
-	}
 	
-	public void moveIn(int x ,int y) {
+	
+	//// Methodes////
+	public void display(Graphics2D gg) {
+		Sprite sprite = currentAnimation.getSprite();
+		sprite.render(gg, x + width / 2, y + height / 2);
+	}
+
+	public void moveIn(int x, int y) {
 		setX(x);
 		setY(y);
 	}
-	
-	public void distanceStep(int dx,int dy) {
-		moveIn(this.x+dx, this.y+dy);
+
+	public void distanceStep(int dx, int dy) {
+		moveIn(this.x + dx, this.y + dy);
 	}
-	
-	//Action clavier
+
+	// Action clavier
 	public void actionKeyboard(int key) {
-		
-		
-		if (key==KeyEvent.VK_Z && !inTheAir) {
+
+		if (key == KeyEvent.VK_Z && !inTheAir) {
 			setInTheAir(false);
 			setVy(-20);
-			setY(y-1);
-			setVx(directionX*vx);
-			
+			setY(y - 1);
+			setVx(directionX * vx);
+
 		}
-		if (key==KeyEvent.VK_Q && keyPressed!=key) {
+		if (key == KeyEvent.VK_Q && keyPressed != key) {
 			setDirectionX(-1);
 			setKeyPressed(key);
 			setMoveX(true);
-		}
-		else if (key==KeyEvent.VK_D && keyPressed!=key) {
+		} else if (key == KeyEvent.VK_D && keyPressed != key) {
 			setDirectionX(1);
 			setKeyPressed(key);
 			setMoveX(true);
@@ -103,64 +96,69 @@ public class Player extends Entity{
 	
 	
 
-	//Action de joueur pour un pas de la boucle
+	// Action de joueur pour un pas de la boucle
 	public void step(int period) {
-		
-		//Mouvement vertical du joueur
-		if (inTheAir) {fall();}
-		
-		
-		int vxOnGround=6;       //Mouvement latéral du joueur
-		double AirControl=1.0;  //En pourcentage
+
+		// Mouvement vertical du joueur
+		if (inTheAir) {
+			fall();
+		}
+
+		int vxOnGround = 6; // Mouvement latéral du joueur
+		double AirControl = 1.0; // En pourcentage
 		if (moveX) {
 			if (isInTheAir()) {
-				setX(x+(int)(this.directionX*AirControl*vxOnGround));
-			}
-			else {
-				setVx(this.directionX*vxOnGround);
-				setX(this.x+this.vx);
+				setX(x + (int) (this.directionX * AirControl * vxOnGround));
+			} else {
+				setVx(this.directionX * vxOnGround);
+				setX(this.x + this.vx);
 			}
 		}
 		chooseAnimation();
 	}
 	
 	
-	//Mouvement physique du joueur dans les airs sans entrée clavier
+	// Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
-		double g=-5;
-		double t=timeInAir/60.0;
-		
-		setVy((int)(vy-g*t));
-		setX(x+vx);
-		setY(y+vy);
+		double g = -5;
+		double t = timeInAir / 60.0;
+
+		setVy((int) (vy - g * t));
+		setX(x + vx);
+		setY(y + vy);
 	}
 	
-	//Gestion de l'interaction joueur/portail
-	public void portalInteraction(FC fc,Portal portal1, Portal portal2) {
-		
-		//S'il y a interaction avec l'un des deux portails
+	// Gestion de l'interaction joueur/portail
+	public void portalInteraction(FC fc, Portal portal1, Portal portal2) {
+
+		// S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-			
-			//Détermine le portail d'entrée et de sortie
-			Portal portalIn,portalOut;
-			if (hitbox.collision(portal1.getHitbox())) 	{portalIn=portal1;	portalOut=portal2;}
-			else 										{portalIn=portal2;	portalOut=portal1;}
-			
-			//Obtenir les points A et B des deux portails (axe, point, portail)
-			//portalIn = 1 et portalOut = 2 
-			int xA1=fc.Rect2Array(portalIn.getForm())[0].x;
-			int yA1=fc.Rect2Array(portalIn.getForm())[0].y;
-			int xB1=fc.Rect2Array(portalIn.getForm())[1].x;
-			int yB1=fc.Rect2Array(portalIn.getForm())[1].y;
-			int xD1=fc.Rect2Array(portalIn.getForm())[3].x;
-			int yD1=fc.Rect2Array(portalIn.getForm())[3].y;
-			int xA2=fc.Rect2Array(portalOut.getForm())[0].x;
-			int yA2=fc.Rect2Array(portalOut.getForm())[0].y;
-			int xB2=fc.Rect2Array(portalOut.getForm())[1].x;
-			int yB2=fc.Rect2Array(portalOut.getForm())[1].y;
-			int xD2=fc.Rect2Array(portalOut.getForm())[3].x;
-			int yD2=fc.Rect2Array(portalOut.getForm())[3].y;
-			
+
+			// Détermine le portail d'entrée et de sortie
+			Portal portalIn, portalOut;
+			if (hitbox.collision(portal1.getHitbox())) {
+				portalIn = portal1;
+				portalOut = portal2;
+			} else {
+				portalIn = portal2;
+				portalOut = portal1;
+			}
+
+			// Obtenir les points A et B des deux portails (axe, point, portail)
+			// portalIn = 1 et portalOut = 2
+			int xA1 = fc.Rect2Array(portalIn.getForm())[0].x;
+			int yA1 = fc.Rect2Array(portalIn.getForm())[0].y;
+			int xB1 = fc.Rect2Array(portalIn.getForm())[1].x;
+			int yB1 = fc.Rect2Array(portalIn.getForm())[1].y;
+			int xD1 = fc.Rect2Array(portalIn.getForm())[3].x;
+			int yD1 = fc.Rect2Array(portalIn.getForm())[3].y;
+			int xA2 = fc.Rect2Array(portalOut.getForm())[0].x;
+			int yA2 = fc.Rect2Array(portalOut.getForm())[0].y;
+			int xB2 = fc.Rect2Array(portalOut.getForm())[1].x;
+			int yB2 = fc.Rect2Array(portalOut.getForm())[1].y;
+			int xD2 = fc.Rect2Array(portalOut.getForm())[3].x;
+			int yD2 = fc.Rect2Array(portalOut.getForm())[3].y;
+
 			//Coordonnées du joueur modifiées
 			int xj=x+width/2;
 			int yj=y+height/2;

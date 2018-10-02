@@ -1,6 +1,5 @@
 package clemnico;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Point;
@@ -12,63 +11,61 @@ import java.util.TimerTask;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-
 public class Window extends JFrame {
 
-	////Attributs////
-	public Panel 	panel;
-	private JLabel 	statusBar;
-	private int 	fps;
-	protected ImageLoader loader=new ImageLoader();
-	
-	//Objets de la fenêtre
-	Player player =new Player(400,200,100,100,50,"Player1", 0, 300, false); 
-	Portal portal1 =new Portal(-500,-500,100,20);
-	Portal portal2 =new Portal(-500,-500,100,20);
-	Obstacle obstacle=new Obstacle(300, 600, 600, 100,0);
-	Obstacle obstacle2=new Obstacle(900, 453, 200, 247,0);
-	Obstacle obstacle3=new Obstacle(250, 500, 100, 100,0);
-	Obstacle[] obstacles= {obstacle,obstacle2,obstacle3};
-	
-	GeneralEnemy enemy= new GeneralEnemy(400, 400, 50,50, "Player1", 0, 300, false);
-	FC fc=new FC();
-	
-	////Constructeur////
+	//// Attributs////
+	public Panel panel;
+	private JLabel statusBar;
+	private int fps;
+	protected ImageLoader loader = new ImageLoader();
+
+	// Objets de la fenêtre
+	Player player = new Player(400, 200, 100, 100, 50, "Player1", 0, 300, false);
+	Portal portal1 = new Portal(-500, -500, 100, 20);
+	Portal portal2 = new Portal(-500, -500, 100, 20);
+	Obstacle obstacle = new Obstacle(300, 600, 600, 200, 0);
+	Obstacle obstacle2 = new Obstacle(900, 550, 200, 247, 0);
+	Obstacle obstacle3 = new Obstacle(150, 500, 200, 200, 0);
+	Obstacle[] obstacles = { obstacle, obstacle2, obstacle3 };
+
+	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Player1", 0, 300, false);
+	FC fc = new FC();
+
+	//// Constructeur////
 	public Window(int fps) {
-		this.fps=fps;
-		
+		this.fps = fps;
+
 		this.setTitle("Ma fenetre");
 		this.setSize(1500, 1000);
 		this.setLocationRelativeTo(null);
-	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);             
-	    this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
 		this.setResizable(true);
-		
+
 		portal1.getForm().setColor(Color.BLUE);
 		portal2.getForm().setColor(Color.ORANGE);
-		
+
 		initPanel();
-		stepGame(player,enemy);
-		
+		stepGame(player, enemy);
 
 	}
-	
-	////Methodes////
-	
-	private void initPanel(){
-		panel=new Panel();
+
+	//// Methodes////
+
+	private void initPanel() {
+		panel = new Panel();
 		panel.setBackground(Color.WHITE);
-		add(panel,BorderLayout.CENTER);
-		
-		statusBar= new JLabel("default");
+		add(panel, BorderLayout.CENTER);
+
+		statusBar = new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
-	
-		Handlerclass handler =new Handlerclass(panel, statusBar, player, portal1, portal2,obstacles);
+
+		Handlerclass handler = new Handlerclass(panel, statusBar, player, portal1, portal2, obstacles);
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
-		
-		//Animations
+
+		// Animations
 		Animation animation= createAnimation(Animations.AnimationPlayerDefault,player.getWidth(),player.getHeight());
 		player.addAnimation(NameAnimation.DEFAULT,animation);
 		player.addAnimation(NameAnimation.JUMPL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
@@ -87,7 +84,9 @@ public class Window extends JFrame {
 		enemy.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		enemy.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		enemy.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
+		enemy.addAnimation(NameAnimation.FALLL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		enemy.addAnimation(NameAnimation.FALLR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
+		enemy.addAnimation(NameAnimation.JUMPL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		enemy.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		
 
@@ -112,29 +111,31 @@ public class Window extends JFrame {
 		panel.setEntityList(array);
 		
 	}
-	
+
 	private void stepGame(Player player, GeneralEnemy enemy) {
-		
-		Timer chrono =new Timer();
-		int delay=100;
-		int period=1000/this.fps;
-		
+
+		Timer chrono = new Timer();
+		int delay = 100;
+		int period = 1000 / this.fps;
+
 		chrono.schedule(new TimerTask() {
-		long time=0;
+			long time = 0;
+
 			@Override
 			public void run() {
-				time=time+1;
+				time = time + 1;
 				player.step(period);
 				enemy.step(period);
-				//Gestion portails teleportations
-				player.portalInteraction(fc,portal1,portal2);
+				// Gestion portails teleportations
+				player.portalInteraction(fc, portal1, portal2);
+				enemy.portalInteraction(fc, portal1, portal2);
 //				System.out.println(player.getX()+" "+player.isInTheAir());
 
-				//Gestion obstacle
+				// Gestion obstacle
 				player.obstacleInteraction2(fc, obstacles);
 				enemy.obstacleInteraction2(fc, obstacles);
 //				System.out.println(player.getForm().getX()+"   "+player.getForm().getY()+"   "+player.getTimeInAir());
-				
+
 				player.getCurrentAnimation().update();					
 				
 				panel.repaint();
@@ -164,27 +165,28 @@ public class Window extends JFrame {
 	}
 	
 	
-	public Animation createAnimationGeneral(String path,int def, int[][] liste_arg, int [] listeTime) {
+	public Animation createAnimationGeneral(String path, int def, int[][] liste_arg, int[] listeTime) {
 		BufferedImage img = this.loader.loadImage(path);
-		SpriteSheet ss=new SpriteSheet(img,def);
-		int nbSprite= liste_arg.length;
+		SpriteSheet ss = new SpriteSheet(img, def);
+		int nbSprite = liste_arg.length;
 		Sprite[] spriteTab = new Sprite[nbSprite];
-		for (int i=0; i< nbSprite ;i++) {
-			Sprite sp= new Sprite(ss, liste_arg[i][0], liste_arg[i][1], liste_arg[i][2], liste_arg[i][3], liste_arg[i][4], liste_arg[i][5],(double) liste_arg[i][6]);
-			spriteTab[i]=sp;
-			}
-		return new Animation(spriteTab,listeTime);
-			
+		for (int i = 0; i < nbSprite; i++) {
+			Sprite sp = new Sprite(ss, liste_arg[i][0], liste_arg[i][1], liste_arg[i][2], liste_arg[i][3],
+					liste_arg[i][4], liste_arg[i][5], (double) liste_arg[i][6]);
+			spriteTab[i] = sp;
 		}
-	
-	
+		return new Animation(spriteTab, listeTime);
+
+	}
+
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
-	
+
 	public int getFps() {
 		return fps;
 	}
+
 	public void setFps(int fps) {
 		this.fps = fps;
 	}

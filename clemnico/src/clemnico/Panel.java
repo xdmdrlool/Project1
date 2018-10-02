@@ -3,7 +3,12 @@ package clemnico;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
  
 public class Panel extends JPanel { 
@@ -26,6 +31,7 @@ public class Panel extends JPanel {
 			entity.display(gg);
 		}
 		
+	
 //		g.fillOval(xPlayer-rPlayer, yPlayer-rPlayer, 2*rPlayer, 2*rPlayer);
 		
 //		ArrayList<Integer> array =new ArrayList<Integer>();

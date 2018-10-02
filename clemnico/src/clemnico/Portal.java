@@ -68,7 +68,7 @@ public class Portal extends Entity{
 		
 		setX(xClic-width/2);
 		setY(yClic-height/2);
-		setAngle(angleRotation(player.getX()+width/2, player.getY()+height/2,xClic,yClic));
+		setAngle(angleRotation(player.getX()+player.getWidth()/2, player.getY()+player.getHeight()/2,xClic,yClic));
 		
 		setAngle(angle);
 		if(obstacleInteraction(obstacles)) {

@@ -2,6 +2,7 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ public class GeneralEnemy extends Enemy {
 	private int vy=0;
 	private int vxMax=100;
 	private int vyMax=30;
+	private int vxOnGround=5;
 	private int width=20;
 	private int height =20;
 	private int radius=60;
@@ -91,6 +93,129 @@ public class GeneralEnemy extends Enemy {
 		setVy((int)(vy-g*t));
 		setX(x+vx);
 		setY(y+vy);
+	}
+	
+	public void portalInteraction(FC fc, Portal portal1, Portal portal2) {
+
+		// S'il y a interaction avec l'un des deux portails
+		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
+
+			// Détermine le portail d'entrée et de sortie
+			Portal portalIn, portalOut;
+			if (hitbox.collision(portal1.getHitbox())) {
+				portalIn = portal1;
+				portalOut = portal2;
+			} else {
+				portalIn = portal2;
+				portalOut = portal1;
+			}
+
+			// Obtenir les points A et B des deux portails (axe, point, portail)
+			// portalIn = 1 et portalOut = 2
+			int xA1 = fc.Rect2Array(portalIn.getForm())[0].x;
+			int yA1 = fc.Rect2Array(portalIn.getForm())[0].y;
+			int xB1 = fc.Rect2Array(portalIn.getForm())[1].x;
+			int yB1 = fc.Rect2Array(portalIn.getForm())[1].y;
+			int xD1 = fc.Rect2Array(portalIn.getForm())[3].x;
+			int yD1 = fc.Rect2Array(portalIn.getForm())[3].y;
+			int xA2 = fc.Rect2Array(portalOut.getForm())[0].x;
+			int yA2 = fc.Rect2Array(portalOut.getForm())[0].y;
+			int xB2 = fc.Rect2Array(portalOut.getForm())[1].x;
+			int yB2 = fc.Rect2Array(portalOut.getForm())[1].y;
+			int xD2 = fc.Rect2Array(portalOut.getForm())[3].x;
+			int yD2 = fc.Rect2Array(portalOut.getForm())[3].y;
+
+			//Coordonnées du joueur modifiées
+			int xj=x+width/2;
+			int yj=y+height/2;
+			
+			//Détermine la vitesse min et la distance entre le joueur et le portail de sortie
+			int distancePortal=(int) ( width/1.42);
+			int vMinOut=5;
+			
+			
+			//Détermine la position du joueur sur la tangente du portail
+			double distancePlayerA1=Math.sqrt((xj-xA1)*(xj-xA1)+(yj-yA1)*(yj-yA1));
+			double distancePlayerD1=Math.sqrt((xj-xD1)*(xj-xD1)+(yj-yD1)*(yj-yD1));
+			double distancePlayerA2=portalOut.getWidth()-distancePlayerA1;
+			
+			//Détermine la norme de la vitesse en sortie
+			double vNormIn=Math.sqrt(vx*vx+vy*vy); 						//Norme de la vitesse d'entrée
+			double[] vectorVIn= {vx*1./vNormIn*1.,vy*1./vNormIn*1.};	//Vecteur vitesse normalisé
+			double vNormOut=Math.max(vNormIn, vMinOut);					//Vitesse minorée en sortie de portail
+			
+			//Vecteurs normalisés AB et DA du portail In et Out
+			double[] vectorAB1= {(xB1-xA1)*1./portalIn.getWidth()*1.,(yB1-yA1)*1./portalIn.getWidth()*1.};
+			double[] vectorAB2= {(xB2-xA2)*1./portalOut.getWidth()*1.,(yB2-yA2)*1./portalOut.getWidth()*1.};
+			double[] vectorDA2= {(xA2-xD2)*1./portalOut.getHeight()*1.,(yA2-yD2)*1./portalOut.getHeight()*1.};
+			
+			//Détermine l'orientation de la vitesse en sortie en fonction de celle en entrée
+			double thetaIn=Math.acos(vectorAB1[0]*vectorVIn[0]+vectorAB1[1]*vectorVIn[1]);
+			double thetaOut=(thetaIn-Math.PI);
+			double[] vectorVOut= {(vectorAB2[0]*Math.cos(thetaOut)-vectorAB2[1]*Math.sin(thetaOut)),
+							      (vectorAB2[0]*Math.sin(thetaOut)+vectorAB2[1]*Math.cos(thetaOut))};
+			int[] vOut= {(int) (vectorVOut[0]*vNormOut), (int) (vectorVOut[1]*vNormOut)};
+			
+			//Détermine le côté du portail où passe le joueur
+			correctionInteractionRect(fc, portalIn.getForm());
+			if (distancePlayerA1<distancePlayerD1) {
+				setX((int) (xA2+vectorAB2[0]*distancePlayerA2+(distancePortal)*vectorDA2[0])-width/2);
+				setY((int) (yA2+vectorAB2[1]*distancePlayerA2+(distancePortal)*vectorDA2[1])-height/2);
+				setVx(vOut[0]);
+				setVy(vOut[1]);
+			}
+			else {
+				
+				setX((int) (xA2+vectorAB2[0]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[0])-width/2);
+				setY((int) (yA2+vectorAB2[1]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[1])-height/2);
+				setVx(-vOut[0]);
+				setVy(-vOut[1]);
+			}
+		}
+	}
+	
+	
+	public void correctionInteractionRect(FC fc, FormRect rect) {
+
+		Point pointPlayer1=new Point(xBefore,yBefore);
+		Point pointPlayer2=new Point(x,y);
+		
+		Point A=new Point(fc.Rect2Array(rect)[0].x,fc.Rect2Array(rect)[0].y);
+		Point B=new Point(fc.Rect2Array(rect)[1].x,fc.Rect2Array(rect)[1].y);
+		Point C=new Point(fc.Rect2Array(rect)[2].x,fc.Rect2Array(rect)[2].y);
+		Point D=new Point(fc.Rect2Array(rect)[3].x,fc.Rect2Array(rect)[3].y);
+		
+		double dmin=10000;
+		Point correctedPosition=new Point(-1,-1);
+//		System.out.print(A.x+" ");
+//		System.out.println(A.y);
+//		System.out.print(D.x+" ");
+//		System.out.println(D.y);
+		
+		if (fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);
+			dmin=fc.distance(A, B);}
+		
+		
+		if (fc.calculIntersectionSeg(B,C,pointPlayer1,pointPlayer2)!=null && fc.distance(B, C)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(B,C,pointPlayer1,pointPlayer2);
+			dmin=fc.distance(B, C);}
+		
+		
+		if (fc.calculIntersectionSeg(C,D,pointPlayer1,pointPlayer2)!=null && fc.distance(C, D)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(C,D,pointPlayer1,pointPlayer2);
+			dmin=fc.distance(C, D);}
+		
+		
+		if (fc.calculIntersectionSeg(D,A,pointPlayer1,pointPlayer2)!=null && fc.distance(D, A)<dmin)
+			{correctedPosition=fc.calculIntersectionSeg(D,A,pointPlayer1,pointPlayer2);
+			dmin=fc.distance(D, A);}
+
+		if (correctedPosition.getX()!=-1 && correctedPosition.getY()!=-1) {
+			setX((int)(correctedPosition.x+width*1./2.));
+			setY((int)(correctedPosition.y+height*1./2.));
+			
+		}
 	}
 	
 	
@@ -237,6 +362,7 @@ public class GeneralEnemy extends Enemy {
 		if (this.inTheAir != inTheAir) {
 			 setTimeInAir(0);
 			this.inTheAir = inTheAir;}
+		if (!inTheAir) {if (vx>=0) {setVx(vxOnGround);} else {setVx(-vxOnGround);}}
 	}
 
 
