@@ -29,16 +29,16 @@ public class Player extends Entity {
 	private int vy = 0;
 	private int vxMax = 100;
 	private int vyMax = 30;
+	private int vxOnGround=6;
 	private int width = 20;
 	private int height = 20;
-	private int radius = 60;
-	private Hitbox hitbox = new Hitbox("RECT", x, y, radius, width, height, 0);
+	private Hitbox hitbox = new Hitbox("RECT", x, y, 0, width, height, 0);
 	private FC fc = new FC();
 	private Animation currentAnimation;
 	public Map<NameAnimation, Animation> ListAnimation = new HashMap<>();
 
 	////Constructeur////
-	public Player(int x, int y, int width, int height, int radius, String name, int direction, int speed, boolean move) {
+	public Player(int x, int y, int width, int height, String name, int direction, int vxOnGround) {
 		super(x, y);
 		FormRect rect = new FormRect(Color.RED, x, y, width, height, 0);
 		setForm(rect);
@@ -48,11 +48,9 @@ public class Player extends Entity {
 		setyBefore(y);
 		setWidth(width);
 		setHeight(height);
-		setRadius(radius);
 		this.name = name;
 		setDirectionX(direction);
-		this.speed = speed;
-		setMoveX(move);
+		setVxOnGround(vxOnGround);
 	}
 
 
@@ -104,7 +102,6 @@ public class Player extends Entity {
 			fall();
 		}
 
-		int vxOnGround = 6; // Mouvement latéral du joueur
 		double AirControl = 1.0; // En pourcentage
 		if (moveX) {
 			if (isInTheAir()) {
@@ -473,20 +470,6 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 		this.hitbox.setHeight(height);
 	}
 
-	
-
-
-	public int getRadius() {
-		return radius;
-	}
-
-
-	public void setRadius(int radius) {
-		this.radius = radius;
-		this.form.setRadius(radius);
-		this.hitbox.setRayon(radius);
-	}
-
 
 	public int getxBefore() {
 		return xBefore;
@@ -506,6 +489,20 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 	public void setyBefore(int yBefore) {
 		this.yBefore = yBefore;
 	}
+	public int getVxOnGround() {
+		return vxOnGround;
+	}
+
+
+
+
+	public void setVxOnGround(int vxOnGround) {
+		this.vxOnGround = vxOnGround;
+	}
+
+
+
+
 	public void setCurrentAnimation(NameAnimation name) {
 		Animation anime = ListAnimation.get(name);
 		if (this.currentAnimation!=anime) {

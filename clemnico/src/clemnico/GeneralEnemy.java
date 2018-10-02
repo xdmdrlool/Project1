@@ -41,7 +41,7 @@ public class GeneralEnemy extends Enemy {
 
 
 	////Constructeur////
-	public GeneralEnemy(int x,int y,int width, int height,String name, int direction, int speed, boolean move) {
+	public GeneralEnemy(int x,int y,int width, int height,String name, int direction, int vxOnGround, boolean fallFromPlatform) {
 		super(x,y);
 		FormRect rect = new FormRect(Color.RED,x,y,width,height,0 );
 		setForm(rect);
@@ -54,8 +54,8 @@ public class GeneralEnemy extends Enemy {
 		setRadius(radius);
 		this.name=name;
 		setDirectionX(direction);
-		this.speed=speed;
-		setMoveX(move);	
+		setVxOnGround(vxOnGround);
+		setFallFromPlatform(fallFromPlatform);
 	}
 
 
@@ -239,7 +239,7 @@ public class GeneralEnemy extends Enemy {
 //				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
 				if (directionCollision.x!=0) {inverseVx=true;}
-				if (!fallFromPlatform) {if (  directionCollision.y>0 && (x<obstacle.getX() || x+width>obstacle.getX()+obstacle.getWidth())) {inverseVx=true;};}
+				if (!fallFromPlatform && directionCollision.y>0) {if(x<obstacle.getX() && vx<0) {inverseVx=true;} if (x+width>obstacle.getX()+obstacle.getWidth() &&vx>=0) {inverseVx=true;};}
 				if (directionCollision.y!=0) {setVy(0);}
 
 				int newX=(int) (getX()+vecteurCorrection.x);
@@ -450,6 +450,16 @@ public class GeneralEnemy extends Enemy {
 	public void setyBefore(int yBefore) {
 		this.yBefore = yBefore;
 	}
+	public int getVxOnGround() {
+		return vxOnGround;
+	}
+
+
+	public void setVxOnGround(int vxOnGround) {
+		this.vxOnGround = vxOnGround;
+	}
+
+
 	public void setCurrentAnimation(NameAnimation name) {
 		Animation anime = ListAnimation.get(name);
 		if (this.currentAnimation!=anime) {
@@ -485,6 +495,16 @@ public class GeneralEnemy extends Enemy {
 		
 		else {if (vx>0) {name=NameAnimation.WALKR;}else if (vx<0) {name=NameAnimation.WALKL;}}
 		setCurrentAnimation(name);
+	}
+
+
+	public boolean isFallFromPlatform() {
+		return fallFromPlatform;
+	}
+
+
+	public void setFallFromPlatform(boolean fallFromPlatform) {
+		this.fallFromPlatform = fallFromPlatform;
 	}
 }
 

@@ -20,7 +20,7 @@ public class Window extends JFrame {
 	protected ImageLoader loader = new ImageLoader();
 
 	// Objets de la fenêtre
-	Player player = new Player(400, 200, 100, 100, 50, "Player1", 0, 300, false);
+	Player player = new Player(400, 200, 100, 100,"Player1", 0, 6);
 	Portal portal1 = new Portal(-500, -500, 100, 20);
 	Portal portal2 = new Portal(-500, -500, 100, 20);
 	Obstacle obstacle = new Obstacle(300, 600, 600, 200, 0);
@@ -28,7 +28,7 @@ public class Window extends JFrame {
 	Obstacle obstacle3 = new Obstacle(150, 500, 200, 200, 0);
 	Obstacle[] obstacles = { obstacle, obstacle2, obstacle3 };
 
-	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Player1", 0, 300, false);
+	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Enemy1", 0, 5,false);
 	FC fc = new FC();
 
 	//// Constructeur////
