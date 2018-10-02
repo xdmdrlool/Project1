@@ -233,7 +233,7 @@ public class FC {
 		tab[0] = vec;
 		tab[1] = direction;
 		Point P = null;
-		Point P0 = new Point();
+
 		Point I = null;
 		Point J = null;
 		int n = 0;
