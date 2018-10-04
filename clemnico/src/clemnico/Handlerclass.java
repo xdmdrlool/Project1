@@ -17,11 +17,15 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	private Panel 	panel;
 	private JLabel 	statusBar;
 	
+	private int xMouse=0;
+	private int yMouse=0;
 
 	private Player 	player;
 	private Portal portal1;
 	private Portal portal2;
 	private Obstacle[] obstacles;
+	private Projectile projectile;
+	
 	////Constructeur////
 	public  Handlerclass(Panel panel, JLabel statusBar, Player player, Portal portal1, Portal portal2, Obstacle[] obstacles) {
 		this.panel=panel;
@@ -39,7 +43,7 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	////////////////////////////////
 	
 	public void mouseClicked(MouseEvent event) {
-		 
+		
 		int xClic=event.getX();
 		int yClic=event.getY();
 		
@@ -57,8 +61,9 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		statusBar.setText("ca bouge !" );;
+	public void mouseMoved(MouseEvent event) {
+		setxMouse(event.getX());
+		setyMouse(event.getY());
 		
 	}
 
@@ -103,7 +108,7 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	public void keyPressed(KeyEvent e) {
 		
 		int key =e.getKeyCode();
-		player.actionKeyboard(key);
+		player.actionKeyboard(key,xMouse,yMouse);
 	}
 
 	@Override
@@ -125,5 +130,25 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
+	}
+
+
+	public int getxMouse() {
+		return xMouse;
+	}
+
+
+	public void setxMouse(int xMouse) {
+		this.xMouse = xMouse;
+	}
+
+
+	public int getyMouse() {
+		return yMouse;
+	}
+
+
+	public void setyMouse(int yMouse) {
+		this.yMouse = yMouse;
 	}
 }

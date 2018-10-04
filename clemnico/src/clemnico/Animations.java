@@ -44,9 +44,9 @@ public enum Animations {
 	
 	AnimationObsatcleDefault("SpriteSheet_Obstacle.png",64, new int[][] { {0 , 0 , 58 , 14 , 0 } },new int[] {1}),
 	
-	AnimationObsatcleDefault2("SpriteSheet_Obstacle2.png",64, new int[][] { {0 , 0 , 51 , 51 , 0 } },new int[] {1});
+	AnimationObsatcleDefault2("SpriteSheet_Obstacle2.png",64, new int[][] { {0 , 0 , 51 , 51 , 0 } },new int[] {1}),
 	
-	
+	AnimationProjectile("SpriteSheetPunkPlayer.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } } ,  new int[] {1}   )
 	
 	;
 	

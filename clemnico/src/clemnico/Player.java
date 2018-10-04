@@ -2,8 +2,10 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.List;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +34,12 @@ public class Player extends Entity {
 	private int vxOnGround=6;
 	private int width = 20;
 	private int height = 20;
+	
 	private Hitbox hitbox = new Hitbox("RECT", x, y, 0, width, height, 0);
 	private FC fc = new FC();
 	private Animation currentAnimation;
 	public Map<NameAnimation, Animation> ListAnimation = new HashMap<>();
+	public ArrayList<Projectile> projectiles=new ArrayList<>();
 
 	////Constructeur////
 	public Player(int x, int y, int width, int height, String name, int direction, int vxOnGround) {
@@ -72,7 +76,7 @@ public class Player extends Entity {
 	}
 
 	// Action clavier
-	public void actionKeyboard(int key) {
+	public void actionKeyboard(int key, int xMouse, int yMouse) {
 
 		if (key == KeyEvent.VK_Z && !inTheAir) {
 			setInTheAir(false);
@@ -81,6 +85,7 @@ public class Player extends Entity {
 			setVx(directionX * vx);
 
 		}
+		
 		if (key == KeyEvent.VK_Q && keyPressed != key) {
 			setDirectionX(-1);
 			setKeyPressed(key);
@@ -89,6 +94,12 @@ public class Player extends Entity {
 			setDirectionX(1);
 			setKeyPressed(key);
 			setMoveX(true);
+		}
+		//Jet de projectiles
+		if (key == KeyEvent.VK_SPACE) {
+			Projectile projectile=new Projectile(x,y,10,20,0);
+			projectile.directionThrow(this, xMouse, yMouse);
+			projectiles.add(projectile);
 		}
 	}
 	
@@ -540,5 +551,27 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 		else {if (vx>0) {name=NameAnimation.WALKR;}else if (vx<0) {name=NameAnimation.WALKL;}}
 		setCurrentAnimation(name);
 	}
+
+
+
+
+	public FC getFc() {
+		return fc;
+	}
+
+
+
+
+	public void setFc(FC fc) {
+		this.fc = fc;
+	}
+
+	public ArrayList<Projectile> getProjectiles(){
+		return projectiles;
+	}
+
+
+
+	
 }
 

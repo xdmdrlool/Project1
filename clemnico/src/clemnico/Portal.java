@@ -2,6 +2,7 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class Portal extends Entity{
 	private Hitbox hitbox=new Hitbox("RECT",x,y+height/4,10,height/2,width,angle);
 	private Animation currentAnimation;
 	public Map<NameAnimation,Animation> ListAnimation=new  HashMap<>();
+	FC fc=new FC();
 	
 	////Constructeur////
 	public Portal(int x, int y, int width, int height){
@@ -48,10 +50,12 @@ public class Portal extends Entity{
 	}
 	
 
-	public boolean obstacleInteraction(Obstacle[] obstacles) {
+	public boolean obstacleInteraction(Obstacle[] obstacles,Player player,int xClic,int yClic) {
+		Point A=new Point(player.getX(),player.getY());
+		Point B=new Point(xClic, yClic);
 		for (Obstacle obstacle: obstacles) {
-			//S'il y a collision avec un obstacle
-			if (this.getHitbox().collision(obstacle.getHitbox())) {
+			//S'il y a interaction avec un obstacle
+			if (this.getHitbox().collision(obstacle.getHitbox()) || fc.CollisionLineRect(A,B,obstacle.getForm())) {
 				return true;
 			}
 		}
@@ -70,7 +74,7 @@ public class Portal extends Entity{
 		setAngle(angleRotation(player.getX()+player.getWidth()/2, player.getY()+player.getHeight()/2,xClic,yClic));
 		
 		setAngle(angle);
-		if(obstacleInteraction(obstacles)) {
+		if(obstacleInteraction(obstacles,player,xClic,yClic)) {
 			setX(xBefore);
 			setY(yBefore);
 			setAngle(angleBefore);
@@ -173,5 +177,13 @@ public class Portal extends Entity{
 	public void chooseAnimation() {
 		NameAnimation name=NameAnimation.DEFAULT;
 		setCurrentAnimation(name);
+	}
+
+	public FC getFc() {
+		return fc;
+	}
+
+	public void setFc(FC fc) {
+		this.fc = fc;
 	}
 }

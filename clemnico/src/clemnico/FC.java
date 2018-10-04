@@ -150,6 +150,18 @@ public class FC {
 	public boolean Collision(FormCircle circle1, FormCircle circle2) {
 		return Collision(Cirle2Cercle(circle1), Cirle2Cercle(circle2));
 	}
+	
+	public boolean CollisionLineRect(Point A, Point B, FormRect rectangle) {
+		Point[] rect= Rect2Array(rectangle);
+		Point J=new Point();
+		for (int i=0; i<4; i++) {
+			J=(calculIntersectionSeg(A,B,rect[i], rect[(i+1)%4]));
+			if (J!=null) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public Point calculIntersectionSeg(Point A, Point B, Point C, Point D) {
 		if (!CollisionSegSeg(A, B, C, D)) {
@@ -442,6 +454,8 @@ public class FC {
 		}
 
 	}
+	
+	
 
 	////////////////////////////////////
 	////// FONCTIONS GENERALES /////////

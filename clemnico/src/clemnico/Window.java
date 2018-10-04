@@ -25,7 +25,10 @@ public class Window extends JFrame {
 	Obstacle obstacle = new Obstacle(300, 600, 600, 200, 0);
 	Obstacle obstacle2 = new Obstacle(900, 550, 200, 247, 0);
 	Obstacle obstacle3 = new Obstacle(150, 500, 200, 200, 0);
-	Obstacle[] obstacles = { obstacle, obstacle2, obstacle3 };
+	Obstacle obstacle4 = new Obstacle(120, 200, 200, 200, 0);
+	Obstacle[] obstacles = { obstacle, obstacle2, obstacle3, obstacle4 };
+	ArrayList<Projectile> projectiles=player.getProjectiles();
+	int projectileCount=0;
 
 	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Enemy1", 0, 5,false);
 	FC fc = new FC();
@@ -49,7 +52,7 @@ public class Window extends JFrame {
 
 	}
 
-	//// Methodes////
+	//// Methodes ////
 
 	private void initPanel() {
 		panel = new Panel();
@@ -79,7 +82,8 @@ public class Window extends JFrame {
 		obstacle.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle.getWidth(),obstacle.getHeight()));
 		obstacle2.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle2.getWidth(),obstacle2.getHeight()));
 		obstacle3.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle3.getWidth(),obstacle3.getHeight()));
-		
+		obstacle4.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle3.getWidth(),obstacle3.getHeight()));
+				
 		enemy.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		enemy.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		enemy.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
@@ -87,8 +91,6 @@ public class Window extends JFrame {
 		enemy.addAnimation(NameAnimation.FALLR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		enemy.addAnimation(NameAnimation.JUMPL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
 		enemy.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
-		
-
 				
 		player.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal1.setCurrentAnimation(NameAnimation.DEFAULT);
@@ -96,11 +98,15 @@ public class Window extends JFrame {
 		obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle2.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle3.setCurrentAnimation(NameAnimation.DEFAULT);
+		obstacle4.setCurrentAnimation(NameAnimation.DEFAULT);
+		
 		enemy.setCurrentAnimation(NameAnimation.DEFAULT);
+		
 		ArrayList<Entity> array = new ArrayList<Entity>();
 		array.add(obstacle);
 		array.add(obstacle2);
 		array.add(obstacle3);
+		array.add(obstacle4);
 		array.add(player);
 		array.add(portal1);
 		array.add(portal2);
@@ -109,6 +115,21 @@ public class Window extends JFrame {
 				
 		panel.setEntityList(array);
 		
+	}
+	
+	private void refreshPanel() {
+		
+		projectiles=player.getProjectiles();
+		ArrayList<Entity> array = panel.getEntityList();
+		
+		//Si un projectile a été rajouté par le joueur en faisant espace
+		if (projectileCount<projectiles.size()) {			
+			projectiles.get(projectileCount-1).addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,projectiles.get(projectileCount-1).getWidth(),projectiles.get(projectileCount-1).getHeight()));
+			projectiles.get(projectileCount-1).setCurrentAnimation(NameAnimation.DEFAULT);
+			array.add(projectiles.get(projectileCount-1));
+			projectileCount+=1;
+			panel.setEntityList(array);
+		}
 	}
 
 	private void stepGame(Player player, GeneralEnemy enemy) {
@@ -122,9 +143,16 @@ public class Window extends JFrame {
 
 			@Override
 			public void run() {
+				
 				time = time + 1;
 				player.step(period);
 				enemy.step(period);
+				
+				refreshPanel();
+				for (Projectile projectile : projectiles) {
+					projectile.step(period,player,1,1);
+				}
+
 				// Gestion portails teleportations
 				player.portalInteraction(fc, portal1, portal2);
 				enemy.portalInteraction(fc, portal1, portal2);
