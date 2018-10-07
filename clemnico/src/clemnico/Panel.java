@@ -5,12 +5,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+
+import clemnico.FC.Vecteur;
  
 public class Panel extends JPanel { 
 	
 	////Attributs////
 	protected ArrayList<Entity> formList= new ArrayList<Entity>();
-
+	private int xOffset=0;
+	private int yOffset=0;
 	
 	////Constructeur////
 	public Panel() {
@@ -23,7 +26,7 @@ public class Panel extends JPanel {
 		super.paintComponent(g);
 		Graphics2D gg= (Graphics2D) g;		
 		for (Entity entity :formList) {
-			entity.display(gg);
+			entity.display(gg,xOffset,yOffset);
 		}
 		
 	
@@ -85,6 +88,30 @@ public class Panel extends JPanel {
 	}
 	public void setEntityList(ArrayList<Entity> formList) {
 		this.formList = formList;
+	}
+
+
+
+	public int getxOffset() {
+		return xOffset;
+	}
+
+
+
+	public void setxOffset(int xOffset) {
+		this.xOffset = xOffset;
+	}
+
+
+
+	public int getyOffset() {
+		return yOffset;
+	}
+
+
+
+	public void setyOffset(int yOffset) {
+		this.yOffset = yOffset;
 	}        
 
 	

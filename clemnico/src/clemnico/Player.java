@@ -1,73 +1,46 @@
 package clemnico;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.List;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import clemnico.FC.Vecteur;
 
 public class Player extends Entity {
 
 	//// Attributs////
-	private String name = "";
+
 	private int directionX = 0;
-	private int speed = 300;
+
 	private boolean moveX = false;
-	private boolean inTheAir = false;
-	private int timeInAir = 0;
 	private int keyPressed = 0;
 	private boolean dead = false;
-	private FormRect form;
-	private int x = 100;
-	private int y = 100;
-	private int xBefore = x;
-	private int yBefore = y;
-	private int vx = 0;
-	private int vy = 0;
 	private int vxMax = 100;
 	private int vyMax = 30;
 	private int vxOnGround=6;
-	private int width = 20;
-	private int height = 20;
+	Sound sound=new Sound("saut.wav");
+	
 	private boolean shooting=false;
 	private int reloadShoot=10;	//fréquence de tir (0=max)
 	private int timeShoot=0;	//durée depuis le dernier tir
 	
 	private int xMouse;
 	private int yMouse;
-	
-	private Hitbox hitbox = new Hitbox("RECT", x, y, 0, width, height, 0);
-	private FC fc = new FC();
-	private Animation currentAnimation;
-	public Map<NameAnimation, Animation> ListAnimation = new HashMap<>();
-	public ArrayList<Projectile> projectiles=new ArrayList<>();
 
+	public ArrayList<Projectile> projectiles=new ArrayList<>();
+	
 	////Constructeur////
 	public Player(int x, int y, int width, int height, String name, int direction, int vxOnGround) {
-		super(x, y);
-		FormRect rect = new FormRect(Color.RED, x, y, width, height, 0);
-		setForm(rect);
-		setX(x);
-		setY(y);
-		setxBefore(x);
-		setyBefore(y);
-		setWidth(width);
-		setHeight(height);
-		this.name = name;
+		super(name, x, y, width, height);
 		setDirectionX(direction);
 		setVxOnGround(vxOnGround);
 	}
+
+
+	
 	
 	//// Methodes////
-	public void display(Graphics2D gg) {
-		Sprite sprite = currentAnimation.getSprite();
-		sprite.render(gg, x + width / 2, y + height / 2);
-	}
 
 	public void moveIn(int x, int y) {
 		setX(x);
@@ -86,6 +59,7 @@ public class Player extends Entity {
 			setVy(-20);
 			setY(y - 1);
 			setVx(directionX * vx);
+			sound.play();
 
 		}
 		
@@ -103,12 +77,13 @@ public class Player extends Entity {
 			setShooting(true);
 		}
 	}
-
+	
 	public void shoot() {
 		Projectile projectile=new Projectile(x+width/2,y+height/2,10,20,0);
 		projectile.directionThrow(this, xMouse, yMouse);
 		projectiles.add(projectile);
 	}
+	
 	
 	// Action de joueur pour un pas de la boucle
 	public void step(int period) {
@@ -140,7 +115,6 @@ public class Player extends Entity {
 		chooseAnimation();
 	}
 	
-	
 	// Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
 		double g = -5;
@@ -151,12 +125,12 @@ public class Player extends Entity {
 		setY(y + vy);
 	}
 	
+
 	
-	
+	//Gestion intéraction entre joueur et les obstacles
+
 	
 public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
-		
-		
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
 		boolean varInTheAir=true;
@@ -164,13 +138,22 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a collision avec un obstacle
 			FormRect rect0=new FormRect(Color.RED, xBefore, yBefore, width, height, 0);
-			FormRect rect=(FormRect) hitbox.getForm();
+			FormRect rect=(FormRect) getHitbox().getForm();
 			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
+			
+			rect0.setX(rect0.getX()+obstacle.getX()-obstacle.getxBefore());
+			rect0.setY(rect0.getY()+obstacle.getY()-obstacle.getyBefore());
+			
 			Vecteur[] tab = fc.calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
 			
 			if (tab !=null) {
 				vecteurCorrection=tab[0];
 				directionCollision=tab[1];
+				
+//				System.out.println("xB :"+rect0.getX()+"   yB : "+rect0.getY());
+//				System.out.println("x :"+x+"   y : "+y);
+//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
+//				System.out.println(directionCollision.x+" "+directionCollision.y);
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
 				if (directionCollision.x!=0 ||directionCollision.y>0) {setVx(0);}
 				if (directionCollision.y!=0) {setVy(0);}
@@ -179,17 +162,50 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 				int newX=(int) (getX()+vecteurCorrection.x);
 				int newY=(int) (getY()+vecteurCorrection.y);
 				
+//				System.out.println("x: "+newX+"  y: "+newY);
+//				System.out.println("air : "+isInTheAir());	
+
 				setX(newX);
 				setY(newY);
+//				System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);
 			}
+			
+
 		}
+//		System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);	
 		setTimeInAir(getTimeInAir()+1);
 		setInTheAir(varInTheAir);
-		setxBefore(x);
-		setyBefore(y);
+		setxBefore(x);setyBefore(y);
+
+		
+				
+	}
+	
+	@Override
+	public void chooseAnimation() {
+		NameAnimation name=NameAnimation.DEFAULT;
+		if (inTheAir) {
+			if (vy<=0) {if (vx>=0) {name=NameAnimation.JUMPR;}else {name=NameAnimation.JUMPL;}}
+			else  {if (vx>=0) {name=NameAnimation.FALLR;}else {name=NameAnimation.FALLL;}}}
+		
+		else {if (vx>0) {name=NameAnimation.WALKR;}else if (vx<0) {name=NameAnimation.WALKL;}}
+		setCurrentAnimation(name);
 	}
 	
 	
+	
+	@Override
+	public void useDefaultAnimations() {
+		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.WALKL,ACreator.createAnimation(Animations.AnimationPlayerWalkL,width,height));
+		addAnimation(NameAnimation.WALKR,ACreator.createAnimation(Animations.AnimationPlayerWalkR,width,height));
+		addAnimation(NameAnimation.JUMPL,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.JUMPR,ACreator.createAnimation(Animations.AnimationPlayerAirKick,width,height));
+		addAnimation(NameAnimation.FALLL,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.FALLR,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+
+		
+	}
 	
 	
 	
@@ -197,19 +213,7 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
 	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 
-	public int getSpeed() {
-		return speed;
-	}
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
 	public boolean isDead() {
 		return dead;
 	}
@@ -217,34 +221,6 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 		this.dead = dead;
 	}
 
-	public FormRect getForm() {
-		return form;
-	}
-
-	public void setForm(FormRect form) {
-		this.form = form;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-
-		this.x = x;
-		this.form.setX(x);;
-		this.hitbox.setX(x);	
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-		this.form.setY(y);;
-		this.hitbox.setY(y);
-	}
 
 	public int getDirectionX() {
 		return directionX;
@@ -266,15 +242,6 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 	public void setKeyPressed(int keyPressed) {
 		this.keyPressed=keyPressed;
 	}
-	public Hitbox getHitbox() {
-		return hitbox;
-	}
-
-
-	public void setHitbox(Hitbox hitbox) {
-		this.hitbox = hitbox;
-	}
-
 
 	public boolean isInTheAir() {
 		return inTheAir;
@@ -320,49 +287,11 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 	public void setTimeInAir(int timeInAir) {
 		this.timeInAir = timeInAir;
 	}
-	public int getWidth() {
-		return width;
-	}
-	public void setWidth(int width) {
-		this.width = width;
-		this.hitbox.setWidth(width);
-	}
 
 
-	public int getHeight() {
-		return height;
-	}
-
-
-	public void setHeight(int height) {
-		this.height = height;
-		this.hitbox.setHeight(height);
-	}
-
-
-	public int getxBefore() {
-		return xBefore;
-	}
-
-
-	public void setxBefore(int xBefore) {
-		this.xBefore = xBefore;
-	}
-
-
-	public int getyBefore() {
-		return yBefore;
-	}
-
-
-	public void setyBefore(int yBefore) {
-		this.yBefore = yBefore;
-	}
 	public int getVxOnGround() {
 		return vxOnGround;
 	}
-
-
 
 
 	public void setVxOnGround(int vxOnGround) {
@@ -370,59 +299,6 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 	}
 
 
-
-
-	public void setCurrentAnimation(NameAnimation name) {
-		Animation anime = ListAnimation.get(name);
-		if (this.currentAnimation!=anime) {
-			this.currentAnimation=anime;
-			this.currentAnimation.reset();}
-	}
-	public Map<NameAnimation,Animation> getListAnimation() {
-		return ListAnimation;
-	}
-
-
-	public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
-		ListAnimation = listAnimation;
-	}
-
-
-
-	public void addAnimation(NameAnimation string,Animation animation) {
-		this.ListAnimation.put(string,animation);
-	}
-
-
-	@Override
-	public Animation getCurrentAnimation() {
-		return this.currentAnimation;
-	}
-	
-	
-	public void chooseAnimation() {
-		NameAnimation name=NameAnimation.DEFAULT;
-		if (inTheAir) {
-			if (vy<=0) {if (vx>=0) {name=NameAnimation.JUMPR;}else {name=NameAnimation.JUMPL;}}
-			else  {if (vx>=0) {name=NameAnimation.FALLR;}else {name=NameAnimation.FALLL;}}}
-		
-		else {if (vx>0) {name=NameAnimation.WALKR;}else if (vx<0) {name=NameAnimation.WALKL;}}
-		setCurrentAnimation(name);
-	}
-
-
-
-
-	public FC getFc() {
-		return fc;
-	}
-
-
-
-
-	public void setFc(FC fc) {
-		this.fc = fc;
-	}
 
 	public ArrayList<Projectile> getProjectiles(){
 		return projectiles;
@@ -486,8 +362,7 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 		this.timeShoot = timeShoot;
 	}
 
-
-
 	
+
 }
 

@@ -16,6 +16,9 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	////Attributs////
 	private Panel 	panel;
 	private JLabel 	statusBar;
+	
+	private int xOffset=0;
+	private int yOffset=0;
 
 	private Player 	player;
 	private Portal portal1;
@@ -59,8 +62,8 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 
 	@Override
 	public void mouseMoved(MouseEvent event) {
-		player.setxMouse(event.getX());
-		player.setyMouse(event.getY());
+		player.setxMouse(event.getX()-xOffset);
+		player.setyMouse(event.getY()-yOffset);
 		
 	}
 
@@ -79,8 +82,8 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	public void mousePressed(MouseEvent event) {
 		statusBar.setText(" "+event.getX());;
 		
-		int xClic=event.getX();
-		int yClic=event.getY();
+		int xClic=event.getX()-xOffset;
+		int yClic=event.getY()-yOffset;
 		
 		//Commandes portail
 		if (event.getButton()==MouseEvent.BUTTON1) {
@@ -139,5 +142,25 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 
 	public void setProjectile(Projectile projectile) {
 		this.projectile = projectile;
+	}
+	
+	
+	public int getxOffset() {
+		return xOffset;
+	}
+
+
+	public void setxOffset(int xOffset) {
+		this.xOffset = xOffset;
+	}
+
+
+	public int getyOffset() {
+		return yOffset;
+	}
+
+
+	public void setyOffset(int yOffset) {
+		this.yOffset = yOffset;
 	}
 }

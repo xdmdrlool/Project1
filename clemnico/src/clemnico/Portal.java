@@ -1,38 +1,20 @@
 package clemnico;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Portal extends Entity{
 	
-	private int x=0;
-	private int y=0;
-	private int xBefore=0;
-	private int yBefore=0;
-	private int vx=0;
-	private int vy=0;
-	private int height=10;
-	private int width=10;
+
 	private double angle=0;
 	private boolean moved;
-	private int timeInAir=0;
-	private boolean inTheAir=false;
-	private FormRect form= new FormRect(Color.BLUE,x,y,width, height, angle);
-	private Hitbox hitbox=new Hitbox("RECT",x,y+height/4,10,height/2,width,angle);
-	private Animation currentAnimation;
-	public Map<NameAnimation,Animation> ListAnimation=new  HashMap<>();
-	FC fc=new FC();
+	private Color color;
 	
 	////Constructeur////
-	public Portal(int x, int y, int width, int height){
-		super(x,y);
-		this.setX(x);
-		this.setY(y);
-		this.setWidth(width);
-		this.setHeight(height);
+	public Portal(int x, int y, int width, int height,String name,Color color){
+		super(name, x,y, width, height);
+		this.setColor(color);
+
 	}
 	
 	////Méthodes////
@@ -50,10 +32,7 @@ public class Portal extends Entity{
 		}
 	}
 	
-	public void display(Graphics2D gg) {
-		Sprite sprite =currentAnimation.getSprite();
-		sprite.render(gg, x+width/2, y+height/2);
-	}
+
 	
 
 	public boolean obstacleInteraction(Obstacle[] obstacles,Player player,int xClic,int yClic) {
@@ -86,25 +65,33 @@ public class Portal extends Entity{
 			setAngle(angleBefore);
 		}
 	}
+	
+	
+	
+	
+	public void chooseAnimation() {
+		NameAnimation name=NameAnimation.DEFAULT;
+		setCurrentAnimation(name);
+	}
+	
+	
+	@Override
+	public void useDefaultAnimations() {
+		if (color==Color.BLUE) {
+		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPortal1Default,width,height));}
+		else {addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPortal2Default,width,height));}
+	}
+	
 
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
 	
-	public int getX() {
-		return x;
-	}
-	public void setX(int x) {
-		this.x = x;
-		this.form.setX(x);
-		this.hitbox.setX(x);
-	}
-	public int getY() {
-		return y;
-	}
+
+
 	public void setY(int y) {
 		this.y = y;
-		this.form.setY(y);;
+		this.form.setY(y);
 		this.hitbox.setY(y+height/4);
 	}
 	public double getAngle() {
@@ -116,16 +103,8 @@ public class Portal extends Entity{
 		this.hitbox.setAngle(angle);
 		this.currentAnimation.setAngle(angle);
 	}
-	public FormRect getForm() {
-		return form;
-	}
-	public void setForm(FormRect form) {
-		this.form = form;
-	}
 
-	public int getHeight() {
-		return height;
-	}
+
 
 	public void setHeight(int height) {
 		this.height = height;
@@ -133,112 +112,26 @@ public class Portal extends Entity{
 		this.hitbox.setHeight(height/2);
 	}
 
-	public int getWidth() {
-		return width;
-	}
 
-	public void setWidth(int width) {
-		this.width = width;
-		this.form.setWidth(width);;
-		this.hitbox.setWidth(width);
-	}
 	public boolean isMoved() {
 		return moved;
 	}
 	public void setMoved(boolean moved) {
 		this.moved = moved;
 	}
-	public Hitbox getHitbox() {
-		return hitbox;
+
+	public Color getColor() {
+		return color;
 	}
 
-	public void setHitbox(Hitbox hitbox) {
-		this.hitbox = hitbox;
-	}
-	public Animation getCurrentAnimation() {
-		return currentAnimation;
-	}
-
-	public void setCurrentAnimation(NameAnimation name) {
-		Animation anime = ListAnimation.get(name);
-		if (this.currentAnimation!=anime) {
-			this.currentAnimation=anime;
-			this.currentAnimation.reset();}
-	}
-	public Map<NameAnimation,Animation> getListAnimation() {
-		return ListAnimation;
-	}
-
-
-	public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
-		ListAnimation = listAnimation;
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 
 
-	public void addAnimation(NameAnimation name,Animation animation) {
-		this.ListAnimation.put(name,animation);
-	}
+
+
 	
-	public void chooseAnimation() {
-		NameAnimation name=NameAnimation.DEFAULT;
-		setCurrentAnimation(name);
-	}
-
-	public FC getFc() {
-		return fc;
-	}
-
-	public void setFc(FC fc) {
-		this.fc = fc;
-	}
-
-	public int getVx() {
-		return vx;
-	}
-
-	public void setVx(int vx) {
-		this.vx = vx;
-	}
-
-	public int getVy() {
-		return vy;
-	}
-
-	public void setVy(int vy) {
-		this.vy = vy;
-	}
-
-	public int getxBefore() {
-		return xBefore;
-	}
-
-	public void setxBefore(int xBefore) {
-		this.xBefore = xBefore;
-	}
-
-	public int getyBefore() {
-		return yBefore;
-	}
-
-	public void setyBefore(int yBefore) {
-		this.yBefore = yBefore;
-	}
-
-	public int getTimeInAir() {
-		return timeInAir;
-	}
-
-	public void setTimeInAir(int timeInAir) {
-		this.timeInAir = timeInAir;
-	}
-
-	public boolean isInTheAir() {
-		return inTheAir;
-	}
-
-	public void setInTheAir(boolean inTheAir) {
-		this.inTheAir = inTheAir;
-	}
 
 }

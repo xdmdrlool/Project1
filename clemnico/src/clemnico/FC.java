@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import clemnico.FC.Vecteur;
-
 public class FC {
 
 	public FC() {
@@ -124,7 +122,6 @@ public class FC {
 	}
 
 	public boolean Collision(FormRect rect1, FormRect rect2) {
-
 		Point[] list1 = Rect2Array(rect1);
 		Point[] list2 = Rect2Array(rect2);
 		for (int i = 0; i <= 3; i++) {
@@ -152,7 +149,7 @@ public class FC {
 	public boolean Collision(FormCircle circle1, FormCircle circle2) {
 		return Collision(Cirle2Cercle(circle1), Cirle2Cercle(circle2));
 	}
-	
+
 	public boolean CollisionLineRect(Point A, Point B, FormRect rectangle) {
 		Point[] rect= Rect2Array(rectangle);
 		Point J=new Point();
@@ -164,7 +161,7 @@ public class FC {
 		}
 		return false;
 	}
-
+	
 	public Point calculIntersectionSeg(Point A, Point B, Point C, Point D) {
 		if (!CollisionSegSeg(A, B, C, D)) {
 			return null;
@@ -234,10 +231,9 @@ public class FC {
 		return closestPoint;
 	}
 
-	public Vecteur[] calculVecteurCollisionRectDroitObstacleDroit(FormRect rectangle0, FormRect rectangle,
-			FormRect obstacle) {
-		Point Middle = new Point(rectangle.getX() + rectangle.getWidth() / 2,
-				rectangle.getY() + rectangle.getHeight() / 2);
+	public Vecteur[] calculVecteurCollisionRectDroitObstacleDroit(FormRect rectangle0, FormRect rectangle,FormRect obstacle) {
+		if (!(Collision(rectangle,obstacle))) {return null;}
+		Point Middle = new Point(rectangle.getX() + rectangle.getWidth() / 2,rectangle.getY() + rectangle.getHeight() / 2);
 		Point[] rect0 = Rect2Array(rectangle0);
 		Point[] rect = Rect2Array(rectangle);
 		Point[] obs = Rect2Array(obstacle);
@@ -252,20 +248,13 @@ public class FC {
 		Point J = null;
 		int n = 0;
 		ArrayList<Integer> listPointInObs = new ArrayList<>();
-		if (Collision(obs, 4, rect[0])) {
-			listPointInObs.add(0);
-		}
-		if (Collision(obs, 4, rect[1])) {
-			listPointInObs.add(1);
-		}
-		if (Collision(obs, 4, rect[2])) {
-			listPointInObs.add(2);
-		}
-		if (Collision(obs, 4, rect[3])) {
-			listPointInObs.add(3);
-		}
+		if (Collision(obs, 4, rect[0])) {listPointInObs.add(0);}
+		if (Collision(obs, 4, rect[1])) {listPointInObs.add(1);}
+		if (Collision(obs, 4, rect[2])) {listPointInObs.add(2);}
+		if (Collision(obs, 4, rect[3])) {listPointInObs.add(3);}
 		switch (listPointInObs.size()) {
 		case 2:
+//			System.out.println("cas 2");
 			int t = listPointInObs.get(0);
 			int t0 = listPointInObs.get(1);
 			Point A0 = rect0[t], A = rect[t];
@@ -352,13 +341,34 @@ public class FC {
 				vec.y = I1.y - B.y;
 			}
 			break;
+			
+			
+			
 		default:
-			return null;
+			System.out.println("coucou");
+			int x=obstacle.getX()-rectangle.getX()+rectangle0.getX();
+			int y= obstacle.getY()-rectangle.getY()+rectangle0.getY();
+			FormRect obstacle0=new FormRect(null,x,y, obstacle.getWidth(), obstacle.getHeight(), obstacle.getAngle());
+			return calculVecteurCollisionRectDroitObstacleDroit(obstacle0, obstacle,rectangle);
 		}
 		normalize(direction);
 		return tab;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public Vecteur calculVecteurCollisionCircleObstacleDroit(FormCircle circle, FormRect obstacle) {
 		Cercle C = new Cercle();
 		C.x = circle.getX();
@@ -456,8 +466,6 @@ public class FC {
 		}
 
 	}
-	
-	
 
 	////////////////////////////////////
 	////// FONCTIONS GENERALES /////////
@@ -722,8 +730,10 @@ public class FC {
 			return 0;
 		return 1;
 	}
-
-
+	
+	
+	
+	
 	////////////////////////////////////
 	////// INTERACTIONS OBSTACLES //////
 	////////////////////////////////////

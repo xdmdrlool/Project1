@@ -1,5 +1,7 @@
 package clemnico;
 
+import java.awt.image.BufferedImage;
+
 public enum Animations {
  
 	// path= "NomDeLaSpriteSheet.png" 
@@ -44,9 +46,9 @@ public enum Animations {
 	
 	AnimationObsatcleDefault("SpriteSheet_Obstacle.png",64, new int[][] { {0 , 0 , 58 , 14 , 0 } },new int[] {1}),
 	
-	AnimationObsatcleDefault2("SpriteSheet_Obstacle2.png",64, new int[][] { {0 , 0 , 51 , 51 , 0 } },new int[] {1}),
+	AnimationObsatcleDefault2("SpriteSheet_Obstacle2.png",64, new int[][] { {0 , 0 , 51 , 51 , 0 } },new int[] {1});
 	
-	AnimationProjectile("SpriteSheetPunkPlayer.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } } ,  new int[] {1}   )
+	
 	
 	;
 	
@@ -56,21 +58,24 @@ public enum Animations {
 	
 	
 	
-
+	private ImageLoader loader= new ImageLoader();
 	
 	private String path;
 	private int def;
 	private int[][] listeArg;
 	private int[] listeTime;
+	private BufferedImage image;
 
 	
 	
 	
 	Animations(String path, int def,int[][] listeArg,int[] listeTime){
+		
 		this.setPath(path);
 		this.setDef(def);
 		this.setListeArg(listeArg);
 		this.setListeTime(listeTime);
+		this.setImage(loader.loadImage(path));
 	}
 
 	
@@ -113,5 +118,17 @@ public enum Animations {
 
 	public void setListeTime(int[] listeTime) {
 		this.listeTime = listeTime;
+	}
+
+
+
+	public BufferedImage getImage() {
+		return image;
+	}
+
+
+
+	public void setImage(BufferedImage image) {
+		this.image = image;
 	}
 }

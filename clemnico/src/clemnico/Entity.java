@@ -1,40 +1,208 @@
 package clemnico;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Entity {
+	
+	protected static AnimationCreator ACreator =new AnimationCreator();
+	protected static  FC fc=new FC();
+	protected int x;
+	protected int y;
+	protected int vx=0;
+	protected int vy=0;
+	protected int xBefore;
+	protected int yBefore;
+	protected int width;
+	protected int height;
+	protected int timeInAir=0;
+	protected boolean inTheAir=false;
+	protected String name;
+	protected FormRect form =new FormRect(Color.RED, 0, 0, 0, 0, 0);
+	protected Hitbox hitbox=new Hitbox("RECT", 0, 0, 10,0, 0, 0);
+	protected Animation currentAnimation;
+	protected Map<NameAnimation, Animation> ListAnimation = new HashMap<>();
+	
 
-	public Entity(int x, int y) {
-		
+
+	
+	public Entity(String name,int x, int y, int width,int height) {
+		setX(x);
+		setY(y);
+		setxBefore(x);
+		setyBefore(y);
+		setWidth(width);
+		setHeight(height);
+		setName(name);
 	}
-	public abstract int getX();
-	public abstract void setX(int x);
-	public abstract int getxBefore();
-	public abstract void setxBefore(int xBefore);
-	public abstract int getY();
-	public abstract void setY(int y);
-	public abstract int getyBefore();
-	public abstract void setyBefore(int yBefore);
-	public abstract int getVx();
-	public abstract void setVx(int vx);
-	public abstract int getVy();
-	public abstract void setVy(int vy);
-	public abstract int getWidth();
-	public abstract void setWidth(int width);
-	public abstract int getHeight();
-	public abstract void setHeight(int height);
-	public abstract Hitbox getHitbox();
-	public abstract void setHitbox(Hitbox hitbox);
-	public abstract int getTimeInAir();
-	public abstract void setTimeInAir(int timeInAir);
-	public abstract boolean isInTheAir();
-	public abstract void setInTheAir(boolean inTheAir);
-	public abstract Map<NameAnimation,Animation> getListAnimation();
-	public abstract void setListAnimation(Map<NameAnimation,Animation> listAnimation);
-	public abstract Animation getCurrentAnimation();
-	public abstract void setCurrentAnimation(NameAnimation name);
-	public abstract void addAnimation(NameAnimation name,Animation animation);
-	public abstract void display(Graphics2D g);
+	
 	public abstract void chooseAnimation();
+	
+	public abstract void useDefaultAnimations();
+	
+	public void display(Graphics2D gg,int xOffset,int yOffset) {
+		Sprite sprite = getCurrentAnimation().getSprite();
+		sprite.render(gg,xOffset+ x + width / 2,yOffset+ y + height / 2);
+	}
+	
+	
+	public boolean isInCollisionWith(Entity entity) {
+		return hitbox.collision(entity.getHitbox());	
+	}
+	
+	
+
+	public FormRect getForm() {
+		return form;
+	}
+
+	public void setForm(FormRect form) {
+		this.form = form;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+		this.form.setX(x);
+		this.hitbox.setX(x);	
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+		this.form.setY(y);
+		this.hitbox.setY(y);
+	}
+
+
+	public int getVx() {
+		return vx;
+	}
+
+	public int getVy() {
+		return vy;
+	}
+
+	public void setVx(int vx) {
+		this.vx = vx;
+	}
+
+	public void setVy(int vy) {
+		this.vy = vy;
+	}
+
+	public int getxBefore() {
+		return xBefore;
+	}
+
+	public int getyBefore() {
+		return yBefore;
+	}
+
+	public void setxBefore(int xBefore) {
+		this.xBefore = xBefore;
+	}
+
+	public void setyBefore(int yBefore) {
+		this.yBefore = yBefore;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+	
+	public void setWidth(int width) {
+		this.width = width;
+		this.form.setWidth(width);
+		this.hitbox.setWidth(width);
+	}
+
+
+	public int getHeight() {
+		return height;
+	}
+
+
+	public void setHeight(int height) {
+		this.height = height;
+		this.form.setHeight(height);
+		this.hitbox.setHeight(height);
+	}
+
+
+	public int getTimeInAir() {
+		return timeInAir;
+	}
+
+	public boolean isInTheAir() {
+		return inTheAir;
+	}
+
+	public void setTimeInAir(int timeInAir) {
+		this.timeInAir = timeInAir;
+	}
+
+	public void setInTheAir(boolean inTheAir) {
+		this.inTheAir = inTheAir;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Hitbox getHitbox() {
+		return hitbox;
+	}
+
+
+	public void setHitbox(Hitbox hitbox) {
+		this.hitbox = hitbox;
+	}
+
+	public void setCurrentAnimation(NameAnimation name) {
+		Animation anime = ListAnimation.get(name);
+		if (this.currentAnimation!=anime) {
+			this.currentAnimation=anime;
+			this.currentAnimation.reset();}
+	}
+	
+	public Map<NameAnimation,Animation> getListAnimation() {
+		return ListAnimation;
+	}
+
+	public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
+		ListAnimation = listAnimation;
+	}
+
+	public void addAnimation(NameAnimation string,Animation animation) {
+		this.ListAnimation.put(string,animation);
+	}
+
+	public Animation getCurrentAnimation() {
+		return this.currentAnimation;
+	}
+
+	@Override
+	public String toString() {
+		return "Entity [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + "]";
+	}
+
+
+	
+	
+
+	
+	
 }

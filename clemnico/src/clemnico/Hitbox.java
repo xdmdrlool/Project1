@@ -34,7 +34,6 @@ public class Hitbox {
 
 	
 	public boolean collision(Hitbox hb){
-
 		Form form1=this.form;
 		Form form2=hb.getForm();
 		FC fC= new FC();

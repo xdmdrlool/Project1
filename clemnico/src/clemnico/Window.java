@@ -2,7 +2,6 @@ package clemnico;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,23 +16,35 @@ public class Window extends JFrame {
 	private JLabel statusBar;
 	private int fps;
 	protected ImageLoader loader = new ImageLoader();
+	private Handlerclass handler;
 	private int width=1500;
 	private int height=1000;
-
+	
+	public static AnimationCreator AC =new AnimationCreator();
+	
 	// Objets de la fenêtre
 	Player player = new Player(400, 200, 100, 100,"Player1", 0, 6);
-	Portal portal1 = new Portal(-500, -500, 100, 20);
-	Portal portal2 = new Portal(-500, -500, 100, 20);
-	Obstacle obstacle = new Obstacle(300, 600, 600, 200, 0);
-	Obstacle obstacle2 = new Obstacle(900, 550, 200, 247, 0);
-	Obstacle obstacle3 = new Obstacle(150, 500, 200, 200, 0);
-	Obstacle obstacle4 = new Obstacle(120, 200, 200, 200, 0);
-	Obstacle[] obstacles = { obstacle, obstacle2, obstacle3, obstacle4 };
-	ArrayList<Projectile> projectiles=player.getProjectiles();
-	int projectileCount=0;
+	Portal portal1 = new Portal(-500, -500, 100, 20,"Portal1",Color.BLUE);
+	Portal portal2 = new Portal(-500, -500, 100, 20,"Portal2",Color.ORANGE);
+	Obstacle obstacle = new FixObstacle(300, 600, 400, 200,"Obs1", 0);
+	Obstacle obstacle2 = new FixObstacle(900, 550, 200, 247,"Obs2", 0);
+	Obstacle obstacle3 = new FixObstacle(150, 500, 200, 200,"Obs3", 0);
+	
 
 	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Enemy1", 0, 5,false);
+	
+	MovingPlatform movingPlatform= new MovingPlatform("Plate",400,501,700,501,500,50, 1000);
+	
+	
+	Obstacle[] obstacles = { obstacle, obstacle2, obstacle3,movingPlatform };
+	
+	
+	
+	ArrayList<Projectile> projectiles=player.getProjectiles();
+	int projectileCount=0;
 	FC fc = new FC();
+	
+	
 
 	//// Constructeur////
 	public Window(int fps) {
@@ -54,7 +65,7 @@ public class Window extends JFrame {
 
 	}
 
-	//// Methodes ////
+	//// Methodes////
 
 	private void initPanel() {
 		panel = new Panel();
@@ -68,56 +79,48 @@ public class Window extends JFrame {
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
-
+		
+		setHandler(handler);
+		
+		
+		
 		// Animations
-		Animation animation= createAnimation(Animations.AnimationPlayerDefault,player.getWidth(),player.getHeight());
-		player.addAnimation(NameAnimation.DEFAULT,animation);
-		player.addAnimation(NameAnimation.JUMPL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
-		player.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
-		player.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerWalkL,player.getWidth(),player.getHeight()));
-		player.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerWalkR,player.getWidth(),player.getHeight()));
-		player.addAnimation(NameAnimation.FALLL,createAnimation(Animations.AnimationPlayerAirKick,player.getWidth(),player.getHeight()));
-		player.addAnimation(NameAnimation.FALLR,createAnimation(Animations.AnimationPlayerSpin,player.getWidth(),player.getHeight()));
-
-		portal1.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationPortal1Default,portal1.getWidth(),portal1.getHeight()));
-		portal2.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationPortal2Default,portal2.getWidth(),portal2.getHeight()));
-		obstacle.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle.getWidth(),obstacle.getHeight()));
-		obstacle2.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle2.getWidth(),obstacle2.getHeight()));
-		obstacle3.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle3.getWidth(),obstacle3.getHeight()));
-		obstacle4.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,obstacle3.getWidth(),obstacle3.getHeight()));
-				
-		enemy.addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
-		enemy.addAnimation(NameAnimation.WALKL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
-		enemy.addAnimation(NameAnimation.WALKR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
-		enemy.addAnimation(NameAnimation.FALLL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
-		enemy.addAnimation(NameAnimation.FALLR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
-		enemy.addAnimation(NameAnimation.JUMPL,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
-		enemy.addAnimation(NameAnimation.JUMPR,createAnimation(Animations.AnimationPlayerDefault,enemy.getWidth(),enemy.getHeight()));
-				
+		player.useDefaultAnimations();		
+		portal1.useDefaultAnimations();
+		portal2.useDefaultAnimations();
+		obstacle.useDefaultAnimations();
+		obstacle.useDefaultAnimations();
+		obstacle2.useDefaultAnimations();
+		obstacle3.useDefaultAnimations();
+		enemy.useDefaultAnimations();
+		movingPlatform.useDefaultAnimations();
+		
+		
 		player.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal1.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal2.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle2.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle3.setCurrentAnimation(NameAnimation.DEFAULT);
-		obstacle4.setCurrentAnimation(NameAnimation.DEFAULT);
-		
 		enemy.setCurrentAnimation(NameAnimation.DEFAULT);
-		
+		movingPlatform.setCurrentAnimation(NameAnimation.DEFAULT);
 		ArrayList<Entity> array = new ArrayList<Entity>();
 		array.add(obstacle);
 		array.add(obstacle2);
 		array.add(obstacle3);
-		array.add(obstacle4);
 		array.add(player);
 		array.add(portal1);
 		array.add(portal2);
 		
 		array.add(enemy);
 				
+		array.add(movingPlatform);
+		
 		panel.setEntityList(array);
 		
+		
 	}
+
 	
 	private void refreshPanel() {
 		
@@ -126,17 +129,14 @@ public class Window extends JFrame {
 		
 		//Si un projectile a été rajouté par le joueur en faisant espace
 		if (projectileCount<projectiles.size()) {			
-			projectiles.get(projectileCount).addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,projectiles.get(projectileCount).getWidth(),projectiles.get(projectileCount).getHeight()));
+			projectiles.get(projectileCount).addAnimation(NameAnimation.DEFAULT,AC.createAnimation(Animations.AnimationObsatcleDefault2,projectiles.get(projectileCount).getWidth(),projectiles.get(projectileCount).getHeight()));
 			projectiles.get(projectileCount).setCurrentAnimation(NameAnimation.DEFAULT);
 			array.add(projectiles.get(projectileCount));
 			projectileCount+=1;
 			panel.setEntityList(array);
 		}
-		if (projectileCount>projectiles.size()) {
-			
-		}
 	}
-
+	
 	private void stepGame(Player player, GeneralEnemy enemy) {
 
 		Timer chrono = new Timer();
@@ -148,7 +148,6 @@ public class Window extends JFrame {
 
 			@Override
 			public void run() {
-				
 				time = time + 1;
 				player.step(period);
 				enemy.step(period);
@@ -158,7 +157,7 @@ public class Window extends JFrame {
 				for (Projectile projectile : projectiles) {
 					fc.portalInteractionRect(projectile, portal1, portal2);
 					projectile.step(period,player,1,1);
-					toRemove=projectile.isOut(toRemove, width, height);
+					toRemove=projectile.isOut(toRemove, width, height,panel.getxOffset(),panel.getyOffset());
 				}
 				for (Projectile projectile : toRemove) {
 					projectiles.remove(projectile);
@@ -176,7 +175,8 @@ public class Window extends JFrame {
 //				System.out.println(player.getForm().getX()+"   "+player.getForm().getY()+"   "+player.getTimeInAir());
 
 				player.getCurrentAnimation().update();					
-				
+				caculCameraOffset(panel, player);
+				movingPlatform.update();
 				panel.repaint();
 			}
 				
@@ -184,40 +184,18 @@ public class Window extends JFrame {
 	}
 
 	
-	
-	
-	
-	
-	public Animation createAnimation(Animations enumAnim, int width,int height) {
-		int[][] listeArg =enumAnim.getListeArg();
-		int[][] listeArg2 =new int[listeArg.length][listeArg[0].length+2];
-		for(int i=0;i<listeArg.length;i++) {
-			listeArg2[i][0]=listeArg[i][0];
-			listeArg2[i][1]=listeArg[i][1];
-			listeArg2[i][2]=listeArg[i][2];
-			listeArg2[i][3]=listeArg[i][3];
-			listeArg2[i][4]=width;
-			listeArg2[i][5]=height;
-			listeArg2[i][6]=listeArg[i][4];
-		}
-		return createAnimationGeneral(enumAnim.getPath(), enumAnim.getDef(), listeArg2,enumAnim.getListeTime());	
+	public void caculCameraOffset(Panel panel,Player player) {
+		int w0=this.getWidth();int h0=this.getHeight();
+		int xOff=panel.getxOffset();int yOff=panel.getyOffset();
+		int x=player.getX();int y=player.getY();int w=player.getWidth();int h=player.getHeight();
+		int a;
+		if (x+xOff<1*w0/4) {a=w0/4-x;panel.setxOffset(a);handler.setxOffset(a);}
+		else if (x+w+xOff>3*w0/4) {a=3*w0/4-x-w;panel.setxOffset(a);handler.setxOffset(a);}
+		if (y+yOff<1*h0/4) {a=h0/4-y;panel.setyOffset(a);handler.setyOffset(a);}
+		else if (y+h+yOff>3*h0/4) {a=3*h0/4-y-h;panel.setyOffset(a);handler.setyOffset(a);}
 	}
 	
 	
-	public Animation createAnimationGeneral(String path, int def, int[][] liste_arg, int[] listeTime) {
-		BufferedImage img = this.loader.loadImage(path);
-		SpriteSheet ss = new SpriteSheet(img, def);
-		int nbSprite = liste_arg.length;
-		Sprite[] spriteTab = new Sprite[nbSprite];
-		for (int i = 0; i < nbSprite; i++) {
-			Sprite sp = new Sprite(ss, liste_arg[i][0], liste_arg[i][1], liste_arg[i][2], liste_arg[i][3],
-					liste_arg[i][4], liste_arg[i][5], (double) liste_arg[i][6]);
-			spriteTab[i] = sp;
-		}
-		return new Animation(spriteTab, listeTime);
-
-	}
-
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
@@ -230,19 +208,13 @@ public class Window extends JFrame {
 		this.fps = fps;
 	}
 
-	public int getWidth() {
-		return width;
+	public Handlerclass getHandler() {
+		return handler;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
+	public void setHandler(Handlerclass handler) {
+		this.handler = handler;
 	}
+	
 
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
 }

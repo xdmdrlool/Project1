@@ -10,32 +10,19 @@ import java.util.Map;
 public class Projectile extends Entity{
 	
 	////Attributs////
-	private int x=0;
-	private int y=0;
-	private int xBefore=0;
-	private int yBefore=0;
-	private int vx=1;
-	private int vy=1;
+
+
 	private int vNorm=10;
-	private int height=20;
-	private int width=20;
 	private double angle=0;
-	private int timeInAir=0;
-	private boolean inTheAir=false;
-	
-	private FormRect form= new FormRect(Color.darkGray,x,y,width, height, angle);
-	private Hitbox hitbox=new Hitbox("RECT",x,y,10,height,width,angle);
-	private Animation currentAnimation;
-	public Map<NameAnimation,Animation> ListAnimation=new  HashMap<>();
+
+
 	
 	////Constructeur////
 	public Projectile(int x, int y, int width, int height, double angle) {
-		super(x,y);
-		setX(x);
-		setY(y);
-		setWidth(width);
-		setHeight(height);
+		super("nom a la con",x,y,width,height);
 		setAngle(angle);
+		setVx(1);
+		setVy(1);
 	}
 	
 	////Méthodes////
@@ -45,7 +32,6 @@ public class Projectile extends Entity{
 	}
 	
 	public void directionThrow(Player player, int xClic, int yClic) {
-		
 		int xp=player.getX()+player.getWidth()/2;
 		int yp=player.getY()+player.getHeight()/2;
 		
@@ -55,8 +41,8 @@ public class Projectile extends Entity{
 			setVy(0);
 		}
 		double[] vector= {(xClic-xp)*1./norm,(yClic-yp)*1./norm};
-		System.out.print(vector[0]+" ");
-		System.out.println(vector[1]);
+//		System.out.print(vector[0]+" ");
+//		System.out.println(vector[1]);
 		
 		setVx((int)(vNorm*vector[0]));
 		setVy((int)(vNorm*vector[1]));
@@ -68,8 +54,8 @@ public class Projectile extends Entity{
 	}
 	
 	//Ajoute le projectile à array pour l'enlever ensuite
-	public ArrayList<Projectile> isOut(ArrayList<Projectile> array, int w, int h) {
-		if (x+width<0 || y+height<0 || x>w || y>h) {
+	public ArrayList<Projectile> isOut(ArrayList<Projectile> array, int w, int h,int xoff,int yoff) {
+		if (x+xoff+width<0 || y+yoff+height<0 || x+xoff>w || y+yoff>h) {
 			array.add(this);
 			return array;
 		}
@@ -81,26 +67,17 @@ public class Projectile extends Entity{
 		setY(y+vy);
 	}
 	
+	
+	@Override
+	public void useDefaultAnimations() {
+		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationObsatcleDefault2,width,height));		
+	}
+	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
 	
-	public int getX() {
-		return x;
-	}
-	public void setX(int x) {
-		this.x = x;
-		this.form.setX(x);
-		this.hitbox.setX(x);
-	}
-	public int getY() {
-		return y;
-	}
-	public void setY(int y) {
-		this.y = y;
-		this.form.setY(y);;
-		this.hitbox.setY(y);
-	}
+
 	public double getAngle() {
 		return angle;
 	}
@@ -110,40 +87,9 @@ public class Projectile extends Entity{
 		this.hitbox.setAngle(angle);
 		if (this.currentAnimation != null) {this.currentAnimation.setAngle(angle);}		
 	}
-	public FormRect getForm() {
-		return form;
-	}
-	public void setForm(FormRect form) {
-		this.form = form;
-	}
 
-	public int getHeight() {
-		return height;
-	}
 
-	public void setHeight(int height) {
-		this.height = height;
-		this.form.setHeight(height);;
-		this.hitbox.setHeight(height);
-	}
 
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-		this.form.setWidth(width);;
-		this.hitbox.setWidth(width);
-	}
-
-	public Hitbox getHitbox() {
-		return hitbox;
-	}
-
-	public void setHitbox(Hitbox hitbox) {
-		this.hitbox = hitbox;
-	}
 
 
 
@@ -229,11 +175,7 @@ public class Projectile extends Entity{
 		this.timeInAir = timeInAir;
 	}
 
-	public boolean isInTheAir() {
-		return inTheAir;
-	}
 
-	public void setInTheAir(boolean inTheAir) {
-		this.inTheAir = inTheAir;
-	}
+
+
 }

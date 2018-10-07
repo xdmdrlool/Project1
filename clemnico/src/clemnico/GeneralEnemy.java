@@ -1,29 +1,23 @@
 package clemnico;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.util.HashMap;
-import java.util.Map;
+
 
 import clemnico.FC.Vecteur;
 
-public class GeneralEnemy extends Enemy {
+public class GeneralEnemy extends Entity {
 ////Attributs////
 	
 	boolean fallFromPlatform= false;
 	
-	private String 	name = "" ;
 	private int 	directionX = 0;
-	private int 	speed = 300;
 	private boolean moveX = false;
 	private boolean inTheAir=false;
 	private int timeInAir=0;
-	private int keyPressed=0;
 	private boolean dead =false;
-	private FormRect form;
-	private int x=100;
-	private int y=100;
+
+
 	private int xBefore=x;
 	private int yBefore=y;
 	private int vx=5;
@@ -31,28 +25,13 @@ public class GeneralEnemy extends Enemy {
 	private int vxMax=100;
 	private int vyMax=30;
 	private int vxOnGround=5;
-	private int width=20;
-	private int height =20;
-	private int radius=60;
-	private Hitbox hitbox = new Hitbox("RECT",x,y,radius,width,height,0);
-	private FC fc=new FC();
-	private Animation currentAnimation;
-	public Map<NameAnimation,Animation> ListAnimation = new  HashMap<>();
 
 
 	////Constructeur////
 	public GeneralEnemy(int x,int y,int width, int height,String name, int direction, int vxOnGround, boolean fallFromPlatform) {
-		super(x,y);
-		FormRect rect = new FormRect(Color.RED,x,y,width,height,0 );
-		setForm(rect);
-		setX(x);
-		setY(y);
+		super(name, x,y, width, height);
 		setxBefore(x);
 		setyBefore(y);
-		setWidth(width);
-		setHeight(height);
-		setRadius(radius);
-		this.name=name;
 		setDirectionX(direction);
 		setVxOnGround(vxOnGround);
 		setFallFromPlatform(fallFromPlatform);
@@ -60,10 +39,7 @@ public class GeneralEnemy extends Enemy {
 
 
 	////Methodes////
-	public void display(Graphics2D gg) {
-		Sprite sprite =currentAnimation.getSprite();
-		sprite.render(gg, x+width/2, y+height/2);
-	}
+
 	
 	public void moveIn(int x ,int y) {
 		setX(x);
@@ -265,28 +241,34 @@ public class GeneralEnemy extends Enemy {
 	
 	
 	
-	
+	public void chooseAnimation() {
+		NameAnimation name=NameAnimation.DEFAULT;
+		if (inTheAir) {
+			if (vy<=0) {if (vx>=0) {name=NameAnimation.JUMPR;}else {name=NameAnimation.JUMPL;}}
+			else  {if (vx>=0) {name=NameAnimation.FALLR;}else {name=NameAnimation.FALLL;}}}
+		
+		else {if (vx>0) {name=NameAnimation.WALKR;}else if (vx<0) {name=NameAnimation.WALKL;}}
+		setCurrentAnimation(name);
+	}
 
 	
+	@Override
+	public void useDefaultAnimations() {
+		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.WALKL,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.WALKR,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.JUMPL,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.JUMPR,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.FALLL,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.FALLR,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));		
+	}
 
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 
-	public int getSpeed() {
-		return speed;
-	}
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
+
 	public boolean isDead() {
 		return dead;
 	}
@@ -294,34 +276,8 @@ public class GeneralEnemy extends Enemy {
 		this.dead = dead;
 	}
 
-	public FormRect getForm() {
-		return form;
-	}
 
-	public void setForm(FormRect form) {
-		this.form = form;
-	}
 
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-
-		this.x = x;
-		this.form.setX(x);;
-		this.hitbox.setX(x);	
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-		this.form.setY(y);;
-		this.hitbox.setY(y);
-	}
 
 	public int getDirectionX() {
 		return directionX;
@@ -337,20 +293,7 @@ public class GeneralEnemy extends Enemy {
 	public void setMoveX(boolean moveX) {
 		this.moveX=moveX;
 	}
-	public int getKeyPressed() {
-		return keyPressed;
-	}
-	public void setKeyPressed(int keyPressed) {
-		this.keyPressed=keyPressed;
-	}
-	public Hitbox getHitbox() {
-		return hitbox;
-	}
 
-
-	public void setHitbox(Hitbox hitbox) {
-		this.hitbox = hitbox;
-	}
 
 
 	public boolean isInTheAir() {
@@ -398,38 +341,9 @@ public class GeneralEnemy extends Enemy {
 	public void setTimeInAir(int timeInAir) {
 		this.timeInAir = timeInAir;
 	}
-	public int getWidth() {
-		return width;
-	}
-	public void setWidth(int width) {
-		this.width = width;
-		this.hitbox.setWidth(width);
-	}
 
 
-	public int getHeight() {
-		return height;
-	}
 
-
-	public void setHeight(int height) {
-		this.height = height;
-		this.hitbox.setHeight(height);
-	}
-
-	
-
-
-	public int getRadius() {
-		return radius;
-	}
-
-
-	public void setRadius(int radius) {
-		this.radius = radius;
-		this.form.setRadius(radius);
-		this.hitbox.setRayon(radius);
-	}
 
 
 	public int getxBefore() {
@@ -459,43 +373,6 @@ public class GeneralEnemy extends Enemy {
 		this.vxOnGround = vxOnGround;
 	}
 
-
-	public void setCurrentAnimation(NameAnimation name) {
-		Animation anime = ListAnimation.get(name);
-		if (this.currentAnimation!=anime) {
-			this.currentAnimation=anime;
-			this.currentAnimation.reset();}
-	}
-	public Map<NameAnimation,Animation> getListAnimation() {
-		return ListAnimation;
-	}
-
-
-	public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
-		ListAnimation = listAnimation;
-	}
-
-
-
-	public void addAnimation(NameAnimation string,Animation animation) {
-		this.ListAnimation.put(string,animation);
-	}
-
-
-	@Override
-	public Animation getCurrentAnimation() {
-		return this.currentAnimation;
-	}
-	
-	public void chooseAnimation() {
-		NameAnimation name=NameAnimation.DEFAULT;
-		if (inTheAir) {
-			if (vy<=0) {if (vx>=0) {name=NameAnimation.JUMPR;}else {name=NameAnimation.JUMPL;}}
-			else  {if (vx>=0) {name=NameAnimation.FALLR;}else {name=NameAnimation.FALLL;}}}
-		
-		else {if (vx>0) {name=NameAnimation.WALKR;}else if (vx<0) {name=NameAnimation.WALKL;}}
-		setCurrentAnimation(name);
-	}
 
 
 	public boolean isFallFromPlatform() {

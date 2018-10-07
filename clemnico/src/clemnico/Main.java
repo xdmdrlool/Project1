@@ -1,9 +1,5 @@
 package clemnico;
 
-import java.awt.Color;
-import java.awt.Point;
-
-import clemnico.FC.Vecteur;
 
 public class Main {
  
