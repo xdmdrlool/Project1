@@ -34,6 +34,12 @@ public class Player extends Entity {
 	private int vxOnGround=6;
 	private int width = 20;
 	private int height = 20;
+	private boolean shooting=false;
+	private int reloadShoot=10;	//fréquence de tir (0=max)
+	private int timeShoot=0;	//durée depuis le dernier tir
+	
+	private int xMouse;
+	private int yMouse;
 	
 	private Hitbox hitbox = new Hitbox("RECT", x, y, 0, width, height, 0);
 	private FC fc = new FC();
@@ -56,9 +62,6 @@ public class Player extends Entity {
 		setDirectionX(direction);
 		setVxOnGround(vxOnGround);
 	}
-
-
-	
 	
 	//// Methodes////
 	public void display(Graphics2D gg) {
@@ -76,7 +79,7 @@ public class Player extends Entity {
 	}
 
 	// Action clavier
-	public void actionKeyboard(int key, int xMouse, int yMouse) {
+	public void actionKeyboard(int key) {
 
 		if (key == KeyEvent.VK_Z && !inTheAir) {
 			setInTheAir(false);
@@ -97,14 +100,16 @@ public class Player extends Entity {
 		}
 		//Jet de projectiles
 		if (key == KeyEvent.VK_SPACE) {
-			Projectile projectile=new Projectile(x,y,10,20,0);
-			projectile.directionThrow(this, xMouse, yMouse);
-			projectiles.add(projectile);
+			setShooting(true);
 		}
 	}
-	
-	
 
+	public void shoot() {
+		Projectile projectile=new Projectile(x+width/2,y+height/2,10,20,0);
+		projectile.directionThrow(this, xMouse, yMouse);
+		projectiles.add(projectile);
+	}
+	
 	// Action de joueur pour un pas de la boucle
 	public void step(int period) {
 
@@ -113,6 +118,7 @@ public class Player extends Entity {
 			fall();
 		}
 
+		//Mouvement horizontal du joueur
 		double AirControl = 1.0; // En pourcentage
 		if (moveX) {
 			if (isInTheAir()) {
@@ -122,6 +128,15 @@ public class Player extends Entity {
 				setX(this.x + this.vx);
 			}
 		}
+		
+		//Le joueur tire
+		setTimeShoot(timeShoot+1);
+		if (shooting && timeShoot>=reloadShoot) {
+			shoot();
+			setTimeShoot(0);
+		}
+		
+		
 		chooseAnimation();
 	}
 	
@@ -136,157 +151,12 @@ public class Player extends Entity {
 		setY(y + vy);
 	}
 	
-	// Gestion de l'interaction joueur/portail
-	public void portalInteraction(FC fc, Portal portal1, Portal portal2) {
-
-		// S'il y a interaction avec l'un des deux portails
-		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-
-			// Détermine le portail d'entrée et de sortie
-			Portal portalIn, portalOut;
-			if (hitbox.collision(portal1.getHitbox())) {
-				portalIn = portal1;
-				portalOut = portal2;
-			} else {
-				portalIn = portal2;
-				portalOut = portal1;
-			}
-
-			// Obtenir les points A et B des deux portails (axe, point, portail)
-			// portalIn = 1 et portalOut = 2
-			int xA1 = fc.Rect2Array(portalIn.getForm())[0].x;
-			int yA1 = fc.Rect2Array(portalIn.getForm())[0].y;
-			int xB1 = fc.Rect2Array(portalIn.getForm())[1].x;
-			int yB1 = fc.Rect2Array(portalIn.getForm())[1].y;
-			int xD1 = fc.Rect2Array(portalIn.getForm())[3].x;
-			int yD1 = fc.Rect2Array(portalIn.getForm())[3].y;
-			int xA2 = fc.Rect2Array(portalOut.getForm())[0].x;
-			int yA2 = fc.Rect2Array(portalOut.getForm())[0].y;
-			int xB2 = fc.Rect2Array(portalOut.getForm())[1].x;
-			int yB2 = fc.Rect2Array(portalOut.getForm())[1].y;
-			int xD2 = fc.Rect2Array(portalOut.getForm())[3].x;
-			int yD2 = fc.Rect2Array(portalOut.getForm())[3].y;
-
-			//Coordonnées du joueur modifiées
-			int xj=x+width/2;
-			int yj=y+height/2;
-			
-			//Détermine la vitesse min et la distance entre le joueur et le portail de sortie
-			int distancePortal=(int) ( width/1.42);
-			int vMinOut=5;
-			
-			
-			//Détermine la position du joueur sur la tangente du portail
-			double distancePlayerA1=Math.sqrt((xj-xA1)*(xj-xA1)+(yj-yA1)*(yj-yA1));
-			double distancePlayerD1=Math.sqrt((xj-xD1)*(xj-xD1)+(yj-yD1)*(yj-yD1));
-			double distancePlayerA2=portalOut.getWidth()-distancePlayerA1;
-			
-			//Détermine la norme de la vitesse en sortie
-			double vNormIn=Math.sqrt(vx*vx+vy*vy); 						//Norme de la vitesse d'entrée
-			double[] vectorVIn= {vx*1./vNormIn*1.,vy*1./vNormIn*1.};	//Vecteur vitesse normalisé
-			double vNormOut=Math.max(vNormIn, vMinOut);					//Vitesse minorée en sortie de portail
-			
-			//Vecteurs normalisés AB et DA du portail In et Out
-			double[] vectorAB1= {(xB1-xA1)*1./portalIn.getWidth()*1.,(yB1-yA1)*1./portalIn.getWidth()*1.};
-			double[] vectorAB2= {(xB2-xA2)*1./portalOut.getWidth()*1.,(yB2-yA2)*1./portalOut.getWidth()*1.};
-			double[] vectorDA2= {(xA2-xD2)*1./portalOut.getHeight()*1.,(yA2-yD2)*1./portalOut.getHeight()*1.};
-			
-			//Détermine l'orientation de la vitesse en sortie en fonction de celle en entrée
-			double thetaIn=Math.acos(vectorAB1[0]*vectorVIn[0]+vectorAB1[1]*vectorVIn[1]);
-			double thetaOut=(thetaIn-Math.PI);
-			double[] vectorVOut= {(vectorAB2[0]*Math.cos(thetaOut)-vectorAB2[1]*Math.sin(thetaOut)),
-							      (vectorAB2[0]*Math.sin(thetaOut)+vectorAB2[1]*Math.cos(thetaOut))};
-			int[] vOut= {(int) (vectorVOut[0]*vNormOut), (int) (vectorVOut[1]*vNormOut)};
-			
-			//Détermine le côté du portail où passe le joueur
-			correctionInteractionRect(fc, portalIn.getForm());
-			if (distancePlayerA1<distancePlayerD1) {
-				setX((int) (xA2+vectorAB2[0]*distancePlayerA2+(distancePortal)*vectorDA2[0])-width/2);
-				setY((int) (yA2+vectorAB2[1]*distancePlayerA2+(distancePortal)*vectorDA2[1])-height/2);
-				setVx(vOut[0]);
-				setVy(vOut[1]);
-			}
-			else {
-				
-				setX((int) (xA2+vectorAB2[0]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[0])-width/2);
-				setY((int) (yA2+vectorAB2[1]*distancePlayerA2-(distancePortal+portalOut.getHeight())*vectorDA2[1])-height/2);
-				setVx(-vOut[0]);
-				setVy(-vOut[1]);
-			}
-		}
-	}
-	
-	//Gestion intéraction entre joueur et les obstacles
-	public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
-		
-		for (Obstacle obstacle: obstacles) {
-			//S'il y a collision avec un obstacle
-			if (this.getHitbox().collision(obstacle.getHitbox())) {
-				this.setVy(0);
-				this.setVx(0);
-				
-				//Si l'obstacle est un sol ou un plafond
-				if(yBefore<=y) {
-					this.setTimeInAir(0);
-					this.setInTheAir(false);
-				}
-				correctionInteractionRect(fc, obstacle.getForm());
-				break;
-			}
-			else {
-				this.setInTheAir(true);
-				this.setTimeInAir(this.getTimeInAir()+1);
-			}
-		}
-		setxBefore(x);
-		setyBefore(y);
-	}
-	
-	public void correctionInteractionRect(FC fc, FormRect rect) {
-
-		Point pointPlayer1=new Point(xBefore,yBefore);
-		Point pointPlayer2=new Point(x,y);
-		
-		Point A=new Point(fc.Rect2Array(rect)[0].x,fc.Rect2Array(rect)[0].y);
-		Point B=new Point(fc.Rect2Array(rect)[1].x,fc.Rect2Array(rect)[1].y);
-		Point C=new Point(fc.Rect2Array(rect)[2].x,fc.Rect2Array(rect)[2].y);
-		Point D=new Point(fc.Rect2Array(rect)[3].x,fc.Rect2Array(rect)[3].y);
-		
-		double dmin=10000;
-		Point correctedPosition=new Point(-1,-1);
-//		System.out.print(A.x+" ");
-//		System.out.println(A.y);
-//		System.out.print(D.x+" ");
-//		System.out.println(D.y);
-		
-		if (fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2)!=null && fc.distance(A, B)<dmin)
-			{correctedPosition=fc.calculIntersectionSeg(A,B,pointPlayer1,pointPlayer2);
-			dmin=fc.distance(A, B);}
-		
-		
-		if (fc.calculIntersectionSeg(B,C,pointPlayer1,pointPlayer2)!=null && fc.distance(B, C)<dmin)
-			{correctedPosition=fc.calculIntersectionSeg(B,C,pointPlayer1,pointPlayer2);
-			dmin=fc.distance(B, C);}
-		
-		
-		if (fc.calculIntersectionSeg(C,D,pointPlayer1,pointPlayer2)!=null && fc.distance(C, D)<dmin)
-			{correctedPosition=fc.calculIntersectionSeg(C,D,pointPlayer1,pointPlayer2);
-			dmin=fc.distance(C, D);}
-		
-		
-		if (fc.calculIntersectionSeg(D,A,pointPlayer1,pointPlayer2)!=null && fc.distance(D, A)<dmin)
-			{correctedPosition=fc.calculIntersectionSeg(D,A,pointPlayer1,pointPlayer2);
-			dmin=fc.distance(D, A);}
-
-		if (correctedPosition.getX()!=-1 && correctedPosition.getY()!=-1) {
-			setX((int)(correctedPosition.x+width*1./2.));
-			setY((int)(correctedPosition.y+height*1./2.));
-			
-		}
-	}
 	
 	
-public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
+	
+public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
+		
+		
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
 		boolean varInTheAir=true;
@@ -294,16 +164,13 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a collision avec un obstacle
 			FormRect rect0=new FormRect(Color.RED, xBefore, yBefore, width, height, 0);
-			FormRect rect=(FormRect) getHitbox().getForm();
+			FormRect rect=(FormRect) hitbox.getForm();
 			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
 			Vecteur[] tab = fc.calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
 			
 			if (tab !=null) {
 				vecteurCorrection=tab[0];
 				directionCollision=tab[1];
-//				System.out.println(directionCollision.x+" "+directionCollision.y);
-//				System.out.println("xB :"+xBefore+"   yB : "+yBefore);
-//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
 				if (directionCollision.x!=0 ||directionCollision.y>0) {setVx(0);}
 				if (directionCollision.y!=0) {setVy(0);}
@@ -312,23 +179,14 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 				int newX=(int) (getX()+vecteurCorrection.x);
 				int newY=(int) (getY()+vecteurCorrection.y);
 				
-//				System.out.println("x: "+newX+"  y: "+newY);
-//				System.out.println("air : "+isInTheAir());	
-
 				setX(newX);
 				setY(newY);
-//				System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);
 			}
-			
-
 		}
-//		System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);	
 		setTimeInAir(getTimeInAir()+1);
 		setInTheAir(varInTheAir);
-		setxBefore(x);setyBefore(y);
-
-		
-				
+		setxBefore(x);
+		setyBefore(y);
 	}
 	
 	
@@ -568,6 +426,64 @@ public void obstacleInteraction2(FC fc, Obstacle[] obstacles) {
 
 	public ArrayList<Projectile> getProjectiles(){
 		return projectiles;
+	}
+
+
+
+
+	public boolean isShooting() {
+		return shooting;
+	}
+
+
+
+
+	public void setShooting(boolean shooting) {
+		this.shooting = shooting;
+	}
+
+
+
+
+	public int getxMouse() {
+		return xMouse;
+	}
+
+
+
+
+	public void setxMouse(int xMouse) {
+		this.xMouse = xMouse;
+	}
+
+
+
+
+	public int getyMouse() {
+		return yMouse;
+	}
+
+
+
+
+	public void setyMouse(int yMouse) {
+		this.yMouse = yMouse;
+	}
+
+	public int getReloadShoot() {
+		return reloadShoot;
+	}
+
+	public void setReloadShoot(int reloadShoot) {
+		this.reloadShoot = reloadShoot;
+	}
+
+	public int getTimeShoot() {
+		return timeShoot;
+	}
+
+	public void setTimeShoot(int timeShoot) {
+		this.timeShoot = timeShoot;
 	}
 
 

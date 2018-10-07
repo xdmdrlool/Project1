@@ -10,10 +10,16 @@ public class Portal extends Entity{
 	
 	private int x=0;
 	private int y=0;
+	private int xBefore=0;
+	private int yBefore=0;
+	private int vx=0;
+	private int vy=0;
 	private int height=10;
 	private int width=10;
 	private double angle=0;
 	private boolean moved;
+	private int timeInAir=0;
+	private boolean inTheAir=false;
 	private FormRect form= new FormRect(Color.BLUE,x,y,width, height, angle);
 	private Hitbox hitbox=new Hitbox("RECT",x,y+height/4,10,height/2,width,angle);
 	private Animation currentAnimation;
@@ -186,4 +192,53 @@ public class Portal extends Entity{
 	public void setFc(FC fc) {
 		this.fc = fc;
 	}
+
+	public int getVx() {
+		return vx;
+	}
+
+	public void setVx(int vx) {
+		this.vx = vx;
+	}
+
+	public int getVy() {
+		return vy;
+	}
+
+	public void setVy(int vy) {
+		this.vy = vy;
+	}
+
+	public int getxBefore() {
+		return xBefore;
+	}
+
+	public void setxBefore(int xBefore) {
+		this.xBefore = xBefore;
+	}
+
+	public int getyBefore() {
+		return yBefore;
+	}
+
+	public void setyBefore(int yBefore) {
+		this.yBefore = yBefore;
+	}
+
+	public int getTimeInAir() {
+		return timeInAir;
+	}
+
+	public void setTimeInAir(int timeInAir) {
+		this.timeInAir = timeInAir;
+	}
+
+	public boolean isInTheAir() {
+		return inTheAir;
+	}
+
+	public void setInTheAir(boolean inTheAir) {
+		this.inTheAir = inTheAir;
+	}
+
 }

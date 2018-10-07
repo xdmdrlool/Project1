@@ -16,9 +16,6 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	////Attributs////
 	private Panel 	panel;
 	private JLabel 	statusBar;
-	
-	private int xMouse=0;
-	private int yMouse=0;
 
 	private Player 	player;
 	private Portal portal1;
@@ -62,8 +59,8 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 
 	@Override
 	public void mouseMoved(MouseEvent event) {
-		setxMouse(event.getX());
-		setyMouse(event.getY());
+		player.setxMouse(event.getX());
+		player.setyMouse(event.getY());
 		
 	}
 
@@ -108,7 +105,7 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	public void keyPressed(KeyEvent e) {
 		
 		int key =e.getKeyCode();
-		player.actionKeyboard(key,xMouse,yMouse);
+		player.actionKeyboard(key);
 	}
 
 	@Override
@@ -125,6 +122,9 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 				}
 			}
 		}
+		if (e.getKeyCode()==KeyEvent.VK_SPACE) {
+			player.setShooting(false);
+		}
 	}
 
 	@Override
@@ -132,23 +132,12 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 		// TODO Auto-generated method stub
 	}
 
-
-	public int getxMouse() {
-		return xMouse;
+	public Projectile getProjectile() {
+		return projectile;
 	}
 
 
-	public void setxMouse(int xMouse) {
-		this.xMouse = xMouse;
-	}
-
-
-	public int getyMouse() {
-		return yMouse;
-	}
-
-
-	public void setyMouse(int yMouse) {
-		this.yMouse = yMouse;
+	public void setProjectile(Projectile projectile) {
+		this.projectile = projectile;
 	}
 }

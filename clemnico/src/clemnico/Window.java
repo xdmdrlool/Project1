@@ -17,6 +17,8 @@ public class Window extends JFrame {
 	private JLabel statusBar;
 	private int fps;
 	protected ImageLoader loader = new ImageLoader();
+	private int width=1500;
+	private int height=1000;
 
 	// Objets de la fenêtre
 	Player player = new Player(400, 200, 100, 100,"Player1", 0, 6);
@@ -38,7 +40,7 @@ public class Window extends JFrame {
 		this.fps = fps;
 
 		this.setTitle("Ma fenetre");
-		this.setSize(1500, 1000);
+		this.setSize(width, height);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
@@ -124,11 +126,14 @@ public class Window extends JFrame {
 		
 		//Si un projectile a été rajouté par le joueur en faisant espace
 		if (projectileCount<projectiles.size()) {			
-			projectiles.get(projectileCount-1).addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,projectiles.get(projectileCount-1).getWidth(),projectiles.get(projectileCount-1).getHeight()));
-			projectiles.get(projectileCount-1).setCurrentAnimation(NameAnimation.DEFAULT);
-			array.add(projectiles.get(projectileCount-1));
+			projectiles.get(projectileCount).addAnimation(NameAnimation.DEFAULT,createAnimation(Animations.AnimationObsatcleDefault2,projectiles.get(projectileCount).getWidth(),projectiles.get(projectileCount).getHeight()));
+			projectiles.get(projectileCount).setCurrentAnimation(NameAnimation.DEFAULT);
+			array.add(projectiles.get(projectileCount));
 			projectileCount+=1;
 			panel.setEntityList(array);
+		}
+		if (projectileCount>projectiles.size()) {
+			
 		}
 	}
 
@@ -149,17 +154,24 @@ public class Window extends JFrame {
 				enemy.step(period);
 				
 				refreshPanel();
+				ArrayList<Projectile> toRemove= new ArrayList<>();
 				for (Projectile projectile : projectiles) {
+					fc.portalInteractionRect(projectile, portal1, portal2);
 					projectile.step(period,player,1,1);
+					toRemove=projectile.isOut(toRemove, width, height);
 				}
-
+				for (Projectile projectile : toRemove) {
+					projectiles.remove(projectile);
+					projectileCount-=1;
+				}
+				
 				// Gestion portails teleportations
-				player.portalInteraction(fc, portal1, portal2);
+				fc.portalInteractionRect(player, portal1, portal2);
 				enemy.portalInteraction(fc, portal1, portal2);
 //				System.out.println(player.getX()+" "+player.isInTheAir());
 
 				// Gestion obstacle
-				player.obstacleInteraction2(fc, obstacles);
+				player.obstacleInteraction(fc, obstacles);
 				enemy.obstacleInteraction2(fc, obstacles);
 //				System.out.println(player.getForm().getX()+"   "+player.getForm().getY()+"   "+player.getTimeInAir());
 
@@ -216,5 +228,21 @@ public class Window extends JFrame {
 
 	public void setFps(int fps) {
 		this.fps = fps;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }

@@ -3,20 +3,26 @@ package clemnico;
 import java.awt.Color;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Projectile extends Entity {
+public class Projectile extends Entity{
 	
 	////Attributs////
 	private int x=0;
 	private int y=0;
+	private int xBefore=0;
+	private int yBefore=0;
 	private int vx=1;
 	private int vy=1;
-	private int vNorm=5;
+	private int vNorm=10;
 	private int height=20;
 	private int width=20;
 	private double angle=0;
+	private int timeInAir=0;
+	private boolean inTheAir=false;
+	
 	private FormRect form= new FormRect(Color.darkGray,x,y,width, height, angle);
 	private Hitbox hitbox=new Hitbox("RECT",x,y,10,height,width,angle);
 	private Animation currentAnimation;
@@ -44,16 +50,30 @@ public class Projectile extends Entity {
 		int yp=player.getY()+player.getHeight()/2;
 		
 		double norm=Math.sqrt((xp-xClic)*(xp-xClic)+(yp-yClic)*(yp-yClic));
-		
+		if (norm==0) {
+			setVx(vNorm);
+			setVy(0);
+		}
 		double[] vector= {(xClic-xp)*1./norm,(yClic-yp)*1./norm};
+		System.out.print(vector[0]+" ");
+		System.out.println(vector[1]);
+		
 		setVx((int)(vNorm*vector[0]));
 		setVy((int)(vNorm*vector[1]));
-		
 	}
 	
 	public void moveIn(int x, int y) {
 		setX(x);
 		setY(y);
+	}
+	
+	//Ajoute le projectile à array pour l'enlever ensuite
+	public ArrayList<Projectile> isOut(ArrayList<Projectile> array, int w, int h) {
+		if (x+width<0 || y+height<0 || x>w || y>h) {
+			array.add(this);
+			return array;
+		}
+		return array;
 	}
 	
 	public void step(int period, Player player, int xMouse, int yMouse) {
@@ -184,6 +204,36 @@ public class Projectile extends Entity {
 	public void setvNorm(int vNorm) {
 		this.vNorm = vNorm;
 	}
+
+	public int getxBefore() {
+		return xBefore;
+	}
+
+	public void setxBefore(int xBefore) {
+		this.xBefore = xBefore;
+	}
+
+	public int getyBefore() {
+		return yBefore;
+	}
+
+	public void setyBefore(int yBefore) {
+		this.yBefore = yBefore;
+	}
+
+	public int getTimeInAir() {
+		return timeInAir;
+	}
+
+	public void setTimeInAir(int timeInAir) {
+		this.timeInAir = timeInAir;
+	}
+
+	public boolean isInTheAir() {
+		return inTheAir;
+	}
+
+	public void setInTheAir(boolean inTheAir) {
+		this.inTheAir = inTheAir;
+	}
 }
-
-
