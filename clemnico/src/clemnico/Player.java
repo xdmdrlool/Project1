@@ -11,15 +11,22 @@ public class Player extends Entity {
 
 	//// Attributs////
 
+	private boolean upKey=false;
+	private boolean leftKey=false;
+	private boolean rightKey=false;
+	
 	private int directionX = 0;
-
-	private boolean moveX = false;
+	private int airControl = 1; // En pourcentage
+	
 	private int keyPressed = 0;
 	private boolean dead = false;
-	private int vxMax = 100;
-	private int vyMax = 30;
-	private int vxOnGround=6;
+	private int ax = 1;
+	private int currentVx=0;
+	private int vxMax = 15;
+	private int vyMax = 50;
+	private int vJump = 20;
 	Sound sound=new Sound("saut.wav");
+	Sound sound1=new Sound("pan.wav");
 	
 	private boolean shooting=false;
 	private int reloadShoot=10;	//fréquence de tir (0=max)
@@ -34,152 +41,101 @@ public class Player extends Entity {
 	public Player(int x, int y, int width, int height, String name, int direction, int vxOnGround) {
 		super(name, x, y, width, height);
 		setDirectionX(direction);
-		setVxOnGround(vxOnGround);
 	}
 
-
-	
 	
 	//// Methodes////
 
-	public void moveIn(int x, int y) {
-		setX(x);
-		setY(y);
+	// Actions clavier
+	public void actionKeyboardPressed(int key) {
+		//Déplacement
+		if (key == KeyEvent.VK_Z) {setUpKey(true);}
+		if (key == KeyEvent.VK_Q) {setLeftKey(true);setKeyPressed(-1);} 
+		if (key == KeyEvent.VK_D) {setRightKey(true);setKeyPressed(1);}
+		
+		//Jet de projectiles
+		if (key == KeyEvent.VK_SPACE) {setShooting(true);}
 	}
-
-	public void distanceStep(int dx, int dy) {
-		moveIn(this.x + dx, this.y + dy);
+	
+	public void actionKeyboardReleased(int key) {
+		//Déplacement
+		if (key == KeyEvent.VK_Z) {setUpKey(false);}
+		if (key == KeyEvent.VK_Q) {setLeftKey(false);} 
+		if (key == KeyEvent.VK_D) {setRightKey(false);}
+		
+		//Jet de projectiles
+		if (key == KeyEvent.VK_SPACE) {setShooting(false);}
 	}
-
-	// Action clavier
-	public void actionKeyboard(int key) {
-
-		if (key == KeyEvent.VK_Z && !inTheAir) {
-			setInTheAir(false);
-			setVy(-20);
-			setY(y - 1);
-			setVx(directionX * vx);
-			sound.play();
-
+	
+	public void movement() {
+		//Tombe si est en l'air
+		if (inTheAir) {
+			double g = -5;
+			double t = timeInAir / 60.0;
+			setVy((int) (vy - g * t));
 		}
 		
-		if (key == KeyEvent.VK_Q && keyPressed != key) {
-			setDirectionX(-1);
-			setKeyPressed(key);
-			setMoveX(true);
-		} else if (key == KeyEvent.VK_D && keyPressed != key) {
-			setDirectionX(1);
-			setKeyPressed(key);
-			setMoveX(true);
+		//Saut
+		if (upKey && !inTheAir) {
+			setVy(-vJump);
+			setY(y - 1);
+			sound.play();
 		}
-		//Jet de projectiles
-		if (key == KeyEvent.VK_SPACE) {
-			setShooting(true);
+		if (leftKey) {setDirectionX(-1);}
+		if (rightKey) {setDirectionX(1);}
+		
+		//Si un déplacement latérale est demandé par le joueur
+		//Dernière touche appuyée valide si conflit entre droite et gauche
+		if (leftKey && rightKey) {
+			if (inTheAir) {
+				setVx(currentVx+keyPressed*airControl);
+			}
+			else {
+				setVx(currentVx+keyPressed*ax);
+				
+			}
 		}
+		else if (leftKey || rightKey) {
+			if (inTheAir) {
+				setVx(currentVx+directionX*airControl);
+			}
+			else {
+				setVx(currentVx+directionX*ax);
+				
+			}
+		}
+		setCurrentVx(vx);
+		setX(x + vx);
+		setY(y + vy);
 	}
 	
 	public void shoot() {
-		Projectile projectile=new Projectile(x+width/2,y+height/2,10,20,0);
-		projectile.directionThrow(this, xMouse, yMouse);
-		projectiles.add(projectile);
+		setTimeShoot(timeShoot+1);
+		if (shooting && timeShoot>=reloadShoot) {
+			Projectile projectile=new Projectile(x+width/2,y+height/2,10,20,0);
+			projectile.directionThrow(this, xMouse, yMouse);
+			projectiles.add(projectile);
+			sound1.play();
+	
+			setTimeShoot(0);
+		}
 	}
 	
 	
 	// Action de joueur pour un pas de la boucle
 	public void step(int period) {
-
-		// Mouvement vertical du joueur
-		if (inTheAir) {
-			fall();
-		}
-
-		//Mouvement horizontal du joueur
-		double AirControl = 1.0; // En pourcentage
-		if (moveX) {
-			if (isInTheAir()) {
-				setX(x + (int) (this.directionX * AirControl * vxOnGround));
-			} else {
-				setVx(this.directionX * vxOnGround);
-				setX(this.x + this.vx);
-			}
-		}
 		
-		//Le joueur tire
-		setTimeShoot(timeShoot+1);
-		if (shooting && timeShoot>=reloadShoot) {
-			shoot();
-			setTimeShoot(0);
-		}
+		
+		// Déplacement du joueur
+		movement();
+		
+		// Tir du joueur
+		shoot();
 		
 		
 		chooseAnimation();
 	}
-	
-	// Mouvement physique du joueur dans les airs sans entrée clavier
-	public void fall() {
-		double g = -5;
-		double t = timeInAir / 60.0;
 
-		setVy((int) (vy - g * t));
-		setX(x + vx);
-		setY(y + vy);
-	}
-	
-
-	
-	//Gestion intéraction entre joueur et les obstacles
-
-	
-public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
-		Vecteur vecteurCorrection=null;
-		Vecteur directionCollision=null;
-		boolean varInTheAir=true;
-//		System.out.println("");
-		for (Obstacle obstacle: obstacles) {
-			//S'il y a collision avec un obstacle
-			FormRect rect0=new FormRect(Color.RED, xBefore, yBefore, width, height, 0);
-			FormRect rect=(FormRect) getHitbox().getForm();
-			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
-			
-			rect0.setX(rect0.getX()+obstacle.getX()-obstacle.getxBefore());
-			rect0.setY(rect0.getY()+obstacle.getY()-obstacle.getyBefore());
-			
-			Vecteur[] tab = fc.calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
-			
-			if (tab !=null) {
-				vecteurCorrection=tab[0];
-				directionCollision=tab[1];
-				
-//				System.out.println("xB :"+rect0.getX()+"   yB : "+rect0.getY());
-//				System.out.println("x :"+x+"   y : "+y);
-//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
-//				System.out.println(directionCollision.x+" "+directionCollision.y);
-				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
-				if (directionCollision.x!=0 ||directionCollision.y>0) {setVx(0);}
-				if (directionCollision.y!=0) {setVy(0);}
-				
-
-				int newX=(int) (getX()+vecteurCorrection.x);
-				int newY=(int) (getY()+vecteurCorrection.y);
-				
-//				System.out.println("x: "+newX+"  y: "+newY);
-//				System.out.println("air : "+isInTheAir());	
-
-				setX(newX);
-				setY(newY);
-//				System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);
-			}
-			
-
-		}
-//		System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);	
-		setTimeInAir(getTimeInAir()+1);
-		setInTheAir(varInTheAir);
-		setxBefore(x);setyBefore(y);
-
-		
-				
-	}
 	
 	@Override
 	public void chooseAnimation() {
@@ -230,12 +186,6 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 		this.directionX = i;
 	}
 
-	public boolean isMoveX() {
-		return moveX;
-	}
-	public void setMoveX(boolean moveX) {
-		this.moveX=moveX;
-	}
 	public int getKeyPressed() {
 		return keyPressed;
 	}
@@ -287,17 +237,6 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 	public void setTimeInAir(int timeInAir) {
 		this.timeInAir = timeInAir;
 	}
-
-
-	public int getVxOnGround() {
-		return vxOnGround;
-	}
-
-
-	public void setVxOnGround(int vxOnGround) {
-		this.vxOnGround = vxOnGround;
-	}
-
 
 
 	public ArrayList<Projectile> getProjectiles(){
@@ -362,7 +301,97 @@ public void obstacleInteraction(FC fc, Obstacle[] obstacles) {
 		this.timeShoot = timeShoot;
 	}
 
-	
+
+
+
+	public boolean isUpKey() {
+		return upKey;
+	}
+
+
+
+
+	public void setUpKey(boolean upKey) {
+		this.upKey = upKey;
+	}
+
+
+
+
+	public boolean isLeftKey() {
+		return leftKey;
+	}
+
+
+
+
+	public void setLeftKey(boolean leftKey) {
+		this.leftKey = leftKey;
+	}
+
+
+
+
+	public boolean isRightKey() {
+		return rightKey;
+	}
+
+
+
+
+	public void setRightKey(boolean rightKey) {
+		this.rightKey = rightKey;
+	}
+
+
+
+
+	public int getvJump() {
+		return vJump;
+	}
+
+
+
+
+	public void setvJump(int vJump) {
+		this.vJump = vJump;
+	}
+
+
+
+
+	public int getAirControl() {
+		return airControl;
+	}
+
+
+
+
+	public void setAirControl(int airControl) {
+		this.airControl = airControl;
+	}
+
+
+	public int getAx() {
+		return ax;
+	}
+
+
+	public void setAx(int ax) {
+		this.ax = ax;
+	}
+
+
+	public int getCurrentVx() {
+		return currentVx;
+	}
+
+
+	public void setCurrentVx(int currentVx) {
+		this.currentVx = currentVx;
+	}
+
+
 
 }
 

@@ -7,6 +7,8 @@ import java.util.Map;
 
 public abstract class Entity {
 	
+	
+	////Attrbiuts////
 	protected static AnimationCreator ACreator =new AnimationCreator();
 	protected static  FC fc=new FC();
 	protected int x;
@@ -27,7 +29,7 @@ public abstract class Entity {
 	
 
 
-	
+	////Constructeur////
 	public Entity(String name,int x, int y, int width,int height) {
 		setX(x);
 		setY(y);
@@ -38,6 +40,8 @@ public abstract class Entity {
 		setName(name);
 	}
 	
+	
+	////Méthodes////
 	public abstract void chooseAnimation();
 	
 	public abstract void useDefaultAnimations();
@@ -52,7 +56,9 @@ public abstract class Entity {
 		return hitbox.collision(entity.getHitbox());	
 	}
 	
-	
+	////////////////////////////////
+	/////// GETTER AND SETTER //////
+	////////////////////////////////
 
 	public FormRect getForm() {
 		return form;

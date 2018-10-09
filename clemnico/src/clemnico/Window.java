@@ -29,6 +29,7 @@ public class Window extends JFrame {
 	Obstacle obstacle = new FixObstacle(300, 600, 400, 200,"Obs1", 0);
 	Obstacle obstacle2 = new FixObstacle(900, 550, 200, 247,"Obs2", 0);
 	Obstacle obstacle3 = new FixObstacle(150, 500, 200, 200,"Obs3", 0);
+	Obstacle obstacle4 = new FixObstacle(-2000, 700, 2000, 700,"Obs4", 0);
 	
 
 	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Enemy1", 0, 5,false);
@@ -36,7 +37,7 @@ public class Window extends JFrame {
 	MovingPlatform movingPlatform= new MovingPlatform("Plate",400,501,700,501,500,50, 1000);
 	
 	
-	Obstacle[] obstacles = { obstacle, obstacle2, obstacle3,movingPlatform };
+	Obstacle[] obstacles = { obstacle, obstacle2, obstacle3, obstacle4, movingPlatform };
 	
 	
 	
@@ -92,6 +93,7 @@ public class Window extends JFrame {
 		obstacle.useDefaultAnimations();
 		obstacle2.useDefaultAnimations();
 		obstacle3.useDefaultAnimations();
+		obstacle4.useDefaultAnimations();
 		enemy.useDefaultAnimations();
 		movingPlatform.useDefaultAnimations();
 		
@@ -102,12 +104,14 @@ public class Window extends JFrame {
 		obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle2.setCurrentAnimation(NameAnimation.DEFAULT);
 		obstacle3.setCurrentAnimation(NameAnimation.DEFAULT);
+		obstacle4.setCurrentAnimation(NameAnimation.DEFAULT);
 		enemy.setCurrentAnimation(NameAnimation.DEFAULT);
 		movingPlatform.setCurrentAnimation(NameAnimation.DEFAULT);
 		ArrayList<Entity> array = new ArrayList<Entity>();
 		array.add(obstacle);
 		array.add(obstacle2);
 		array.add(obstacle3);
+		array.add(obstacle4);
 		array.add(player);
 		array.add(portal1);
 		array.add(portal2);
@@ -129,7 +133,7 @@ public class Window extends JFrame {
 		
 		//Si un projectile a été rajouté par le joueur en faisant espace
 		if (projectileCount<projectiles.size()) {			
-			projectiles.get(projectileCount).addAnimation(NameAnimation.DEFAULT,AC.createAnimation(Animations.AnimationObsatcleDefault2,projectiles.get(projectileCount).getWidth(),projectiles.get(projectileCount).getHeight()));
+			projectiles.get(projectileCount).addAnimation(NameAnimation.DEFAULT,AC.createAnimation(Animations.AnimationProjectileDefault,projectiles.get(projectileCount).getWidth(),projectiles.get(projectileCount).getHeight()));
 			projectiles.get(projectileCount).setCurrentAnimation(NameAnimation.DEFAULT);
 			array.add(projectiles.get(projectileCount));
 			projectileCount+=1;
@@ -153,11 +157,14 @@ public class Window extends JFrame {
 				enemy.step(period);
 				
 				refreshPanel();
+				
+				//Gestion des projectiles
 				ArrayList<Projectile> toRemove= new ArrayList<>();
 				for (Projectile projectile : projectiles) {
 					fc.portalInteractionRect(projectile, portal1, portal2);
 					projectile.step(period,player,1,1);
-					toRemove=projectile.isOut(toRemove, width, height,panel.getxOffset(),panel.getyOffset());
+					projectile.getCurrentAnimation().update();	
+					toRemove=projectile.isOut(toRemove, width, height,panel.getxOffset(),panel.getyOffset(), fc.obstacleInteraction(projectile, obstacles));
 				}
 				for (Projectile projectile : toRemove) {
 					projectiles.remove(projectile);
@@ -166,16 +173,14 @@ public class Window extends JFrame {
 				
 				// Gestion portails teleportations
 				fc.portalInteractionRect(player, portal1, portal2);
-				enemy.portalInteraction(fc, portal1, portal2);
-//				System.out.println(player.getX()+" "+player.isInTheAir());
+				fc.portalInteractionRect(enemy, portal1, portal2);
 
 				// Gestion obstacle
-				player.obstacleInteraction(fc, obstacles);
-				enemy.obstacleInteraction2(fc, obstacles);
-//				System.out.println(player.getForm().getX()+"   "+player.getForm().getY()+"   "+player.getTimeInAir());
+				fc.obstacleInteraction(player, obstacles);
+				enemy.obstacleInteractionEnemy(fc, obstacles);
 
 				player.getCurrentAnimation().update();					
-				caculCameraOffset(panel, player);
+				calculCameraOffset(panel, player);
 				movingPlatform.update();
 				panel.repaint();
 			}
@@ -184,7 +189,7 @@ public class Window extends JFrame {
 	}
 
 	
-	public void caculCameraOffset(Panel panel,Player player) {
+	public void calculCameraOffset(Panel panel,Player player) {
 		int w0=this.getWidth();int h0=this.getHeight();
 		int xOff=panel.getxOffset();int yOff=panel.getyOffset();
 		int x=player.getX();int y=player.getY();int w=player.getWidth();int h=player.getHeight();

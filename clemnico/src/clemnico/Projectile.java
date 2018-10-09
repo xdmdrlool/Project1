@@ -9,9 +9,8 @@ import java.util.Map;
 
 public class Projectile extends Entity{
 	
+	
 	////Attributs////
-
-
 	private int vNorm=10;
 	private double angle=0;
 
@@ -23,6 +22,8 @@ public class Projectile extends Entity{
 		setAngle(angle);
 		setVx(1);
 		setVy(1);
+		setHeight(30);
+		setWidth(30);
 	}
 	
 	////Méthodes////
@@ -41,21 +42,22 @@ public class Projectile extends Entity{
 			setVy(0);
 		}
 		double[] vector= {(xClic-xp)*1./norm,(yClic-yp)*1./norm};
-//		System.out.print(vector[0]+" ");
-//		System.out.println(vector[1]);
-		
 		setVx((int)(vNorm*vector[0]));
 		setVy((int)(vNorm*vector[1]));
 	}
+	
 	
 	public void moveIn(int x, int y) {
 		setX(x);
 		setY(y);
 	}
 	
+	
 	//Ajoute le projectile à array pour l'enlever ensuite
-	public ArrayList<Projectile> isOut(ArrayList<Projectile> array, int w, int h,int xoff,int yoff) {
-		if (x+xoff+width<0 || y+yoff+height<0 || x+xoff>w || y+yoff>h) {
+	public ArrayList<Projectile> isOut(ArrayList<Projectile> array, int w, int h,int xoff,int yoff, boolean obstacleCollision) {
+		if (x+xoff+width<0 || y+yoff+height<0 || x+xoff>w || y+yoff>h || obstacleCollision) {
+			setX(-100);
+			setY(-100);
 			array.add(this);
 			return array;
 		}
@@ -68,10 +70,18 @@ public class Projectile extends Entity{
 	}
 	
 	
+	public void entityInteraction(Entity entity) {
+		entity.setX(entity.getX()-10);
+	}
+	
+	
 	@Override
 	public void useDefaultAnimations() {
-		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationObsatcleDefault2,width,height));		
+		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationProjectileDefault,width,height));		
 	}
+	
+	
+	
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
@@ -87,12 +97,6 @@ public class Projectile extends Entity{
 		this.hitbox.setAngle(angle);
 		if (this.currentAnimation != null) {this.currentAnimation.setAngle(angle);}		
 	}
-
-
-
-
-
-
 
 	public Animation getCurrentAnimation() {
 		return currentAnimation;

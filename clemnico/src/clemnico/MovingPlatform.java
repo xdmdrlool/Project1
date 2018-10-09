@@ -21,10 +21,6 @@ public class MovingPlatform extends Obstacle  {
 		setPeriod(period);
 	}
 	
-	
-	
-	
-	
 	public void update() {
 		this.frame=(frame+1)%period;
 		if (frame<period/2) {

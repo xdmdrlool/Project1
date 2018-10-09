@@ -108,26 +108,14 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	public void keyPressed(KeyEvent e) {
 		
 		int key =e.getKeyCode();
-		player.actionKeyboard(key);
+		player.actionKeyboardPressed(key);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		//Si la touche relachée est la dernière appuyée, on considère qu'aucune touche n'est appuyée
-		if (player.getKeyPressed()==e.getKeyCode()) {
-			player.setKeyPressed(0);
-			//Si c'est une touche gauche/droite, on arrête le mouvement latéral créé par le joueur,
-			//et l'inertie si il touche le sol
-			if (e.getKeyCode()==KeyEvent.VK_Q || e.getKeyCode()==KeyEvent.VK_D) {
-				player.setMoveX(false);
-				if (!player.isInTheAir()) {
-					player.setVx(0);
-				}
-			}
-		}
-		if (e.getKeyCode()==KeyEvent.VK_SPACE) {
-			player.setShooting(false);
-		}
+		int key =e.getKeyCode();
+		player.actionKeyboardReleased(key);
+		
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import clemnico.FC.Vecteur;
+
 public class FC {
 
 	public FC() {
@@ -345,11 +347,17 @@ public class FC {
 			
 			
 		default:
-			System.out.println("coucou");
-			int x=obstacle.getX()-rectangle.getX()+rectangle0.getX();
-			int y= obstacle.getY()-rectangle.getY()+rectangle0.getY();
+			int x=obstacle.getX()+rectangle.getX()-rectangle0.getX();
+			int y= obstacle.getY()+rectangle.getY()-rectangle0.getY();
 			FormRect obstacle0=new FormRect(null,x,y, obstacle.getWidth(), obstacle.getHeight(), obstacle.getAngle());
-			return calculVecteurCollisionRectDroitObstacleDroit(obstacle0, obstacle,rectangle);
+			
+			Vecteur[] tab2=calculVecteurCollisionRectDroitObstacleDroit(obstacle0, obstacle,rectangle);
+			tab2[0].x*=-1;
+			tab2[0].y*=-1;
+			tab2[1].x*=-1;
+			tab2[1].y*=-1;
+			tab[0]=tab2[0];
+			tab[1]=tab2[1];
 		}
 		normalize(direction);
 		return tab;
@@ -738,15 +746,9 @@ public class FC {
 	////// INTERACTIONS OBSTACLES //////
 	////////////////////////////////////
 	
-/*	public void obstacleInteraction(Entity entity, Obstacle[] obstacles) {
+	public boolean obstacleInteraction(Entity entity, Obstacle[] obstacles) {
 		
-		Hitbox hitbox=entity.getHitbox();
-		int xBefore = entity.getxBefore();
-		int yBefore = entity.getyBefore();
-		int x = entity.getX();
-		int y = entity.getY();
-		int width = entity.getWidth();
-		int height = entity.getHeight();
+		boolean collision=false;
 		
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
@@ -754,14 +756,23 @@ public class FC {
 //		System.out.println("");
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a collision avec un obstacle
-			FormRect rect0=new FormRect(Color.RED, xBefore, yBefore, width, height, 0);
-			FormRect rect=(FormRect) hitbox.getForm();
+			FormRect rect0=new FormRect(Color.RED, entity.xBefore, entity.yBefore, entity.width, entity.height, 0);
+			FormRect rect=(FormRect) entity.getHitbox().getForm();
 			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
+			
+			rect0.setX(rect0.getX()+obstacle.getX()-obstacle.getxBefore());
+			rect0.setY(rect0.getY()+obstacle.getY()-obstacle.getyBefore());
+			
 			Vecteur[] tab = calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
 			
 			if (tab !=null) {
 				vecteurCorrection=tab[0];
 				directionCollision=tab[1];
+				
+//				System.out.println("xB :"+rect0.getX()+"   yB : "+rect0.getY());
+//				System.out.println("x :"+x+"   y : "+y);
+//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
+//				System.out.println(directionCollision.x+" "+directionCollision.y);
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
 				if (directionCollision.x!=0 ||directionCollision.y>0) {entity.setVx(0);}
 				if (directionCollision.y!=0) {entity.setVy(0);}
@@ -770,15 +781,25 @@ public class FC {
 				int newX=(int) (entity.getX()+vecteurCorrection.x);
 				int newY=(int) (entity.getY()+vecteurCorrection.y);
 				
+//				System.out.println("x: "+newX+"  y: "+newY);
+//				System.out.println("air : "+isInTheAir());	
+
 				entity.setX(newX);
 				entity.setY(newY);
+//				System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);
+				collision=true;
 			}
+			
+
 		}
+//		System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);	
 		entity.setTimeInAir(entity.getTimeInAir()+1);
 		entity.setInTheAir(varInTheAir);
-		entity.setxBefore(x);
-		entity.setyBefore(y);
-	}*/
+		entity.setxBefore(entity.x);entity.setyBefore(entity.y);
+
+		return collision;
+				
+	}
 	
 	
 	
