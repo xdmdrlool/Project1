@@ -7,7 +7,7 @@ public class Enter extends Entity {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
+
 	public void chooseAnimation() {
 		NameAnimation name=NameAnimation.DEFAULT;
 		setCurrentAnimation(name);
@@ -16,7 +16,7 @@ public class Enter extends Entity {
 	
 	
 	
-	@Override
+
 	public void useDefaultAnimations() {
 		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));		
 	}

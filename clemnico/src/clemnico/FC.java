@@ -233,8 +233,31 @@ public class FC {
 		return closestPoint;
 	}
 
+	
+	
 	public Vecteur[] calculVecteurCollisionRectDroitObstacleDroit(FormRect rectangle0, FormRect rectangle,FormRect obstacle) {
-		if (!(Collision(rectangle,obstacle))) {return null;}
+		int a=compteSommetIn(rectangle, obstacle);
+		int b=compteSommetIn(obstacle, rectangle);
+		if (a+b==0) {return null;}
+		if (a>=b) {
+			return calculVecteur( rectangle0,  rectangle, obstacle);
+		}
+		else {
+			int x=obstacle.getX()+rectangle.getX()-rectangle0.getX();
+			int y= obstacle.getY()+rectangle.getY()-rectangle0.getY();
+			FormRect obstacle0=new FormRect(null,x,y, obstacle.getWidth(), obstacle.getHeight(), obstacle.getAngle());
+			
+			Vecteur[] tab2=calculVecteur(obstacle0, obstacle,rectangle);
+			tab2[0].x*=-1;
+			tab2[0].y*=-1;
+			tab2[1].x*=-1;
+			tab2[1].y*=-1;
+			return tab2;
+		}
+	}
+	
+	
+	private Vecteur[] calculVecteur(FormRect rectangle0, FormRect rectangle,FormRect obstacle) {
 		Point Middle = new Point(rectangle.getX() + rectangle.getWidth() / 2,rectangle.getY() + rectangle.getHeight() / 2);
 		Point[] rect0 = Rect2Array(rectangle0);
 		Point[] rect = Rect2Array(rectangle);
@@ -347,17 +370,7 @@ public class FC {
 			
 			
 		default:
-			int x=obstacle.getX()+rectangle.getX()-rectangle0.getX();
-			int y= obstacle.getY()+rectangle.getY()-rectangle0.getY();
-			FormRect obstacle0=new FormRect(null,x,y, obstacle.getWidth(), obstacle.getHeight(), obstacle.getAngle());
-			
-			Vecteur[] tab2=calculVecteurCollisionRectDroitObstacleDroit(obstacle0, obstacle,rectangle);
-			tab2[0].x*=-1;
-			tab2[0].y*=-1;
-			tab2[1].x*=-1;
-			tab2[1].y*=-1;
-			tab[0]=tab2[0];
-			tab[1]=tab2[1];
+			return null;
 		}
 		normalize(direction);
 		return tab;
@@ -478,6 +491,21 @@ public class FC {
 	////////////////////////////////////
 	////// FONCTIONS GENERALES /////////
 	////////////////////////////////////
+	
+	
+	
+	
+	public int compteSommetIn(FormRect rectangle,FormRect obstacle) {
+
+		Point[] rect = Rect2Array(rectangle);
+		Point[] obs = Rect2Array(obstacle);
+		int n = 0;
+		if (Collision(obs, 4, rect[0])) {n++;}
+		if (Collision(obs, 4, rect[1])) {n++;}
+		if (Collision(obs, 4, rect[2])) {n++;}
+		if (Collision(obs, 4, rect[3])) {n++;}
+		return n;
+	}
 
 	public float determinant(Vecteur vec1, Vecteur vec2) {
 		return vec1.x * vec2.y - vec1.y * vec2.x;

@@ -1,10 +1,9 @@
 package clemnico;
 
-import java.awt.Color;
+
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Projectile extends Entity{
@@ -27,10 +26,6 @@ public class Projectile extends Entity{
 	}
 	
 	////Méthodes////
-	public void display(Graphics2D gg) {
-		Sprite sprite =currentAnimation.getSprite();
-		sprite.render(gg, x+width/2, y+height/2);
-	}
 	
 	public void directionThrow(Player player, int xClic, int yClic) {
 		int xp=player.getX()+player.getWidth()/2;
@@ -91,6 +86,7 @@ public class Projectile extends Entity{
 	public double getAngle() {
 		return angle;
 	}
+	
 	public void setAngle(double angle) {
 		this.angle = angle;
 		this.form.setAngle(angle);
@@ -98,9 +94,6 @@ public class Projectile extends Entity{
 		if (this.currentAnimation != null) {this.currentAnimation.setAngle(angle);}		
 	}
 
-	public Animation getCurrentAnimation() {
-		return currentAnimation;
-	}
 
 	public void setCurrentAnimation(NameAnimation name) {
 		Animation anime = ListAnimation.get(name);
@@ -110,41 +103,11 @@ public class Projectile extends Entity{
 		this.currentAnimation.setAngle(this.getAngle());
 	}
 		
-	public Map<NameAnimation,Animation> getListAnimation() {
-		return ListAnimation;
-	}
-
-
-	public void setListAnimation(Map<NameAnimation,Animation> listAnimation) {
-		ListAnimation = listAnimation;
-	}
-
-
-
-	public void addAnimation(NameAnimation name,Animation animation) {
-		this.ListAnimation.put(name,animation);
-	}
 	
 	public void chooseAnimation() {
 		NameAnimation name=NameAnimation.DEFAULT;
 		setCurrentAnimation(name);
 
-	}
-
-	public int getVx() {
-		return vx;
-	}
-
-	public void setVx(int vx) {
-		this.vx = vx;
-	}
-
-	public int getVy() {
-		return vy;
-	}
-
-	public void setVy(int vy) {
-		this.vy = vy;
 	}
 
 	public int getvNorm() {
@@ -155,29 +118,7 @@ public class Projectile extends Entity{
 		this.vNorm = vNorm;
 	}
 
-	public int getxBefore() {
-		return xBefore;
-	}
 
-	public void setxBefore(int xBefore) {
-		this.xBefore = xBefore;
-	}
-
-	public int getyBefore() {
-		return yBefore;
-	}
-
-	public void setyBefore(int yBefore) {
-		this.yBefore = yBefore;
-	}
-
-	public int getTimeInAir() {
-		return timeInAir;
-	}
-
-	public void setTimeInAir(int timeInAir) {
-		this.timeInAir = timeInAir;
-	}
 
 
 

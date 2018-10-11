@@ -1,11 +1,9 @@
 package clemnico;
 
-import java.awt.Color;
-import java.awt.Point;
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import clemnico.FC.Vecteur;
 
 public class Player extends Entity {
 
@@ -16,7 +14,7 @@ public class Player extends Entity {
 	private boolean rightKey=false;
 	
 	private int directionX = 0;
-	private int airControl = 1; // En pourcentage
+	private int airControl = 2; // En pourcentage
 	
 	private int keyPressed = 0;
 	private boolean dead = false;
@@ -24,7 +22,7 @@ public class Player extends Entity {
 	private int currentVx=0;
 	private int vxMax = 15;
 	private int vyMax = 50;
-	private int vJump = 20;
+	private int vJump = 22;
 	Sound sound=new Sound("saut.wav");
 	Sound sound1=new Sound("pan.wav");
 	
@@ -70,9 +68,9 @@ public class Player extends Entity {
 	public void movement() {
 		//Tombe si est en l'air
 		if (inTheAir) {
-			double g = -5;
+			double g = -1;
 			double t = timeInAir / 60.0;
-			setVy((int) (vy - g * t));
+			setVy((int) (vy - g ));
 		}
 		
 		//Saut

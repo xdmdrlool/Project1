@@ -11,84 +11,77 @@ import clemnico.FC.Vecteur;
 public class Panel extends JPanel { 
 	
 	////Attributs////
-	protected ArrayList<Entity> formList= new ArrayList<Entity>();
 	private int xOffset=0;
 	private int yOffset=0;
+	
+	
+	private ArrayList<Layer> listLayer=new ArrayList<Layer>();
+	private int indexMainLayer;
 	
 	////Constructeur////
 	public Panel() {
 
 	}
 	
-	
+	//// Methodes////
 	
 	public synchronized void paintComponent(Graphics g){  
 		super.paintComponent(g);
-		Graphics2D gg= (Graphics2D) g;		
-		for (Entity entity :formList) {
-			entity.display(gg,xOffset,yOffset);
+		Graphics2D gg= (Graphics2D) g;				
+		for (Layer layer :listLayer) {
+			layer.display(gg,xOffset,yOffset);
 		}
-		
 	
-//		g.fillOval(xPlayer-rPlayer, yPlayer-rPlayer, 2*rPlayer, 2*rPlayer);
-		
-//		ArrayList<Integer> array =new ArrayList<Integer>();
-//		array.add(100);
-//		array.add(100);
-//		array.add(200);
-//		array.add(100);
-//		FormRect rect = new FormRect(Color.RED,array );
-//		rect.draw(g);
-		
-		
-		
-		
-		
-		
-//	    int x1 = this.getWidth()/4;
-//
-//	    int y1 = this.getHeight()/4;                      
-//
-//	    g.drawOval(x1, y1, this.getWidth()/2, this.getHeight()/2);
-//	    
-//	  //x1, y1, width, height
-//
-//	    g.fillRect(65, 65, 30, 40);
-//	    
-//	  //x1, y1, width, height, arcWidth, arcHeight
-//
-//	    g.drawRoundRect(10, 10, 30, 50, 10, 10);
-//	    
-//	  //x1, y1, x2, y2
-//
-//	    g.drawLine(0, 0, this.getWidth(), this.getHeight());
-//	    
-//	    int x[] = {20, 30, 50, 60, 60, 50, 30, 20};
-//
-//	    int y[] = {30, 20, 20, 30, 50, 60, 60, 50};
-//
-//	    g.drawPolygon(x, y, 8);
-//	    g.drawPolyline(x, y, 8);
-//	    
-//	    
-//	    
-//	    Font font = new Font("Courier", Font.BOLD, 20);
-//	    g.setFont(font);
-//	    g.setColor(Color.red);          
-//	    g.drawString("Tiens ! je suis la !", 10, 20); 
+
   }
 
+	
+	
+
+	public void triLayer() {
+		Layer a;
+		int j;
+		for (int i=0;i<listLayer.size();i++) {
+			j=i;
+			while (j>0 && (listLayer.get(j).getDistance()>listLayer.get(j-1).getDistance())) {
+				a=listLayer.get(j-1);
+				listLayer.set(j-1, listLayer.get(j));
+				listLayer.set(j, a);
+				j-=1;
+			}
+		}
+		updateIndexMainLayer();
+	}
+	
+	
+	public void addToLayer(int i,Entity e) {
+		listLayer.get(i).add(e);
+	}
+	
+	public void addToMainLayer(Entity e) {
+		addToLayer(indexMainLayer, e);
+	}
+	
+	public boolean deleteEntity(Entity e) {
+		boolean bool=false;
+		for (Layer layer :listLayer) {
+			bool=layer.remove(e) || bool;
+		}
+		return bool;
+	}
+	
+	public void updateIndexMainLayer() {
+		for (int i=0;i<listLayer.size();i++) {
+			if (listLayer.get(i).getDistance()==0) {setIndexMainLayer(i);break;};
+		}
+	}
+	
+	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
 	
 
-	public ArrayList<Entity> getEntityList() {
-		return formList;
-	}
-	public void setEntityList(ArrayList<Entity> formList) {
-		this.formList = formList;
-	}
 
 
 
@@ -112,6 +105,27 @@ public class Panel extends JPanel {
 
 	public void setyOffset(int yOffset) {
 		this.yOffset = yOffset;
+	}
+
+
+
+	public ArrayList<Layer> getListLayer() {
+		return listLayer;
+	}
+
+
+
+	public void setListLayer(ArrayList<Layer> listLayer) {
+		this.listLayer = listLayer;
+		triLayer();
+	}
+
+	public int getIndexMainLayer() {
+		return indexMainLayer;
+	}
+
+	public void setIndexMainLayer(int indexMainLayer) {
+		this.indexMainLayer = indexMainLayer;
 	}        
 
 	

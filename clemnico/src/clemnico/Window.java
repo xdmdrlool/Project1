@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -27,8 +26,8 @@ public class Window extends JFrame {
 	Portal portal1 = new Portal(-500, -500, 100, 20,"Portal1",Color.BLUE);
 	Portal portal2 = new Portal(-500, -500, 100, 20,"Portal2",Color.ORANGE);
 	Obstacle obstacle = new FixObstacle(300, 600, 400, 200,"Obs1", 0);
-	Obstacle obstacle2 = new FixObstacle(900, 550, 200, 247,"Obs2", 0);
-	Obstacle obstacle3 = new FixObstacle(150, 500, 200, 200,"Obs3", 0);
+	Obstacle obstacle2 = new FixObstacle(-300, 450, 50, 50,"Obs2", 0);
+	Obstacle obstacle3 = new FixObstacle(-350, 500, 50, 50,"Obs3", 0);
 	Obstacle obstacle4 = new FixObstacle(-2000, 700, 2000, 700,"Obs4", 0);
 	
 
@@ -120,24 +119,41 @@ public class Window extends JFrame {
 				
 		array.add(movingPlatform);
 		
-		panel.setEntityList(array);
+
+		
+		ArrayList<Layer> arrayLayer= new ArrayList<Layer>();
+		Layer layer1=new Layer(0);
+		layer1.add(player);
+		layer1.add(portal1);
+		layer1.add(portal2);
+		layer1.add(obstacle);
+		layer1.add(obstacle3);
+		layer1.add(obstacle2);
+		layer1.add(obstacle4);
+		layer1.add(enemy);
+		layer1.add(movingPlatform);
+		
+		Layer layer2=new Layer(200);
+		layer2.add(obstacle3);
 		
 		
+		arrayLayer.add(layer1);
+		arrayLayer.add(layer2);
+		panel.setListLayer(arrayLayer);
+
 	}
 
 	
 	private void refreshPanel() {
 		
 		projectiles=player.getProjectiles();
-		ArrayList<Entity> array = panel.getEntityList();
 		
 		//Si un projectile a été rajouté par le joueur en faisant espace
 		if (projectileCount<projectiles.size()) {			
-			projectiles.get(projectileCount).addAnimation(NameAnimation.DEFAULT,AC.createAnimation(Animations.AnimationProjectileDefault,projectiles.get(projectileCount).getWidth(),projectiles.get(projectileCount).getHeight()));
+			projectiles.get(projectileCount).useDefaultAnimations();
 			projectiles.get(projectileCount).setCurrentAnimation(NameAnimation.DEFAULT);
-			array.add(projectiles.get(projectileCount));
+			panel.addToMainLayer( projectiles.get(projectileCount));
 			projectileCount+=1;
-			panel.setEntityList(array);
 		}
 	}
 	
@@ -168,6 +184,7 @@ public class Window extends JFrame {
 				}
 				for (Projectile projectile : toRemove) {
 					projectiles.remove(projectile);
+					panel.deleteEntity(projectile);
 					projectileCount-=1;
 				}
 				
@@ -194,10 +211,10 @@ public class Window extends JFrame {
 		int xOff=panel.getxOffset();int yOff=panel.getyOffset();
 		int x=player.getX();int y=player.getY();int w=player.getWidth();int h=player.getHeight();
 		int a;
-		if (x+xOff<1*w0/4) {a=w0/4-x;panel.setxOffset(a);handler.setxOffset(a);}
-		else if (x+w+xOff>3*w0/4) {a=3*w0/4-x-w;panel.setxOffset(a);handler.setxOffset(a);}
-		if (y+yOff<1*h0/4) {a=h0/4-y;panel.setyOffset(a);handler.setyOffset(a);}
-		else if (y+h+yOff>3*h0/4) {a=3*h0/4-y-h;panel.setyOffset(a);handler.setyOffset(a);}
+		if (x+xOff<1*w0/4) {a=w0/4-x;panel.setxOffset(a+(9*(xOff-a))/10);handler.setxOffset(a+(9*(xOff-a))/10);}
+		else if (x+w+xOff>3*w0/4) {a=3*w0/4-x-w;panel.setxOffset(a+(9*(xOff-a))/10);handler.setxOffset(a+(9/(xOff-a))/10);}
+		if (y+yOff<1*h0/4) {a=h0/4-y;panel.setyOffset(a+(9*(yOff-a))/10);handler.setyOffset(a+(9*(yOff-a))/10);}
+		else if (y+h+yOff>3*h0/4) {a=3*h0/4-y-h;panel.setyOffset(a+(9*(yOff-a))/10);handler.setyOffset(a+(9*(yOff-a))/10);}
 	}
 	
 	

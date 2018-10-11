@@ -22,6 +22,8 @@ public class MovingPlatform extends Obstacle  {
 	}
 	
 	public void update() {
+		setxBefore(x);
+		setyBefore(y);
 		this.frame=(frame+1)%period;
 		if (frame<period/2) {
 			double ux=2/(1.0*period);
@@ -36,10 +38,6 @@ public class MovingPlatform extends Obstacle  {
 			setY((int) (yB+(frame-period/2)*uy*(yA-yB)));
 			
 		}
-			
-		setxBefore(x);
-		setyBefore(y);
-		
 	}
 	
 
