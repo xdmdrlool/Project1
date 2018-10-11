@@ -1,12 +1,16 @@
 package clemnico;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class Main {
  
 	public static void main(String[] args) {
 		
-		
 		Window window =new Window(60);
+		
 		
 		
 //		FC fc=new FC();

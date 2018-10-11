@@ -2,7 +2,7 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Point;
-
+import java.util.ArrayList;
 
 import clemnico.FC.Vecteur;
 
@@ -57,7 +57,8 @@ public class GeneralEnemy extends Entity {
 		//Mouvement vertical du joueur
 		if (inTheAir) {fall();}
 		
-		setX(this.x+this.vx);
+		setX(x+vx);
+		setY(y+vy);
 		chooseAnimation();
 	}
 
@@ -72,7 +73,7 @@ public class GeneralEnemy extends Entity {
 	}
 	
 	
-	public void obstacleInteractionEnemy(FC fc, Obstacle[] obstacles) {
+	public void obstacleInteractionEnemy(FC fc, ArrayList<Obstacle> obstacles) {
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
 		boolean varInTheAir=true;

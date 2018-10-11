@@ -2,6 +2,7 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class Portal extends Entity{
 	
@@ -35,7 +36,7 @@ public class Portal extends Entity{
 
 	
 
-	public boolean obstacleInteraction(Obstacle[] obstacles,Player player,int xClic,int yClic) {
+	public boolean obstacleInteraction(ArrayList<Obstacle> obstacles,Player player,int xClic,int yClic) {
 		Point A=new Point(player.getX(),player.getY());
 		Point B=new Point(xClic, yClic);
 		for (Obstacle obstacle: obstacles) {
@@ -49,7 +50,7 @@ public class Portal extends Entity{
 	
 	
 	//Déplace le portail que s'il n'est pas en contact avec un obstacle
-	public void movePortal(Obstacle[] obstacles,Player player, int xClic, int yClic) {
+	public void movePortal(ArrayList<Obstacle> obstacles,Player player, int xClic, int yClic) {
 		int xBefore=x;
 		int yBefore=y;
 		double angleBefore=angle;

@@ -233,8 +233,6 @@ public class FC {
 		return closestPoint;
 	}
 
-	
-	
 	public Vecteur[] calculVecteurCollisionRectDroitObstacleDroit(FormRect rectangle0, FormRect rectangle,FormRect obstacle) {
 		int a=compteSommetIn(rectangle, obstacle);
 		int b=compteSommetIn(obstacle, rectangle);
@@ -375,10 +373,18 @@ public class FC {
 		normalize(direction);
 		return tab;
 	}
+	
+	public int compteSommetIn(FormRect rectangle,FormRect obstacle) {
 
-	
-	
-	
+		Point[] rect = Rect2Array(rectangle);
+		Point[] obs = Rect2Array(obstacle);
+		int n = 0;
+		if (Collision(obs, 4, rect[0])) {n++;}
+		if (Collision(obs, 4, rect[1])) {n++;}
+		if (Collision(obs, 4, rect[2])) {n++;}
+		if (Collision(obs, 4, rect[3])) {n++;}
+		return n;
+	}
 	
 	
 	
@@ -491,21 +497,6 @@ public class FC {
 	////////////////////////////////////
 	////// FONCTIONS GENERALES /////////
 	////////////////////////////////////
-	
-	
-	
-	
-	public int compteSommetIn(FormRect rectangle,FormRect obstacle) {
-
-		Point[] rect = Rect2Array(rectangle);
-		Point[] obs = Rect2Array(obstacle);
-		int n = 0;
-		if (Collision(obs, 4, rect[0])) {n++;}
-		if (Collision(obs, 4, rect[1])) {n++;}
-		if (Collision(obs, 4, rect[2])) {n++;}
-		if (Collision(obs, 4, rect[3])) {n++;}
-		return n;
-	}
 
 	public float determinant(Vecteur vec1, Vecteur vec2) {
 		return vec1.x * vec2.y - vec1.y * vec2.x;
@@ -774,7 +765,7 @@ public class FC {
 	////// INTERACTIONS OBSTACLES //////
 	////////////////////////////////////
 	
-	public boolean obstacleInteraction(Entity entity, Obstacle[] obstacles) {
+	public boolean obstacleInteraction(Entity entity, ArrayList<Obstacle> obstacles) {
 		
 		boolean collision=false;
 		

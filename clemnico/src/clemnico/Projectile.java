@@ -1,9 +1,10 @@
 package clemnico;
 
-
+import java.awt.Color;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Projectile extends Entity{
@@ -26,6 +27,10 @@ public class Projectile extends Entity{
 	}
 	
 	////Méthodes////
+	public void display(Graphics2D gg) {
+		Sprite sprite =currentAnimation.getSprite();
+		sprite.render(gg, x+width/2, y+height/2);
+	}
 	
 	public void directionThrow(Player player, int xClic, int yClic) {
 		int xp=player.getX()+player.getWidth()/2;
@@ -117,8 +122,6 @@ public class Projectile extends Entity{
 	public void setvNorm(int vNorm) {
 		this.vNorm = vNorm;
 	}
-
-
 
 
 

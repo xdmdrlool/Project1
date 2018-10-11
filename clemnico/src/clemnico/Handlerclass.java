@@ -6,6 +6,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+
 import javax.swing.JLabel;
 
 
@@ -23,11 +25,11 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	private Player 	player;
 	private Portal portal1;
 	private Portal portal2;
-	private Obstacle[] obstacles;
+	private ArrayList<Obstacle> obstacles;
 	private Projectile projectile;
 	
 	////Constructeur////
-	public  Handlerclass(Panel panel, JLabel statusBar, Player player, Portal portal1, Portal portal2, Obstacle[] obstacles) {
+	public  Handlerclass(Panel panel, JLabel statusBar, Player player, Portal portal1, Portal portal2, ArrayList<Obstacle> obstacles) {
 		this.panel=panel;
 		this.statusBar=statusBar;
 		this.player=player;
