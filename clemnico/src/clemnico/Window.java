@@ -30,10 +30,10 @@ public class Window extends JFrame {
 
 	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Enemy1", 0, 5,false);
 	
-	//MovingPlatform movingPlatform= new MovingPlatform("Plate",400,501,700,501,500,50, 1000);
-	
-	
-	ArrayList<Obstacle> obstacles= map.load();
+	ArrayList[] objectsMap=map.load();
+	ArrayList<Obstacle> obstaclesFix= objectsMap[0];
+	ArrayList<Obstacle> obstaclesMoving= objectsMap[1];
+	ArrayList<GeneralEnemy> enemies= objectsMap[2];
 	
 
 	ArrayList<Projectile> projectiles=player.getProjectiles();
@@ -58,7 +58,7 @@ public class Window extends JFrame {
 
 		initPanel();
 		
-		stepGame(player, enemy);
+		stepGame(player, enemies);
 
 	}
 
@@ -73,7 +73,7 @@ public class Window extends JFrame {
 		statusBar = new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
 
-		Handlerclass handler = new Handlerclass(panel, statusBar, player, portal1, portal2, obstacles);
+		Handlerclass handler = new Handlerclass(panel, statusBar, player, portal1, portal2, obstaclesFix);
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
@@ -86,37 +86,49 @@ public class Window extends JFrame {
 		player.useDefaultAnimations();		
 		portal1.useDefaultAnimations();
 		portal2.useDefaultAnimations();
-		for (Obstacle obstacle : obstacles) {
+		for (Obstacle obstacle : obstaclesFix) {
 			obstacle.useDefaultAnimations();
 		}
-		enemy.useDefaultAnimations();
-		//movingPlatform.useDefaultAnimations();
+		for (Obstacle obstacle : obstaclesMoving) {
+			obstacle.useDefaultAnimations();
+		}
+		for (GeneralEnemy enemy : enemies) {
+			enemy.useDefaultAnimations();
+		}
 		
 		
 		player.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal1.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal2.setCurrentAnimation(NameAnimation.DEFAULT);
-		for (Obstacle obstacle : obstacles) {
+		for (Obstacle obstacle : obstaclesFix) {
 			obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
 		}
-		enemy.setCurrentAnimation(NameAnimation.DEFAULT);
-		//movingPlatform.setCurrentAnimation(NameAnimation.DEFAULT);
+		for (Obstacle obstacle : obstaclesMoving) {
+			obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
+		}
+		for (GeneralEnemy enemy : enemies) {
+			enemy.setCurrentAnimation(NameAnimation.DEFAULT);
+		}
 		
 		
 		ArrayList<Layer> arrayLayer= new ArrayList<Layer>();
 		Layer layer1=new Layer(0);
+		Layer layer2=new Layer(200);
+		
 		layer1.add(player);
 		layer1.add(portal1);
 		layer1.add(portal2);
-		for (Obstacle obstacle : obstacles) {
+		for (Obstacle obstacle : obstaclesFix) {
 			layer1.add(obstacle);
 		}
+		for (Obstacle obstacle : obstaclesMoving) {
+			layer1.add(obstacle);
+		}
+		for (GeneralEnemy enemy : enemies) {
+			layer1.add(enemy);
+		}
 		
-		layer1.add(enemy);
-		//layer1.add(movingPlatform);
 		
-		Layer layer2=new Layer(200);
-		//layer2.add(obstacle3);
 		
 		
 		arrayLayer.add(layer1);
@@ -139,7 +151,7 @@ public class Window extends JFrame {
 		}
 	}
 	
-	private void stepGame(Player player, GeneralEnemy enemy) {
+	private void stepGame(Player player, ArrayList<GeneralEnemy> enemies) {
 		
 		Timer chrono = new Timer();
 		int delay = 100;
@@ -152,35 +164,63 @@ public class Window extends JFrame {
 			public void run() {
 				time = time + 1;
 				player.step(period);
-				enemy.step(period);
+				
+				
 				
 				refreshPanel();
 				
 				//Gestion des projectiles
 				ArrayList<Projectile> toRemove= new ArrayList<>();
 				for (Projectile projectile : projectiles) {
+					
 					fc.portalInteractionRect(projectile, portal1, portal2);
 					projectile.step(period,player,1,1);
-					projectile.getCurrentAnimation().update();	
-					toRemove=projectile.isOut(toRemove, width, height,panel.getxOffset(),panel.getyOffset(), fc.obstacleInteraction(projectile, obstacles));
+					System.out.println("toto");
+					projectile.getCurrentAnimation().update();
+					
+					projectile.isOut(toRemove, width, height,panel.getxOffset(),panel.getyOffset(), obstaclesFix);
+					
+					//projectile.isOut(toRemove, width, height,panel.getxOffset(),panel.getyOffset(), obstaclesMoving);
+					
+					for (GeneralEnemy enemy : enemies) {
+						projectile.enemyInteraction(enemy, toRemove);
+					}
+					
+					
+					
+					
 				}
+				//System.out.println(projectiles.size()+" "+toRemove.size());
+				
 				for (Projectile projectile : toRemove) {
 					projectiles.remove(projectile);
 					panel.deleteEntity(projectile);
 					projectileCount-=1;
+					//System.out.println("toto1");
+				}
+				//System.out.println(projectiles.size()+" "+toRemove.size());
+				
+				
+				fc.portalInteractionRect(player, portal1, portal2);  	// Gestion portails teleportations
+				fc.obstacleInteraction(player, obstaclesFix);  			// Gestion obstacle
+				//fc.obstacleInteraction(player, obstaclesMoving);  		// Gestion obstacle
+				
+				for (GeneralEnemy enemy : enemies) {
+					fc.portalInteractionRect(enemy, portal1, portal2);	// Gestion portails teleportations
+					enemy.obstacleInteractionEnemy(fc, obstaclesFix);		// Gestion obstacle
 				}
 				
-				// Gestion portails teleportations
-				fc.portalInteractionRect(player, portal1, portal2);
-				fc.portalInteractionRect(enemy, portal1, portal2);
-
-				// Gestion obstacle
-				fc.obstacleInteraction(player, obstacles);
-				enemy.obstacleInteractionEnemy(fc, obstacles);
+				
+				for (GeneralEnemy enemy : enemies) {
+					enemy.step(period);
+				}
+				
 
 				player.getCurrentAnimation().update();					
 				calculCameraOffset(panel, player);
-				//movingPlatform.update();
+				for (Obstacle obstacle : obstaclesMoving) {
+					obstacle.update();
+				}
 				panel.repaint();
 			}
 				
@@ -193,10 +233,10 @@ public class Window extends JFrame {
 		int xOff=panel.getxOffset();int yOff=panel.getyOffset();
 		int x=player.getX();int y=player.getY();int w=player.getWidth();int h=player.getHeight();
 		int a;
-		if (x+xOff<1*w0/4) {a=w0/4-x;panel.setxOffset(a);handler.setxOffset(a);}
-		else if (x+w+xOff>3*w0/4) {a=3*w0/4-x-w;panel.setxOffset(a);handler.setxOffset(a);}
-		if (y+yOff<1*h0/4) {a=h0/4-y;panel.setyOffset(a);handler.setyOffset(a);}
-		else if (y+h+yOff>3*h0/4) {a=3*h0/4-y-h;panel.setyOffset(a);handler.setyOffset(a);}
+		if (x+xOff<1*w0/4) {a=w0/4-x;panel.setxOffset(a+(9*(xOff-a))/10);handler.setxOffset(a+(9*(xOff-a))/10);}
+		else if (x+w+xOff>3*w0/4) {a=3*w0/4-x-w;panel.setxOffset(a+(9*(xOff-a))/10);handler.setxOffset(a+(9/(xOff-a))/10);}
+		if (y+yOff<1*h0/4) {a=h0/4-y;panel.setyOffset(a+(9*(yOff-a))/10);handler.setyOffset(a+(9*(yOff-a))/10);}
+		else if (y+h+yOff>3*h0/4) {a=3*h0/4-y-h;panel.setyOffset(a+(9*(yOff-a))/10);handler.setyOffset(a+(9*(yOff-a))/10);}
 	}
 	
 	

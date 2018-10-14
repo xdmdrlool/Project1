@@ -37,7 +37,7 @@ public class Portal extends Entity{
 	
 
 	public boolean obstacleInteraction(ArrayList<Obstacle> obstacles,Player player,int xClic,int yClic) {
-		Point A=new Point(player.getX(),player.getY());
+		Point A=new Point(player.getX()+player.getWidth()/2,player.getY()+player.getHeight()/2);
 		Point B=new Point(xClic, yClic);
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a interaction avec un obstacle

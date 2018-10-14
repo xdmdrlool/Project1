@@ -20,6 +20,7 @@ public class Animation {
 		if (timeinframe==listeTime[numeroFrame]) {
 		this.numeroFrame=(this.numeroFrame+1)%this.nbFrame;
 		this.timeinframe=0;}
+		
 	}
 	
 	public void reset() {

@@ -20,9 +20,10 @@ public class GeneralEnemy extends Entity {
 
 	private int xBefore=x;
 	private int yBefore=y;
-	private int vx=5;
+	private int ax=5;
+	private int vx=15;
 	private int vy=0;
-	private int vxMax=100;
+	private int vxMax=1000;
 	private int vyMax=30;
 	private int vxOnGround=5;
 
@@ -65,15 +66,21 @@ public class GeneralEnemy extends Entity {
 	
 	//Mouvement physique du joueur dans les airs sans entrée clavier
 	public void fall() {
-		double g=-5;
+		double g=-2;
 		double t=timeInAir/60.0;
-		setVy((int)(vy-g*t));
-		setX(x+vx);
+		setVy((int)(vy-g));
 		setY(y+vy);
 	}
 	
+	public void touched(int vxProjectile, int vyProjectile) {
+		setX(x+vxProjectile*8);
+		setY(y+vyProjectile*8);
+	}
 	
 	public void obstacleInteractionEnemy(FC fc, ArrayList<Obstacle> obstacles) {
+		
+		boolean collision = false;
+		
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
 		boolean varInTheAir=true;
@@ -83,6 +90,8 @@ public class GeneralEnemy extends Entity {
 			FormRect rect0=new FormRect(Color.RED, xBefore, yBefore, width, height, 0);
 			FormRect rect=(FormRect) getHitbox().getForm();
 			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
+			
+			
 			Vecteur[] tab = fc.calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
 			
 			if (tab !=null) {
@@ -260,6 +269,16 @@ public class GeneralEnemy extends Entity {
 
 	public void setFallFromPlatform(boolean fallFromPlatform) {
 		this.fallFromPlatform = fallFromPlatform;
+	}
+
+
+	public int getAx() {
+		return ax;
+	}
+
+
+	public void setAx(int ax) {
+		this.ax = ax;
 	}
 }
 

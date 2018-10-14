@@ -20,17 +20,18 @@ public class Player extends Entity {
 	
 	private int keyPressed = 0;
 	private boolean dead = false;
-	private int ax = 1;
+	private int ax = 2;
 	private int currentVx=0;
 	private int vxMax = 15;
 	private int vyMax = 50;
-	private int vJump = 22;
+	private int vJump = 40;
 	Sound sound=new Sound("saut.wav");
 	Sound sound1=new Sound("pan.wav");
 	
 	private boolean shooting=false;
 	private int reloadShoot=10;	//fréquence de tir (0=max)
 	private int timeShoot=0;	//durée depuis le dernier tir
+	private int bulletSize=30;
 	
 	private int xMouse;
 	private int yMouse;
@@ -70,7 +71,7 @@ public class Player extends Entity {
 	public void movement() {
 		//Tombe si est en l'air
 		if (inTheAir) {
-			double g = -1;
+			double g = -1.5;
 			setVy((int) (vy - g * 1.0));
 		}
 		
@@ -111,7 +112,7 @@ public class Player extends Entity {
 	public void shoot() {
 		setTimeShoot(timeShoot+1);
 		if (shooting && timeShoot>=reloadShoot) {
-			Projectile projectile=new Projectile(x+width/2,y+height/2,10,20,0);
+			Projectile projectile=new Projectile(x+width/2-bulletSize/2,y+height/2-bulletSize/2,10,20,0, bulletSize);
 			projectile.directionThrow(this, xMouse, yMouse);
 			projectiles.add(projectile);
 			sound1.play();
@@ -388,6 +389,16 @@ public class Player extends Entity {
 
 	public void setCurrentVx(int currentVx) {
 		this.currentVx = currentVx;
+	}
+
+
+	public int getBulletSize() {
+		return bulletSize;
+	}
+
+
+	public void setBulletSize(int bulletSize) {
+		this.bulletSize = bulletSize;
 	}
 
 

@@ -13,17 +13,19 @@ public class Projectile extends Entity{
 	////Attributs////
 	private int vNorm=10;
 	private double angle=0;
+	private int xLimit=1000;
+	private int yLimit=1000;
 
 
 	
 	////Constructeur////
-	public Projectile(int x, int y, int width, int height, double angle) {
+	public Projectile(int x, int y, int width, int height, double angle, int size) {
 		super("nom a la con",x,y,width,height);
 		setAngle(angle);
 		setVx(1);
 		setVy(1);
-		setHeight(30);
-		setWidth(30);
+		setHeight(size);
+		setWidth(size);
 	}
 	
 	////Méthodes////
@@ -35,13 +37,15 @@ public class Projectile extends Entity{
 	public void directionThrow(Player player, int xClic, int yClic) {
 		int xp=player.getX()+player.getWidth()/2;
 		int yp=player.getY()+player.getHeight()/2;
+		int xc=xClic-width/2;
+		int yc=yClic-height/2;
 		
-		double norm=Math.sqrt((xp-xClic)*(xp-xClic)+(yp-yClic)*(yp-yClic));
-		if (norm==0) {
+		double norm=Math.sqrt((xp-xc)*(xp-xc)+(yp-yc)*(yp-yc));
+		if ((int)(norm)==0) {
 			setVx(vNorm);
 			setVy(0);
 		}
-		double[] vector= {(xClic-xp)*1./norm,(yClic-yp)*1./norm};
+		double[] vector= {(xc-xp)*1./norm,(yc-yp)*1./norm};
 		setVx((int)(vNorm*vector[0]));
 		setVy((int)(vNorm*vector[1]));
 	}
@@ -54,24 +58,33 @@ public class Projectile extends Entity{
 	
 	
 	//Ajoute le projectile à array pour l'enlever ensuite
-	public ArrayList<Projectile> isOut(ArrayList<Projectile> array, int w, int h,int xoff,int yoff, boolean obstacleCollision) {
-		if (x+xoff+width<0 || y+yoff+height<0 || x+xoff>w || y+yoff>h || obstacleCollision) {
-			setX(-100);
-			setY(-100);
+	public void isOut(ArrayList<Projectile> array, int w, int h,int xoff,int yoff, ArrayList<Obstacle> obstacles) {
+		if (x+xoff+width+xLimit<0 || y+yoff+height+yLimit<0 || x+xoff-xLimit>w || y+yoff-yLimit>h) {
 			array.add(this);
-			return array;
 		}
-		return array;
+		else {
+			for(Obstacle obstacle : obstacles) {
+				if(this.isInCollisionWith(obstacle)) {
+					array.add(this);
+					break;
+				}
+			}
+		}
 	}
 	
 	public void step(int period, Player player, int xMouse, int yMouse) {
+		setxBefore(x);
+		setyBefore(y);
 		setX(x+vx);
 		setY(y+vy);
 	}
 	
 	
-	public void entityInteraction(Entity entity) {
-		entity.setX(entity.getX()-10);
+	public void enemyInteraction(GeneralEnemy enemy, ArrayList<Projectile> toRemove) {
+		if (this.isInCollisionWith(enemy)) {
+			enemy.touched(vx,vy);
+			toRemove.add(this);
+		}
 	}
 	
 	
@@ -122,8 +135,5 @@ public class Projectile extends Entity{
 	public void setvNorm(int vNorm) {
 		this.vNorm = vNorm;
 	}
-
-
-
 
 }
