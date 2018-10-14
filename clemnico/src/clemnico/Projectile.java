@@ -15,6 +15,9 @@ public class Projectile extends Entity{
 	private double angle=0;
 	private int xLimit=1000;
 	private int yLimit=1000;
+	private double vxReal;
+	private double vyReal;
+	private int flyTime=0;
 
 
 	
@@ -45,9 +48,9 @@ public class Projectile extends Entity{
 			setVx(vNorm);
 			setVy(0);
 		}
-		double[] vector= {(xc-xp)*1./norm,(yc-yp)*1./norm};
-		setVx((int)(vNorm*vector[0]));
-		setVy((int)(vNorm*vector[1]));
+		double[] vector= {(xc-xp),(yc-yp)};
+		setVxReal(vNorm*vector[0]*1./norm);
+		setVyReal(vNorm*vector[1]*1./norm);
 	}
 	
 	
@@ -57,43 +60,50 @@ public class Projectile extends Entity{
 	}
 	
 	
-	//Ajoute le projectile à array pour l'enlever ensuite
-	public void isOut(ArrayList<Projectile> array, int w, int h,int xoff,int yoff, ArrayList<Obstacle> obstacles) {
+	//Détermine si le projectile doit être détruit ou non
+	public boolean isOut(int w, int h,int xoff,int yoff, ArrayList<Obstacle> obstacles) {
+		//Hors des limites du terrain
 		if (x+xoff+width+xLimit<0 || y+yoff+height+yLimit<0 || x+xoff-xLimit>w || y+yoff-yLimit>h) {
-			array.add(this);
+			return true;
 		}
-		else {
-			for(Obstacle obstacle : obstacles) {
-				if(this.isInCollisionWith(obstacle)) {
-					array.add(this);
-					break;
-				}
+		//Percute un obstacle
+		for(Obstacle obstacle : obstacles) {
+			if(this.isInCollisionWith(obstacle)) {
+				return true;
 			}
 		}
+		return false;
 	}
 	
-	public void step(int period, Player player, int xMouse, int yMouse) {
-		setxBefore(x);
-		setyBefore(y);
-		setX(x+vx);
-		setY(y+vy);
-	}
-	
-	
-	public void enemyInteraction(GeneralEnemy enemy, ArrayList<Projectile> toRemove) {
+	public void enemyInteraction(GeneralEnemy enemy) {
 		if (this.isInCollisionWith(enemy)) {
 			enemy.touched(vx,vy);
-			toRemove.add(this);
 		}
 	}
+	
+	
+	public void step(Portal portal1, Portal portal2,ArrayList<GeneralEnemy> enemies) {
+		
+		setFlyTime(flyTime+1);
+		setxBefore(x);
+		setyBefore(y);
+		setX(x+(int)vxReal);
+		setY(y+(int)vyReal);
+		fc.portalInteractionRect(this, portal1, portal2);
+		
+		for (GeneralEnemy enemy : enemies) {
+			enemyInteraction(enemy);
+		}
+		
+		getCurrentAnimation().update();
+	}
+	
 	
 	
 	@Override
 	public void useDefaultAnimations() {
 		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationProjectileDefault,width,height));		
 	}
-	
-	
 	
 	
 	////////////////////////////////
@@ -134,6 +144,30 @@ public class Projectile extends Entity{
 
 	public void setvNorm(int vNorm) {
 		this.vNorm = vNorm;
+	}
+
+	public double getVxReal() {
+		return vxReal;
+	}
+
+	public void setVxReal(double vxReal) {
+		this.vxReal = vxReal;
+	}
+
+	public double getVyReal() {
+		return vyReal;
+	}
+
+	public void setVyReal(double vyReal) {
+		this.vyReal = vyReal;
+	}
+
+	public int getFlyTime() {
+		return flyTime;
+	}
+
+	public void setFlyTime(int flyTime) {
+		this.flyTime = flyTime;
 	}
 
 }

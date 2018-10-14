@@ -53,13 +53,17 @@ public class GeneralEnemy extends Entity {
 	
 	
 	//Action de joueur pour un pas de la boucle
-	public void step(int period) {
+	public void step(Portal portal1, Portal portal2, ArrayList<Obstacle> obstacles) {
 		
 		//Mouvement vertical du joueur
 		if (inTheAir) {fall();}
 		
 		setX(x+vx);
 		setY(y+vy);
+		
+		fc.portalInteractionRect(this, portal1, portal2);	// Gestion portails teleportations
+		obstacleInteractionEnemy(fc, obstacles);		// Gestion obstacle
+		
 		chooseAnimation();
 	}
 
@@ -73,8 +77,8 @@ public class GeneralEnemy extends Entity {
 	}
 	
 	public void touched(int vxProjectile, int vyProjectile) {
-		setX(x+vxProjectile*8);
-		setY(y+vyProjectile*8);
+		setX(x+vxProjectile*5);
+		setY(y+vyProjectile*5);
 	}
 	
 	public void obstacleInteractionEnemy(FC fc, ArrayList<Obstacle> obstacles) {

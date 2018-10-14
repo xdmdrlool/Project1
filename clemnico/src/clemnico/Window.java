@@ -23,6 +23,7 @@ public class Window extends JFrame {
 	public static AnimationCreator AC =new AnimationCreator();
 	
 	// Objets de la fenêtre
+	FC fc = new FC();
 	Player player = new Player(100, 200, 100, 100,"Player1", 0, 6);
 	Portal portal1 = new Portal(-500, -500, 100, 20,"Portal1",Color.BLUE);
 	Portal portal2 = new Portal(-500, -500, 100, 20,"Portal2",Color.ORANGE);
@@ -31,14 +32,12 @@ public class Window extends JFrame {
 	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Enemy1", 0, 5,false);
 	
 	ArrayList[] objectsMap=map.load();
-	ArrayList<Obstacle> obstaclesFix= objectsMap[0];
-	ArrayList<Obstacle> obstaclesMoving= objectsMap[1];
+	ArrayList<Obstacle> obstacles=fc.concatenate(objectsMap[0],objectsMap[1]);
 	ArrayList<GeneralEnemy> enemies= objectsMap[2];
 	
-
-	ArrayList<Projectile> projectiles=player.getProjectiles();
-	int projectileCount=0;
-	FC fc = new FC();
+	
+	
+	
 	
 	
 
@@ -73,7 +72,7 @@ public class Window extends JFrame {
 		statusBar = new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
 
-		Handlerclass handler = new Handlerclass(panel, statusBar, player, portal1, portal2, obstaclesFix);
+		Handlerclass handler = new Handlerclass(panel, statusBar, player, portal1, portal2, obstacles);
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
@@ -86,24 +85,17 @@ public class Window extends JFrame {
 		player.useDefaultAnimations();		
 		portal1.useDefaultAnimations();
 		portal2.useDefaultAnimations();
-		for (Obstacle obstacle : obstaclesFix) {
-			obstacle.useDefaultAnimations();
-		}
-		for (Obstacle obstacle : obstaclesMoving) {
+		for (Obstacle obstacle : obstacles) {
 			obstacle.useDefaultAnimations();
 		}
 		for (GeneralEnemy enemy : enemies) {
 			enemy.useDefaultAnimations();
 		}
 		
-		
 		player.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal1.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal2.setCurrentAnimation(NameAnimation.DEFAULT);
-		for (Obstacle obstacle : obstaclesFix) {
-			obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
-		}
-		for (Obstacle obstacle : obstaclesMoving) {
+		for (Obstacle obstacle : obstacles) {
 			obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
 		}
 		for (GeneralEnemy enemy : enemies) {
@@ -118,37 +110,17 @@ public class Window extends JFrame {
 		layer1.add(player);
 		layer1.add(portal1);
 		layer1.add(portal2);
-		for (Obstacle obstacle : obstaclesFix) {
-			layer1.add(obstacle);
-		}
-		for (Obstacle obstacle : obstaclesMoving) {
+		for (Obstacle obstacle : obstacles) {
 			layer1.add(obstacle);
 		}
 		for (GeneralEnemy enemy : enemies) {
 			layer1.add(enemy);
 		}
 		
-		
-		
-		
 		arrayLayer.add(layer1);
 		arrayLayer.add(layer2);
 		panel.setListLayer(arrayLayer);
 		
-	}
-
-	
-	private void refreshPanel() {
-		
-		projectiles=player.getProjectiles();
-		
-		//Si un projectile a été rajouté par le joueur en faisant espace
-		if (projectileCount<projectiles.size()) {			
-			projectiles.get(projectileCount).useDefaultAnimations();
-			projectiles.get(projectileCount).setCurrentAnimation(NameAnimation.DEFAULT);
-			panel.addToMainLayer( projectiles.get(projectileCount));
-			projectileCount+=1;
-		}
 	}
 	
 	private void stepGame(Player player, ArrayList<GeneralEnemy> enemies) {
@@ -163,64 +135,17 @@ public class Window extends JFrame {
 			@Override
 			public void run() {
 				time = time + 1;
-				player.step(period);
-				
-				
-				
-				refreshPanel();
-				
-				//Gestion des projectiles
-				ArrayList<Projectile> toRemove= new ArrayList<>();
-				for (Projectile projectile : projectiles) {
+				player.step(panel,portal1, portal2, enemies, width, height, obstacles);
 					
-					fc.portalInteractionRect(projectile, portal1, portal2);
-					projectile.step(period,player,1,1);
-					System.out.println("toto");
-					projectile.getCurrentAnimation().update();
-					
-					projectile.isOut(toRemove, width, height,panel.getxOffset(),panel.getyOffset(), obstaclesFix);
-					
-					//projectile.isOut(toRemove, width, height,panel.getxOffset(),panel.getyOffset(), obstaclesMoving);
-					
-					for (GeneralEnemy enemy : enemies) {
-						projectile.enemyInteraction(enemy, toRemove);
-					}
-					
-					
-					
-					
-				}
-				//System.out.println(projectiles.size()+" "+toRemove.size());
-				
-				for (Projectile projectile : toRemove) {
-					projectiles.remove(projectile);
-					panel.deleteEntity(projectile);
-					projectileCount-=1;
-					//System.out.println("toto1");
-				}
-				//System.out.println(projectiles.size()+" "+toRemove.size());
-				
-				
-				fc.portalInteractionRect(player, portal1, portal2);  	// Gestion portails teleportations
-				fc.obstacleInteraction(player, obstaclesFix);  			// Gestion obstacle
-				//fc.obstacleInteraction(player, obstaclesMoving);  		// Gestion obstacle
-				
-				for (GeneralEnemy enemy : enemies) {
-					fc.portalInteractionRect(enemy, portal1, portal2);	// Gestion portails teleportations
-					enemy.obstacleInteractionEnemy(fc, obstaclesFix);		// Gestion obstacle
-				}
-				
-				
-				for (GeneralEnemy enemy : enemies) {
-					enemy.step(period);
-				}
-				
-
-				player.getCurrentAnimation().update();					
 				calculCameraOffset(panel, player);
-				for (Obstacle obstacle : obstaclesMoving) {
+				
+				for (Obstacle obstacle : obstacles) {
 					obstacle.update();
 				}
+				for (GeneralEnemy enemy : enemies) {
+					enemy.step(portal1, portal2, obstacles);
+				}
+				
 				panel.repaint();
 			}
 				

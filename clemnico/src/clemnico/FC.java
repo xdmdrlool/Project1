@@ -820,7 +820,16 @@ public class FC {
 				
 	}
 	
-	
+	public ArrayList<Obstacle> concatenate(ArrayList<Obstacle> obstaclesFix, ArrayList<Obstacle> obstaclesMoving){
+		ArrayList<Obstacle> obstacles = new ArrayList<>();
+		for (Obstacle obstacle : obstaclesFix) {
+			obstacles.add(obstacle);
+		}
+		for (Obstacle obstacle : obstaclesMoving) {
+			obstacles.add(obstacle);
+		}
+		return obstacles;
+	}
 	
 	////////////////////////////////////
 	////// INTERACTIONS PORTAILS ///////

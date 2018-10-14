@@ -109,30 +109,57 @@ public class Player extends Entity {
 		setY(y + vy);
 	}
 	
-	public void shoot() {
+	public void projectileOperation(Panel panel,Portal portal1, Portal portal2,ArrayList<GeneralEnemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
+		
 		setTimeShoot(timeShoot+1);
+		
+		//Creation des projectiles
 		if (shooting && timeShoot>=reloadShoot) {
-			Projectile projectile=new Projectile(x+width/2-bulletSize/2,y+height/2-bulletSize/2,10,20,0, bulletSize);
+			Projectile projectile=new Projectile(x+this.width/2-bulletSize/2,y+this.height/2-bulletSize/2,10,20,0, bulletSize);
+			projectile.useDefaultAnimations();
+			projectile.setCurrentAnimation(NameAnimation.DEFAULT);
+			panel.addToMainLayer(projectile);
 			projectile.directionThrow(this, xMouse, yMouse);
 			projectiles.add(projectile);
 			sound1.play();
 	
 			setTimeShoot(0);
+			
+		}
+		
+		//Refresh des projectiles et enregistrement de ceux à détruire
+		ArrayList<Projectile> toRemove = new ArrayList<>();
+		for (Projectile projectile : projectiles) {
+			projectile.step(portal1,portal2,enemies);
+			if(projectile.isOut(width, height,panel.getxOffset(),panel.getyOffset(), obstacles)) {
+				toRemove.add(projectile);
+			}
+		}
+		
+		//Destruction des projectiles
+		for (Projectile projectile : toRemove) {
+			projectiles.remove(projectile);
+			panel.deleteEntity(projectile);
 		}
 	}
 	
 	
 	// Action de joueur pour un pas de la boucle
-	public void step(int period) {
+	public void step(Panel panel,Portal portal1, Portal portal2,ArrayList<GeneralEnemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
 		
 		
 		// Déplacement du joueur
 		movement();
+		// Gestion portails teleportations
+		fc.portalInteractionRect(this, portal1, portal2);
+		// Gestion obstacle
 		
+		fc.obstacleInteraction(this, obstacles);
+		//fc.obstacleInteraction(this, obstaclesMoving); 
 		// Tir du joueur
-		shoot();
+		projectileOperation(panel, portal1, portal2, enemies, width, height, obstacles);
 		
-		
+		getCurrentAnimation().update();	
 		chooseAnimation();
 	}
 
