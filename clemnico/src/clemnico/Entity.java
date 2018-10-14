@@ -21,6 +21,9 @@ public abstract class Entity {
 	protected int height;
 	protected int timeInAir=0;
 	protected boolean inTheAir=false;
+	protected boolean InCollisionRight=false;
+	protected boolean InCollisionLeft=false;
+	protected Layer layerIn =null;
 	protected String name;
 	protected FormRect form =new FormRect(Color.RED, 0, 0, 0, 0, 0);
 	protected Hitbox hitbox=new Hitbox("RECT", 0, 0, 10,0, 0, 0);
@@ -206,7 +209,34 @@ public abstract class Entity {
 	}
 
 
-	
+	public boolean isInCollisionRight() {
+		return InCollisionRight;
+	}
+
+
+	public void setInCollisionRight(boolean inCollisionRight) {
+		InCollisionRight = inCollisionRight;
+	}
+
+
+	public boolean isInCollisionLeft() {
+		return InCollisionLeft;
+	}
+
+
+	public void setInCollisionLeft(boolean inCollisionLeft) {
+		InCollisionLeft = inCollisionLeft;
+	}
+
+
+	public Layer getLayerIn() {
+		return layerIn;
+	}
+
+
+	public void setLayerIn(Layer layerIn) {
+		this.layerIn = layerIn;
+	}
 	
 
 	

@@ -12,11 +12,13 @@ public abstract class Obstacle extends Entity {
 
 		setAngle(angle);
 	}
+
 	
 	public void update() {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	
 	public void chooseAnimation() {
 		NameAnimation name=NameAnimation.DEFAULT;
@@ -57,7 +59,9 @@ public abstract class Obstacle extends Entity {
 			this.currentAnimation.reset();}
 		this.currentAnimation.setAngle(this.getAngle());
 	}
+		
 
+	
 
 }
 

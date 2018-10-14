@@ -772,6 +772,8 @@ public class FC {
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
 		boolean varInTheAir=true;
+		boolean varCollisonLeft=false;
+		boolean varCollisonRight=false;
 //		System.out.println("");
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a collision avec un obstacle
@@ -793,6 +795,8 @@ public class FC {
 //				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
 //				System.out.println(directionCollision.x+" "+directionCollision.y);
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
+				if (directionCollision.x<0) {varCollisonLeft=true;}
+				if (directionCollision.x>0) {varCollisonRight=true;}
 				if (directionCollision.x!=0 ||directionCollision.y>0) {entity.setVx(0);}
 				if (directionCollision.y!=0) {entity.setVy(0);}
 				
@@ -814,12 +818,14 @@ public class FC {
 //		System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);	
 		entity.setTimeInAir(entity.getTimeInAir()+1);
 		entity.setInTheAir(varInTheAir);
+		entity.setInCollisionLeft(varCollisonLeft);
+		entity.setInCollisionRight(varCollisonRight);
+		
 		entity.setxBefore(entity.x);entity.setyBefore(entity.y);
 
 		return collision;
 				
 	}
-	
 	public ArrayList<Obstacle> concatenate(ArrayList<Obstacle> obstaclesFix, ArrayList<Obstacle> obstaclesMoving){
 		ArrayList<Obstacle> obstacles = new ArrayList<>();
 		for (Obstacle obstacle : obstaclesFix) {
@@ -830,6 +836,7 @@ public class FC {
 		}
 		return obstacles;
 	}
+	
 	
 	////////////////////////////////////
 	////// INTERACTIONS PORTAILS ///////

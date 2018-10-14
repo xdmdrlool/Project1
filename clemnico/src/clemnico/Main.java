@@ -1,13 +1,19 @@
 package clemnico;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class Main {
  
 	public static void main(String[] args) {
+		
+		
+//		LayerLoader t=new LayerLoader();
+//		try {
+//			t.load("test");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		Window window =new Window(60);
 		

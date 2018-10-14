@@ -14,6 +14,8 @@ public class Player extends Entity {
 	private boolean upKey=false;
 	private boolean leftKey=false;
 	private boolean rightKey=false;
+
+	
 	
 	private int directionX = 0;
 	private int airControl = 1; // En pourcentage
@@ -24,7 +26,7 @@ public class Player extends Entity {
 	private int currentVx=0;
 	private int vxMax = 15;
 	private int vyMax = 50;
-	private int vJump = 40;
+	private int vJump = 22;
 	Sound sound=new Sound("saut.wav");
 	Sound sound1=new Sound("pan.wav");
 	
@@ -35,7 +37,7 @@ public class Player extends Entity {
 	
 	private int xMouse;
 	private int yMouse;
-
+	
 	public ArrayList<Projectile> projectiles=new ArrayList<>();
 	
 	////Constructeur////
@@ -71,7 +73,7 @@ public class Player extends Entity {
 	public void movement() {
 		//Tombe si est en l'air
 		if (inTheAir) {
-			double g = -1.5;
+			double g = -1;
 			setVy((int) (vy - g * 1.0));
 		}
 		
@@ -105,9 +107,13 @@ public class Player extends Entity {
 			}
 		}
 		setCurrentVx(vx);
-		setX(x + vx);
+		if (!((isInCollisionLeft() && vx<0)|| (isInCollisionRight() && vx>0))) {setX(x + vx);}
 		setY(y + vy);
+		
 	}
+	
+	
+	
 	
 	public void projectileOperation(Panel panel,Portal portal1, Portal portal2,ArrayList<GeneralEnemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
 		
@@ -142,8 +148,8 @@ public class Player extends Entity {
 			panel.deleteEntity(projectile);
 		}
 	}
-	
-	
+		
+		
 	// Action de joueur pour un pas de la boucle
 	public void step(Panel panel,Portal portal1, Portal portal2,ArrayList<GeneralEnemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
 		
@@ -162,6 +168,7 @@ public class Player extends Entity {
 		getCurrentAnimation().update();	
 		chooseAnimation();
 	}
+
 
 	
 	@Override

@@ -95,6 +95,7 @@ public class ObstacleMoving extends Obstacle  {
 	public void setFrame(int frame) {
 		this.frame = frame;
 	}
+
 	
 	
 	

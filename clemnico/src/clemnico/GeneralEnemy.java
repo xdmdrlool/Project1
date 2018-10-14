@@ -10,20 +10,11 @@ public class GeneralEnemy extends Entity {
 ////Attributs////
 	
 	boolean fallFromPlatform= false;
-	
 	private int 	directionX = 0;
 	private boolean moveX = false;
-	private boolean inTheAir=false;
-	private int timeInAir=0;
 	private boolean dead =false;
 
-
-	private int xBefore=x;
-	private int yBefore=y;
-	private int ax=5;
-	private int vx=15;
-	private int vy=0;
-	private int vxMax=1000;
+	private int vxMax=100;
 	private int vyMax=30;
 	private int vxOnGround=5;
 
@@ -81,10 +72,8 @@ public class GeneralEnemy extends Entity {
 		setY(y+vyProjectile*5);
 	}
 	
+	
 	public void obstacleInteractionEnemy(FC fc, ArrayList<Obstacle> obstacles) {
-		
-		boolean collision = false;
-		
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
 		boolean varInTheAir=true;
@@ -94,8 +83,6 @@ public class GeneralEnemy extends Entity {
 			FormRect rect0=new FormRect(Color.RED, xBefore, yBefore, width, height, 0);
 			FormRect rect=(FormRect) getHitbox().getForm();
 			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
-			
-			
 			Vecteur[] tab = fc.calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
 			
 			if (tab !=null) {
@@ -187,9 +174,7 @@ public class GeneralEnemy extends Entity {
 
 
 
-	public boolean isInTheAir() {
-		return inTheAir;
-	}
+
 
 
 	public void setInTheAir(boolean inTheAir) {
@@ -200,9 +185,7 @@ public class GeneralEnemy extends Entity {
 	}
 
 
-	public int getVx() {
-		return vx;
-	}
+
 
 
 	public void setVx(int vx) {
@@ -212,9 +195,7 @@ public class GeneralEnemy extends Entity {
 	}
 
 
-	public int getVy() {
-		return vy;
-	}
+
 
 
 	public void setVy(int vy) {
@@ -224,37 +205,8 @@ public class GeneralEnemy extends Entity {
 	}
 
 
-	public int getTimeInAir() {
-		return timeInAir;
-	}
 
 
-	public void setTimeInAir(int timeInAir) {
-		this.timeInAir = timeInAir;
-	}
-
-
-
-
-
-	public int getxBefore() {
-		return xBefore;
-	}
-
-
-	public void setxBefore(int xBefore) {
-		this.xBefore = xBefore;
-	}
-
-
-	public int getyBefore() {
-		return yBefore;
-	}
-
-
-	public void setyBefore(int yBefore) {
-		this.yBefore = yBefore;
-	}
 	public int getVxOnGround() {
 		return vxOnGround;
 	}
@@ -273,16 +225,6 @@ public class GeneralEnemy extends Entity {
 
 	public void setFallFromPlatform(boolean fallFromPlatform) {
 		this.fallFromPlatform = fallFromPlatform;
-	}
-
-
-	public int getAx() {
-		return ax;
-	}
-
-
-	public void setAx(int ax) {
-		this.ax = ax;
 	}
 }
 

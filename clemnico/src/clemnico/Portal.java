@@ -41,7 +41,7 @@ public class Portal extends Entity{
 		Point B=new Point(xClic, yClic);
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a interaction avec un obstacle
-			if (this.getHitbox().collision(obstacle.getHitbox()) || fc.CollisionLineRect(A,B,obstacle.getForm())) {
+			if (isInCollisionWith(obstacle) || fc.CollisionLineRect(A,B,obstacle.getForm())) {
 				return true;
 			}
 		}

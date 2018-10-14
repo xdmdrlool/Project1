@@ -64,7 +64,7 @@ public enum Animations {
 	
 	
 	
-	private ImageLoader loader= new ImageLoader();
+	private  ImageLoader loader= new ImageLoader();
 	
 	private String path;
 	private int def;

@@ -21,22 +21,24 @@ public class Window extends JFrame {
 	private int height=1000;
 	
 	public static AnimationCreator AC =new AnimationCreator();
+	public static FC fc = new FC();
 	
 	// Objets de la fenêtre
-	FC fc = new FC();
 	Player player = new Player(100, 200, 100, 100,"Player1", 0, 6);
 	Portal portal1 = new Portal(-500, -500, 100, 20,"Portal1",Color.BLUE);
 	Portal portal2 = new Portal(-500, -500, 100, 20,"Portal2",Color.ORANGE);
 	Map map=new Map("carte");
 
-	GeneralEnemy enemy = new GeneralEnemy(400, 400, 50, 50, "Enemy1", 0, 5,false);
+	GeneralEnemy enemy = new GeneralEnemy(500, 400, 50, 50, "Enemy1", 0, 5,false);
+	
+	//MovingPlatform movingPlatform= new MovingPlatform("Plate",400,501,700,501,500,50, 1000);
+	
 	
 	ArrayList[] objectsMap=map.load();
 	ArrayList<Obstacle> obstacles=fc.concatenate(objectsMap[0],objectsMap[1]);
 	ArrayList<GeneralEnemy> enemies= objectsMap[2];
 	
-	
-	
+
 	
 	
 	
@@ -102,7 +104,6 @@ public class Window extends JFrame {
 			enemy.setCurrentAnimation(NameAnimation.DEFAULT);
 		}
 		
-		
 		ArrayList<Layer> arrayLayer= new ArrayList<Layer>();
 		Layer layer1=new Layer(0);
 		Layer layer2=new Layer(200);
@@ -122,6 +123,8 @@ public class Window extends JFrame {
 		panel.setListLayer(arrayLayer);
 		
 	}
+
+	
 	
 	private void stepGame(Player player, ArrayList<GeneralEnemy> enemies) {
 		
@@ -153,15 +156,25 @@ public class Window extends JFrame {
 	}
 
 	
+	
 	public void calculCameraOffset(Panel panel,Player player) {
 		int w0=this.getWidth();int h0=this.getHeight();
 		int xOff=panel.getxOffset();int yOff=panel.getyOffset();
 		int x=player.getX();int y=player.getY();int w=player.getWidth();int h=player.getHeight();
-		int a;
-		if (x+xOff<1*w0/4) {a=w0/4-x;panel.setxOffset(a+(9*(xOff-a))/10);handler.setxOffset(a+(9*(xOff-a))/10);}
-		else if (x+w+xOff>3*w0/4) {a=3*w0/4-x-w;panel.setxOffset(a+(9*(xOff-a))/10);handler.setxOffset(a+(9/(xOff-a))/10);}
-		if (y+yOff<1*h0/4) {a=h0/4-y;panel.setyOffset(a+(9*(yOff-a))/10);handler.setyOffset(a+(9*(yOff-a))/10);}
-		else if (y+h+yOff>3*h0/4) {a=3*h0/4-y-h;panel.setyOffset(a+(9*(yOff-a))/10);handler.setyOffset(a+(9*(yOff-a))/10);}
+		int p;
+		
+		// la camera bouge quand le joueur à a/b du bord
+		int a=2;
+		int b=7;
+		
+		// c/d : vitesse de la camera ; c/d=0 : mvt instantané   ;c/d=1 : pas de mvt
+		int c=17;
+		int d=20;
+		
+		if (x+xOff<a*w0/b) {p=a*w0/b-x;panel.setxOffset(p+(c*(xOff-p))/d);handler.setxOffset(p+(c*(xOff-p))/d);}
+		else if (x+w+xOff>(b-a)*w0/b) {p=(b-a)*w0/b-x-w;panel.setxOffset(p+(c*(xOff-p))/d);handler.setxOffset(p+(c/(xOff-p))/d);}
+		if (y+yOff<a*h0/b) {p=a*h0/b-y;panel.setyOffset(p+(c*(yOff-p))/d);handler.setyOffset(p+(c*(yOff-p))/d);}
+		else if (y+h+yOff>(b-a)*h0/b) {p=(b-a)*h0/b-y-h;panel.setyOffset(p+(c*(yOff-p))/d);handler.setyOffset(p+(c*(yOff-p))/d);}
 	}
 	
 	

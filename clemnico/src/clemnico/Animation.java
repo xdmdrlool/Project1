@@ -7,6 +7,11 @@ public class Animation {
 	private int timeinframe =0;
 	private int nbFrame;
 	private double angle;
+	private boolean ended=false;
+
+
+
+
 
 	public Animation(Sprite[] listeSprite,int[] listeTime ) {
 		setListeSprite(listeSprite);
@@ -14,17 +19,22 @@ public class Animation {
 		setNbFrame(listeSprite.length);
 	}
 	
+
 	
 	public void update() {
 		this.timeinframe++;
 		if (timeinframe==listeTime[numeroFrame]) {
-		this.numeroFrame=(this.numeroFrame+1)%this.nbFrame;
+			if (this.numeroFrame==this.nbFrame-1) {
+				setEnded(true);
+				this.numeroFrame=0;}
+			else {this.numeroFrame++;}
 		this.timeinframe=0;}
-		
 	}
 	
 	public void reset() {
 		this.numeroFrame=0;
+		this.timeinframe=0;
+		this.ended=false;
 	}
 	
 	
@@ -91,4 +101,11 @@ public class Animation {
 		this.listeTime = listeTime;
 	}
 
+	public void setEnded(boolean ended) {
+		this.ended = ended;
+	}
+	
+	public boolean isEnded() {
+		return ended;
+	}
 }
