@@ -39,7 +39,7 @@ public class Map {
 		
 		ArrayList<ObstacleFix> obstaclesFix = new ArrayList<>();
 		ArrayList<ObstacleMoving> obstaclesMoving = new ArrayList<>();
-		ArrayList<GeneralEnemy> enemies = new ArrayList<>();
+		ArrayList<EnemyDefault> enemies = new ArrayList<>();
 		
 		int obstacleType=0; // = 1 pour ObstacleFix et = 2 pour ObstacleMoving
 		int i1Connect=0;
@@ -112,7 +112,7 @@ public class Map {
 				
 				//Affichage des ennemis
 				if (pixel[0]==enemyPix[0] && pixel[1]==enemyPix[1] && pixel[2]==enemyPix[2]) {
-					GeneralEnemy enemy = new GeneralEnemy(i*blocSize, j*blocSize, 50, 50, "Enemy1", 0, 5,false);
+					EnemyDefault enemy = new EnemyDefault(i*blocSize, j*blocSize, 50, 50, "Enemy1",false);
 					enemies.add(enemy);
 				}
 				

@@ -765,6 +765,7 @@ public class FC {
 	////// INTERACTIONS OBSTACLES //////
 	////////////////////////////////////
 	
+	////PLAYER////
 	public boolean obstacleInteraction(Entity entity, ArrayList<Obstacle> obstacles) {
 		
 		boolean collision=false;
@@ -837,6 +838,52 @@ public class FC {
 		return obstacles;
 	}
 	
+	////ENNEMIS////
+	public void obstacleInteractionEnemy(Enemy enemy, ArrayList<Obstacle> obstacles) {
+		
+		
+		Vecteur vecteurCorrection=null;
+		Vecteur directionCollision=null;
+		boolean varInTheAir=true;
+		boolean inverseVx=false;
+		for (Obstacle obstacle: obstacles) {
+			//S'il y a collision avec un obstacle
+			FormRect rect0=new FormRect(Color.RED, enemy.xBefore, enemy.yBefore, enemy.width, enemy.height, 0);
+			FormRect rect=(FormRect) enemy.getHitbox().getForm();
+			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
+			Vecteur[] tab = calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
+			
+			if (tab !=null) {
+				vecteurCorrection=tab[0];
+				directionCollision=tab[1];
+//				System.out.println(directionCollision.x+" "+directionCollision.y);
+//				System.out.println("xB :"+xBefore+"   yB : "+yBefore);
+//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
+				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
+				if (directionCollision.x!=0) {inverseVx=true;}
+				if (!enemy.fallFromPlatform && directionCollision.y>0) {if(enemy.x<obstacle.getX() && enemy.vx<0) {inverseVx=true;} if (enemy.x+enemy.width>obstacle.getX()+obstacle.getWidth() &&enemy.vx>=0) {inverseVx=true;};}
+				if (directionCollision.y!=0) {enemy.setVy(0);}
+
+				int newX=(int) (enemy.getX()+vecteurCorrection.x);
+				int newY=(int) (enemy.getY()+vecteurCorrection.y);
+				
+				
+//				System.out.println("x: "+newX+"  y: "+newY);
+//				System.out.println("air : "+isInTheAir());	
+
+				enemy.setX(newX);
+				enemy.setY(newY);
+				
+//				System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);
+			}
+			
+
+		}
+		enemy.setTimeInAir(enemy.getTimeInAir()+1);
+		enemy.setInTheAir(varInTheAir);
+		enemy.setxBefore(enemy.x);enemy.setyBefore(enemy.y);		
+		if (inverseVx) {enemy.setVx(-enemy.vx);}
+	}
 	
 	////////////////////////////////////
 	////// INTERACTIONS PORTAILS ///////

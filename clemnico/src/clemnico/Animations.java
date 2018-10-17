@@ -8,6 +8,9 @@ public enum Animations {
 	// def = taille du carreau de la grille de la SpriteSheet
 	// listeArg= {  { colonne , ligne ,  wSprite(default=def) ,hSprite(default=def) ,  angle } ,  ...    }
 	
+	AnimationLandScapeDefault("SpriteSheet_Landscape.png" , 1000 , new int[][]  { { 0 , 0 , 240 , 320 , 0 } }   ,  new int[] {1}  ),
+	
+	
 	AnimationTest("SpriteSheet_test.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } } ,  new int[] {1}   ),
 	
 	AnimationPlayerDefault("SpriteSheet_test.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } }   ,  new int[] {1}  ),
@@ -35,6 +38,19 @@ public enum Animations {
 		
 	},
 			new int[] {3,3,3,3,3,3,3,3,3,3,3,3,3}   ),
+	
+	AnimationEnemyWalkR("SpriteSheet_Enemy1.png" , 64 , new int[][]  {
+		{ 0 , 0 , 56 , 58 , 0 }, { 1 , 0 , 56 , 58 , 0 },{2 , 0 , 56 , 58 , 0 },{ 3 , 0 , 56 , 58 , 0 }
+		},
+	
+		new int[] {3,3,3,3}   ),
+	
+	AnimationEnemyWalkL("SpriteSheet_Enemy1.png" , 64 , new int[][]  {
+		{ 7 , 0 , 56 , 58 , 0 }, { 6 , 0 , 56 , 58 , 0 },{5 , 0 , 56 , 58 , 0 },{ 4 , 0 , 56 , 58 , 0 }
+		
+	},new int[] {3,3,3,3}   ),
+	
+	
 	
 	
 	AnimationPortal1Default("SpriteSheet_Portal.png", 64 , new int[][] { { 0 , 0 , 61 , 10 , 0 } },new int[] {1} ),

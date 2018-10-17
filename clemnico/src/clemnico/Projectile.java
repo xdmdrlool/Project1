@@ -49,8 +49,8 @@ public class Projectile extends Entity{
 			setVy(0);
 		}
 		double[] vector= {(xc-xp),(yc-yp)};
-		setVxReal(vNorm*vector[0]*1./norm);
-		setVyReal(vNorm*vector[1]*1./norm);
+		setVx((int)(vNorm*vector[0]*1./norm));
+		setVy((int)(vNorm*vector[1]*1./norm));
 	}
 	
 	
@@ -61,7 +61,7 @@ public class Projectile extends Entity{
 	
 	
 	//Détermine si le projectile doit être détruit ou non
-	public boolean isOut(int w, int h,int xoff,int yoff, ArrayList<Obstacle> obstacles) {
+	public boolean isOut(int w, int h,int xoff,int yoff, ArrayList<Obstacle> obstacles,ArrayList<Enemy> enemies) {
 		//Hors des limites du terrain
 		if (x+xoff+width+xLimit<0 || y+yoff+height+yLimit<0 || x+xoff-xLimit>w || y+yoff-yLimit>h) {
 			return true;
@@ -72,28 +72,25 @@ public class Projectile extends Entity{
 				return true;
 			}
 		}
+		//Percute un ennemi
+		for(Enemy enemy : enemies) {
+			if (this.isInCollisionWith(enemy)) {
+				enemy.touched(vx,vy);
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	
-	public void enemyInteraction(GeneralEnemy enemy) {
-		if (this.isInCollisionWith(enemy)) {
-			enemy.touched(vx,vy);
-		}
-	}
 	
-	
-	public void step(Portal portal1, Portal portal2,ArrayList<GeneralEnemy> enemies) {
-		
+	public void step(Portal portal1, Portal portal2,ArrayList<Enemy> enemies) {
+		fc.portalInteractionRect(this, portal1, portal2);
 		setFlyTime(flyTime+1);
 		setxBefore(x);
 		setyBefore(y);
-		setX(x+(int)vxReal);
-		setY(y+(int)vyReal);
-		fc.portalInteractionRect(this, portal1, portal2);
-		
-		for (GeneralEnemy enemy : enemies) {
-			enemyInteraction(enemy);
-		}
+		setX(x+vx);
+		setY(y+vy);
 		
 		getCurrentAnimation().update();
 	}

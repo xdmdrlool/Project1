@@ -25,8 +25,8 @@ public class Player extends Entity {
 	private int ax = 2;
 	private int currentVx=0;
 	private int vxMax = 15;
-	private int vyMax = 50;
-	private int vJump = 22;
+	private int vyMax = 30;
+	private int vJump = 30;
 	Sound sound=new Sound("saut.wav");
 	Sound sound1=new Sound("pan.wav");
 	
@@ -115,7 +115,7 @@ public class Player extends Entity {
 	
 	
 	
-	public void projectileOperation(Panel panel,Portal portal1, Portal portal2,ArrayList<GeneralEnemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
+	public void projectileOperation(Panel panel,Portal portal1, Portal portal2,ArrayList<Enemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
 		
 		setTimeShoot(timeShoot+1);
 		
@@ -137,7 +137,7 @@ public class Player extends Entity {
 		ArrayList<Projectile> toRemove = new ArrayList<>();
 		for (Projectile projectile : projectiles) {
 			projectile.step(portal1,portal2,enemies);
-			if(projectile.isOut(width, height,panel.getxOffset(),panel.getyOffset(), obstacles)) {
+			if(projectile.isOut(width, height,panel.getxOffset(),panel.getyOffset(), obstacles, enemies)) {
 				toRemove.add(projectile);
 			}
 		}
@@ -151,7 +151,7 @@ public class Player extends Entity {
 		
 		
 	// Action de joueur pour un pas de la boucle
-	public void step(Panel panel,Portal portal1, Portal portal2,ArrayList<GeneralEnemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
+	public void step(Panel panel,Portal portal1, Portal portal2,ArrayList<Enemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
 		
 		
 		// Déplacement du joueur

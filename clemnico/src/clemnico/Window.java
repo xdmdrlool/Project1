@@ -24,22 +24,20 @@ public class Window extends JFrame {
 	public static FC fc = new FC();
 	
 	// Objets de la fenêtre
-	Player player = new Player(100, 200, 100, 100,"Player1", 0, 6);
+	Player player = new Player(100, 200, 50, 50,"Player1", 0, 6);
 	Portal portal1 = new Portal(-500, -500, 100, 20,"Portal1",Color.BLUE);
 	Portal portal2 = new Portal(-500, -500, 100, 20,"Portal2",Color.ORANGE);
 	Map map=new Map("carte");
-
-	GeneralEnemy enemy = new GeneralEnemy(500, 400, 50, 50, "Enemy1", 0, 5,false);
 	
 	//MovingPlatform movingPlatform= new MovingPlatform("Plate",400,501,700,501,500,50, 1000);
 	
 	
 	ArrayList[] objectsMap=map.load();
 	ArrayList<Obstacle> obstacles=fc.concatenate(objectsMap[0],objectsMap[1]);
-	ArrayList<GeneralEnemy> enemies= objectsMap[2];
+	ArrayList<Enemy> enemies= objectsMap[2];
 	
 
-	
+	Decoration deco = new Decoration("ciel", 0,0,1800,1200);
 	
 	
 
@@ -87,20 +85,22 @@ public class Window extends JFrame {
 		player.useDefaultAnimations();		
 		portal1.useDefaultAnimations();
 		portal2.useDefaultAnimations();
+		deco.useDefaultAnimations();
 		for (Obstacle obstacle : obstacles) {
 			obstacle.useDefaultAnimations();
 		}
-		for (GeneralEnemy enemy : enemies) {
+		for (Enemy enemy : enemies) {
 			enemy.useDefaultAnimations();
 		}
 		
 		player.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal1.setCurrentAnimation(NameAnimation.DEFAULT);
 		portal2.setCurrentAnimation(NameAnimation.DEFAULT);
+		deco.setCurrentAnimation(NameAnimation.DEFAULT);
 		for (Obstacle obstacle : obstacles) {
 			obstacle.setCurrentAnimation(NameAnimation.DEFAULT);
 		}
-		for (GeneralEnemy enemy : enemies) {
+		for (Enemy enemy : enemies) {
 			enemy.setCurrentAnimation(NameAnimation.DEFAULT);
 		}
 		
@@ -111,10 +111,11 @@ public class Window extends JFrame {
 		layer1.add(player);
 		layer1.add(portal1);
 		layer1.add(portal2);
+		layer2.add(deco);
 		for (Obstacle obstacle : obstacles) {
 			layer1.add(obstacle);
 		}
-		for (GeneralEnemy enemy : enemies) {
+		for (Enemy enemy : enemies) {
 			layer1.add(enemy);
 		}
 		
@@ -126,7 +127,7 @@ public class Window extends JFrame {
 
 	
 	
-	private void stepGame(Player player, ArrayList<GeneralEnemy> enemies) {
+	private void stepGame(Player player, ArrayList<Enemy> enemies) {
 		
 		Timer chrono = new Timer();
 		int delay = 100;
@@ -145,7 +146,7 @@ public class Window extends JFrame {
 				for (Obstacle obstacle : obstacles) {
 					obstacle.update();
 				}
-				for (GeneralEnemy enemy : enemies) {
+				for (Enemy enemy : enemies) {
 					enemy.step(portal1, portal2, obstacles);
 				}
 				

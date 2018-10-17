@@ -13,7 +13,7 @@ public class Layer {
 	private ArrayList<Portal> listPortal=new ArrayList<Portal>();
 	private ArrayList<Obstacle> listObstacle=new ArrayList<Obstacle>();
 	private ArrayList<Projectile> listProjectile=new ArrayList<Projectile>();
-	private ArrayList<GeneralEnemy> listGeneralEnemy=new ArrayList<GeneralEnemy>();
+	private ArrayList<EnemyDefault> listGeneralEnemy=new ArrayList<EnemyDefault>();
 	
 	
 	////Constructeur////
@@ -41,7 +41,7 @@ public class Layer {
 		else if (e instanceof Portal) {listPortal.add((Portal)e);}
 		else if (e instanceof Obstacle) {listObstacle.add((Obstacle)e);}
 		else if (e instanceof Projectile) {listProjectile.add((Projectile)e);}
-		else if (e instanceof GeneralEnemy) {listGeneralEnemy.add((GeneralEnemy)e);}
+		else if (e instanceof EnemyDefault) {listGeneralEnemy.add((EnemyDefault)e);}
 	}
 
 	
@@ -51,7 +51,7 @@ public class Layer {
 		else if (e instanceof Portal) {listPortal.remove(e);}
 		else if (e instanceof Obstacle) {listObstacle.remove(e);}
 		else if (e instanceof Projectile) {listProjectile.remove(e);}
-		else if (e instanceof GeneralEnemy) {listGeneralEnemy.remove(e);}
+		else if (e instanceof EnemyDefault) {listGeneralEnemy.remove(e);}
 		return listEntity.remove(e);
 	}
 	

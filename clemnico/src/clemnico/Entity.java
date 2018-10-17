@@ -59,6 +59,17 @@ public abstract class Entity {
 		return hitbox.collision(entity.getHitbox());	
 	}
 	
+	public void moveIn(int x ,int y) {
+		setX(x);
+		setY(y);
+	}
+	
+	public void distanceStep(int dx,int dy) {
+		moveIn(this.x+dx, this.y+dy);
+	}
+	
+	
+	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
