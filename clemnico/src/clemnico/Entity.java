@@ -15,6 +15,8 @@ public abstract class Entity {
 	protected int y;
 	protected int vx=0;
 	protected int vy=0;
+	protected int vxMax=10;
+	protected int vyMax=30;
 	protected int xBefore;
 	protected int yBefore;
 	protected int width;
@@ -112,10 +114,14 @@ public abstract class Entity {
 	}
 
 	public void setVx(int vx) {
+		if (vx>0) {vx=Math.min(vx , vxMax );}
+		else {vx=- Math.min(-vx, vxMax);}
 		this.vx = vx;
 	}
 
 	public void setVy(int vy) {
+		if (vy>0) {vy=Math.min(vy , vyMax );}
+		else {vy=- Math.min(-vy, vyMax);}
 		this.vy = vy;
 	}
 
@@ -247,6 +253,26 @@ public abstract class Entity {
 
 	public void setLayerIn(Layer layerIn) {
 		this.layerIn = layerIn;
+	}
+
+
+	public int getVxMax() {
+		return vxMax;
+	}
+
+
+	public void setVxMax(int vxMax) {
+		this.vxMax = vxMax;
+	}
+
+
+	public int getVyMax() {
+		return vyMax;
+	}
+
+
+	public void setVyMax(int vyMax) {
+		this.vyMax = vyMax;
 	}
 	
 

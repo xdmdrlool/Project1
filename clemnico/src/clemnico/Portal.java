@@ -23,7 +23,7 @@ public class Portal extends Entity{
 	//Renvoie l'angle du portail enfonction de la position du joueur et du clic
 	public int angleRotation(int xPlayer, int yPlayer, int xClic, int yClic) {
 		if (xClic==xPlayer) {
-			return 0;
+			return 180;
 		}
 		else if (xClic>xPlayer){
 			return ((int) Math.toDegrees(Math.atan((yPlayer-yClic)*1.0/(xPlayer-xClic)*1.0) - Math.PI/2.0));

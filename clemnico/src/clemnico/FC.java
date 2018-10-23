@@ -799,7 +799,7 @@ public class FC {
 				if (directionCollision.x<0) {varCollisonLeft=true;}
 				if (directionCollision.x>0) {varCollisonRight=true;}
 				if (directionCollision.x!=0 ||directionCollision.y>0) {entity.setVx(0);}
-				if (directionCollision.y!=0) {entity.setVy(0);}
+				if (directionCollision.y!=0) {entity.setVy(0);entity.setX(entity.getX()+obstacle.getVx());}
 				
 
 				int newX=(int) (entity.getX()+vecteurCorrection.x);
@@ -825,8 +825,10 @@ public class FC {
 		entity.setxBefore(entity.x);entity.setyBefore(entity.y);
 
 		return collision;
-				
+			
 	}
+	
+	
 	public ArrayList<Obstacle> concatenate(ArrayList<Obstacle> obstaclesFix, ArrayList<Obstacle> obstaclesMoving){
 		ArrayList<Obstacle> obstacles = new ArrayList<>();
 		for (Obstacle obstacle : obstaclesFix) {
@@ -902,7 +904,7 @@ public class FC {
 		
 		// S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-	
+			
 			// Détermine le portail d'entrée et de sortie
 			Portal portalIn, portalOut;
 			if (hitbox.collision(portal1.getHitbox())) {

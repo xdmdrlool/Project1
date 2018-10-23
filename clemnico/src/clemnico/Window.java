@@ -25,8 +25,8 @@ public class Window extends JFrame {
 	
 	// Objets de la fenêtre
 	Player player = new Player(100, 200, 50, 50,"Player1", 0, 6);
-	Portal portal1 = new Portal(-500, -500, 100, 20,"Portal1",Color.BLUE);
-	Portal portal2 = new Portal(-500, -500, 100, 20,"Portal2",Color.ORANGE);
+	Portal portal1 = new Portal(-500, -500, 100, 30,"Portal1",Color.BLUE);
+	Portal portal2 = new Portal(-500, -500, 100, 30,"Portal2",Color.ORANGE);
 	Map map=new Map("carte");
 	
 	//MovingPlatform movingPlatform= new MovingPlatform("Plate",400,501,700,501,500,50, 1000);

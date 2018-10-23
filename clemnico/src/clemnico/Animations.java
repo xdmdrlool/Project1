@@ -8,7 +8,7 @@ public enum Animations {
 	// def = taille du carreau de la grille de la SpriteSheet
 	// listeArg= {  { colonne , ligne ,  wSprite(default=def) ,hSprite(default=def) ,  angle } ,  ...    }
 	
-	AnimationLandScapeDefault("SpriteSheet_Landscape.png" , 1000 , new int[][]  { { 0 , 0 , 240 , 320 , 0 } }   ,  new int[] {1}  ),
+	AnimationLandScapeDefault("SpriteSheet_Landscape2.png" , 1000 , new int[][]  { { 0 , 0 , 240 , 320 , 0 } }   ,  new int[] {1}  ),
 	
 	
 	AnimationTest("SpriteSheet_test.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } } ,  new int[] {1}   ),

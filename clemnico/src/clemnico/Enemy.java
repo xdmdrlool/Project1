@@ -15,6 +15,12 @@ public abstract class Enemy extends Entity{
 	protected int ax=1;
 	protected boolean dead=false;
 	
+	//Paramètres de recul
+	protected boolean recoil=false;
+	protected int vRecoil=1;
+	protected int timeRecoil=0;
+	protected int timeEndRecoil=10;
+	
 	
 	////Constructeur////
 	public Enemy(String name, int x, int y, int width, int height) {
@@ -36,10 +42,25 @@ public abstract class Enemy extends Entity{
 	//Action de joueur pour un pas de la boucle
 	public abstract void step(Portal portal1, Portal portal2, ArrayList<Obstacle> obstacles);
 	
-	public abstract void chooseAnimation();
+	public void useDefaultAnimations() {
+		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
+		addAnimation(NameAnimation.WALKL,ACreator.createAnimation(Animations.AnimationEnemyWalkL,width,height));
+		addAnimation(NameAnimation.WALKR,ACreator.createAnimation(Animations.AnimationEnemyWalkR,width,height));
+		addAnimation(NameAnimation.JUMPL,ACreator.createAnimation(Animations.AnimationEnemyWalkL,width,height));
+		addAnimation(NameAnimation.JUMPR,ACreator.createAnimation(Animations.AnimationEnemyWalkR,width,height));
+		addAnimation(NameAnimation.FALLL,ACreator.createAnimation(Animations.AnimationEnemyWalkL,width,height));
+		addAnimation(NameAnimation.FALLR,ACreator.createAnimation(Animations.AnimationEnemyWalkR,width,height));		
+	}
 	
-	public abstract void useDefaultAnimations();
-	
+	public void chooseAnimation() {
+		NameAnimation name=NameAnimation.DEFAULT;
+		if (inTheAir) {
+			if (vy<=0) {if (vx>=0) {name=NameAnimation.JUMPR;}else {name=NameAnimation.JUMPL;}}
+			else  {if (vx>=0) {name=NameAnimation.FALLR;}else {name=NameAnimation.FALLL;}}}
+		
+		else {if (vx>0) {name=NameAnimation.WALKR;}else if (vx<0) {name=NameAnimation.WALKL;}}
+		setCurrentAnimation(name);
+	}
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////
@@ -86,5 +107,53 @@ public abstract class Enemy extends Entity{
 	}
 	public void setAx(int ax) {
 		this.ax = ax;
+	}
+
+	public int getVyMax() {
+		return vyMax;
+	}
+
+	public void setVyMax(int vyMax) {
+		this.vyMax = vyMax;
+	}
+
+	public int getVxMax() {
+		return vxMax;
+	}
+
+	public void setVxMax(int vxMax) {
+		this.vxMax = vxMax;
+	}
+
+	public boolean isRecoil() {
+		return recoil;
+	}
+
+	public void setRecoil(boolean recoil) {
+		this.recoil = recoil;
+	}
+
+	public int getvRecoil() {
+		return vRecoil;
+	}
+
+	public void setvRecoil(int vRecoil) {
+		this.vRecoil = vRecoil;
+	}
+
+	public int getTimeRecoil() {
+		return timeRecoil;
+	}
+
+	public void setTimeRecoil(int timeRecoil) {
+		this.timeRecoil = timeRecoil;
+	}
+
+	public int getTimeEndRecoil() {
+		return timeEndRecoil;
+	}
+
+	public void setTimeEndRecoil(int timeEndRecoil) {
+		this.timeEndRecoil = timeEndRecoil;
 	}
 }

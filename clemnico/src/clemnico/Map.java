@@ -18,7 +18,8 @@ public class Map {
 	int[] obstacleFixPix= {0,0,0};	//Noir
 	int[] obstacleMovingPix= {100,100,100};	//Gris foncé
 	int[] obstacleMovingParcoursPix= {200,200,200};	//Gris clair
-	int[] enemyPix= {255,0,0};  //Rouge
+	int[] enemyDefaultPix= {255,0,0};  	//Rouge
+	int[] enemyJumpPix= {255,100,0};	//Orange
 	
 	
 	public Map(String name) {
@@ -39,7 +40,7 @@ public class Map {
 		
 		ArrayList<ObstacleFix> obstaclesFix = new ArrayList<>();
 		ArrayList<ObstacleMoving> obstaclesMoving = new ArrayList<>();
-		ArrayList<EnemyDefault> enemies = new ArrayList<>();
+		ArrayList<Enemy> enemies = new ArrayList<>();
 		
 		int obstacleType=0; // = 1 pour ObstacleFix et = 2 pour ObstacleMoving
 		int i1Connect=0;
@@ -111,8 +112,12 @@ public class Map {
 				
 				
 				//Affichage des ennemis
-				if (pixel[0]==enemyPix[0] && pixel[1]==enemyPix[1] && pixel[2]==enemyPix[2]) {
+				if (equal(pixel,enemyDefaultPix)) {
 					EnemyDefault enemy = new EnemyDefault(i*blocSize, j*blocSize, 50, 50, "Enemy1",false);
+					enemies.add(enemy);
+				}
+				if (equal(pixel,enemyJumpPix)) {
+					EnemyJump enemy = new EnemyJump(i*blocSize, j*blocSize, 50, 50, "Enemy1",false);
 					enemies.add(enemy);
 				}
 				
