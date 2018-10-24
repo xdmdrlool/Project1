@@ -31,6 +31,7 @@ public abstract class Obstacle extends Entity {
 	@Override
 	public void useDefaultAnimations() {
 		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationObsatcleDefault2,width,height));		
+		setCurrentAnimation(NameAnimation.DEFAULT);
 	}
 	
 	

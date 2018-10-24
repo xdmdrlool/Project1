@@ -49,7 +49,8 @@ public abstract class Enemy extends Entity{
 		addAnimation(NameAnimation.JUMPL,ACreator.createAnimation(Animations.AnimationEnemyWalkL,width,height));
 		addAnimation(NameAnimation.JUMPR,ACreator.createAnimation(Animations.AnimationEnemyWalkR,width,height));
 		addAnimation(NameAnimation.FALLL,ACreator.createAnimation(Animations.AnimationEnemyWalkL,width,height));
-		addAnimation(NameAnimation.FALLR,ACreator.createAnimation(Animations.AnimationEnemyWalkR,width,height));		
+		addAnimation(NameAnimation.FALLR,ACreator.createAnimation(Animations.AnimationEnemyWalkR,width,height));	
+		setCurrentAnimation(NameAnimation.DEFAULT);
 	}
 	
 	public void chooseAnimation() {

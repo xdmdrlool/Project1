@@ -35,12 +35,9 @@ public class Map {
 		}
 	}
 
-	public ArrayList[] load() {
-		ArrayList<Object> mapObject = new ArrayList<>();
-		
-		ArrayList<ObstacleFix> obstaclesFix = new ArrayList<>();
-		ArrayList<ObstacleMoving> obstaclesMoving = new ArrayList<>();
-		ArrayList<Enemy> enemies = new ArrayList<>();
+	public ArrayList<Entity> load() {
+		ArrayList<Entity> mapObject = new ArrayList<>();
+
 		
 		int obstacleType=0; // = 1 pour ObstacleFix et = 2 pour ObstacleMoving
 		int i1Connect=0;
@@ -55,10 +52,7 @@ public class Map {
 		for (int j=0;j<height; j++) {
 			for(int i=0;i<width;i++) {
 				pixel=img.getRaster().getPixel(i, j, new int[3]);
-				//System.out.println(pixel[0]+" "+pixel[1]+" "+pixel[2]);
-				
-				//System.out.println(pixel[0]+" "+pixel[1]+" "+pixel[2]);
-				//System.out.println(i+" "+j);
+
 				//Affichage des obstacles
 				if (pixel[0]==pixel[1] && pixel[1]==pixel[2]) {
 					//Obstacles fixes
@@ -77,7 +71,7 @@ public class Map {
 					else if(obstacleType==1) {
 						obstacleType=0;
 						ObstacleFix obstacle = new ObstacleFix(i1Connect*blocSize, j1Connect*blocSize, widthConnect*blocSize, heightConnect*blocSize,"Obs1", 0);
-						obstaclesFix.add(obstacle);
+						mapObject.add(obstacle);
 					}
 					//Corps obstacles mouvant
 					if (pixel[0]==obstacleMovingPix[0]) {
@@ -103,8 +97,8 @@ public class Map {
 						obstacleType=0;
 						ObstacleMoving obstacleMoving= new ObstacleMoving("Plate",i1Connect*blocSize,j1Connect*blocSize,
 																				 (i1Connect+i2Connect)*blocSize,(j1Connect+j2Connect)*blocSize,
-																				 widthConnect*blocSize,heightConnect*blocSize, 1000);
-						obstaclesMoving.add(obstacleMoving);
+																				 widthConnect*blocSize,heightConnect*blocSize, 50*(i2Connect));
+						mapObject.add(obstacleMoving);
 						
 					}
 					
@@ -114,11 +108,11 @@ public class Map {
 				//Affichage des ennemis
 				if (equal(pixel,enemyDefaultPix)) {
 					EnemyDefault enemy = new EnemyDefault(i*blocSize, j*blocSize, 50, 50, "Enemy1",false);
-					enemies.add(enemy);
+					mapObject.add(enemy);
 				}
 				if (equal(pixel,enemyJumpPix)) {
 					EnemyJump enemy = new EnemyJump(i*blocSize, j*blocSize, 50, 50, "Enemy1",false);
-					enemies.add(enemy);
+					mapObject.add(enemy);
 				}
 				
 			}
@@ -127,8 +121,10 @@ public class Map {
 			
 		}
 		
-		return new ArrayList[] {obstaclesFix, obstaclesMoving, enemies};
-		//System.out.println(pixel[0]+" "+pixel[1]+" "+pixel[2]);
+		
+		for (Entity e :mapObject) {e.useDefaultAnimations();}
+		
+		return mapObject;
 	}
 	
 	public boolean equal(int[] l1,int[] l2) {

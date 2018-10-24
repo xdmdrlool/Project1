@@ -24,22 +24,25 @@ public class ObstacleMoving extends Obstacle  {
 	public void update() {
 		setxBefore(x);
 		setyBefore(y);
+		double ux=2/(1.0*period);
+		double uy=2/(1.0*period);
 		this.frame=(frame+1)%period;
 		if (frame<period/2) {
-			double ux=2/(1.0*period);
-			double uy=2/(1.0*period);
-			setX((int) (xA+frame*ux*(xB-xA)));
-			setY((int) (yA+frame*uy*(yB-yA)));
+			
+			setVx((int) (ux*(xB-xA)));
+			setVy((int) (uy*(yB-yA)));
+			setX((int) xA+frame*vx);
+			setY((int) yA+frame*vy);
+
 		}
 		else {
-			double ux=2/(1.0*period);
-			double uy=2/(1.0*period);
-			setX((int) (xB+(frame-period/2)*ux*(xA-xB)));
-			setY((int) (yB+(frame-period/2)*uy*(yA-yB)));
+			setVx((int) (-ux*(xB-xA)));
+			setVy((int) (-uy*(yB-yA)));
+			setX((int) (xB+(frame-period/2)*vx));
+			setY((int) (yB+(frame-period/2)*vy));
 			
 		}
 	}
-	
 
 
 	////////////////////////////////

@@ -15,10 +15,10 @@ public abstract class Entity {
 	protected int y;
 	protected int vx=0;
 	protected int vy=0;
-	protected int vxMax=10;
-	protected int vyMax=30;
 	protected int xBefore;
 	protected int yBefore;
+	protected int vxMax=10;
+	protected int vyMax=30;
 	protected int width;
 	protected int height;
 	protected int timeInAir=0;
@@ -254,8 +254,7 @@ public abstract class Entity {
 	public void setLayerIn(Layer layerIn) {
 		this.layerIn = layerIn;
 	}
-
-
+	
 	public int getVxMax() {
 		return vxMax;
 	}
@@ -275,7 +274,6 @@ public abstract class Entity {
 		this.vyMax = vyMax;
 	}
 	
-
 	
 	
 }

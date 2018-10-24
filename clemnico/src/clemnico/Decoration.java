@@ -17,7 +17,7 @@ public class Decoration extends Entity{
 	public void useDefaultAnimations() {
 		
 		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationLandScapeDefault,width,height));
-		
+		setCurrentAnimation(NameAnimation.DEFAULT);
 	}
 
 }

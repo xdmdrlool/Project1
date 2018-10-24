@@ -775,48 +775,46 @@ public class FC {
 		boolean varInTheAir=true;
 		boolean varCollisonLeft=false;
 		boolean varCollisonRight=false;
-//		System.out.println("");
 		for (Obstacle obstacle: obstacles) {
-			//S'il y a collision avec un obstacle
 			FormRect rect0=new FormRect(Color.RED, entity.xBefore, entity.yBefore, entity.width, entity.height, 0);
 			FormRect rect=(FormRect) entity.getHitbox().getForm();
 			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
 			
 			rect0.setX(rect0.getX()+obstacle.getX()-obstacle.getxBefore());
 			rect0.setY(rect0.getY()+obstacle.getY()-obstacle.getyBefore());
-			
 			Vecteur[] tab = calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
 			
+			//S'il y a collision avec un obstacle :
 			if (tab !=null) {
 				vecteurCorrection=tab[0];
+				// vecteurCorrection=[x,y] : vecteur a appliquer a l'entité pour lui donner sa position correcte apres collision
 				directionCollision=tab[1];
+				// directionCollision=[x,y] : vecteur qui indique la direction de la collision (orienté du joueur vers l'obstacle)
 				
-//				System.out.println("xB :"+rect0.getX()+"   yB : "+rect0.getY());
-//				System.out.println("x :"+x+"   y : "+y);
-//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
-//				System.out.println(directionCollision.x+" "+directionCollision.y);
+				
+				// On verifie si l'entité et en l'air, si il y a collision a gauche ou a droite
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
 				if (directionCollision.x<0) {varCollisonLeft=true;}
 				if (directionCollision.x>0) {varCollisonRight=true;}
-				if (directionCollision.x!=0 ||directionCollision.y>0) {entity.setVx(0);}
-				if (directionCollision.y!=0) {entity.setVy(0);entity.setX(entity.getX()+obstacle.getVx());}
 				
+				if (directionCollision.x!=0 ||directionCollision.y>0) {entity.setVx(0);}
+				if (directionCollision.y!=0) {entity.setVy(0);}
+				if (directionCollision.y!=0) {entity.setVy(0);entity.setX(entity.getX()+obstacle.getVx());}
 
 				int newX=(int) (entity.getX()+vecteurCorrection.x);
 				int newY=(int) (entity.getY()+vecteurCorrection.y);
 				
-//				System.out.println("x: "+newX+"  y: "+newY);
-//				System.out.println("air : "+isInTheAir());	
 
+				// On modifie la position de l'entité
 				entity.setX(newX);
 				entity.setY(newY);
-//				System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);
+
 				collision=true;
 			}
 			
 
 		}
-//		System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);	
+		// On modifie les variables :
 		entity.setTimeInAir(entity.getTimeInAir()+1);
 		entity.setInTheAir(varInTheAir);
 		entity.setInCollisionLeft(varCollisonLeft);
@@ -824,11 +822,11 @@ public class FC {
 		
 		entity.setxBefore(entity.x);entity.setyBefore(entity.y);
 
+		// On return True ou False selon s'il y a eu collision ou non
 		return collision;
-			
+		
+				
 	}
-	
-	
 	public ArrayList<Obstacle> concatenate(ArrayList<Obstacle> obstaclesFix, ArrayList<Obstacle> obstaclesMoving){
 		ArrayList<Obstacle> obstacles = new ArrayList<>();
 		for (Obstacle obstacle : obstaclesFix) {
@@ -846,41 +844,50 @@ public class FC {
 		
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
-		boolean varInTheAir=true;
+		
+		boolean varInTheAir=true; 
 		boolean inverseVx=false;
+		
 		for (Obstacle obstacle: obstacles) {
-			//S'il y a collision avec un obstacle
+			
 			FormRect rect0=new FormRect(Color.RED, enemy.xBefore, enemy.yBefore, enemy.width, enemy.height, 0);
 			FormRect rect=(FormRect) enemy.getHitbox().getForm();
 			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
+			rect0.setX(rect0.getX()+obstacle.getX()-obstacle.getxBefore());
+			rect0.setY(rect0.getY()+obstacle.getY()-obstacle.getyBefore());
 			Vecteur[] tab = calculVecteurCollisionRectDroitObstacleDroit(rect0,rect,obs);
 			
+			//S'il y a collision avec un obstacle :
 			if (tab !=null) {
-				vecteurCorrection=tab[0];
-				directionCollision=tab[1];
-//				System.out.println(directionCollision.x+" "+directionCollision.y);
-//				System.out.println("xB :"+xBefore+"   yB : "+yBefore);
-//				System.out.println(vecteurCorrection.x+" "+vecteurCorrection.y);
+				vecteurCorrection=tab[0]; 
+				// vecteurCorrection=[x,y] : vecteur a appliquer a l'entité pour lui donner sa position correcte apres collision
+				directionCollision=tab[1]; 
+				// directionCollision=[x,y] : vecteur qui indique la direction de la collision (orienté du joueur vers l'obstacle)
+
+				
+				
+				// On verifie si l'entité et en l'air, si elle doit changer de sens ...
+				
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
 				if (directionCollision.x!=0) {inverseVx=true;}
 				if (!enemy.fallFromPlatform && directionCollision.y>0) {if(enemy.x<obstacle.getX() && enemy.vx<0) {inverseVx=true;} if (enemy.x+enemy.width>obstacle.getX()+obstacle.getWidth() &&enemy.vx>=0) {inverseVx=true;};}
+				
+				
 				if (directionCollision.y!=0) {enemy.setVy(0);}
 
+				// On modifie la position de l'entité
+				
 				int newX=(int) (enemy.getX()+vecteurCorrection.x);
 				int newY=(int) (enemy.getY()+vecteurCorrection.y);
-				
-				
-//				System.out.println("x: "+newX+"  y: "+newY);
-//				System.out.println("air : "+isInTheAir());	
-
 				enemy.setX(newX);
 				enemy.setY(newY);
 				
-//				System.out.println("x :"+x+"   y : "+y+"     vy : "+vy+"     "+varInTheAir);
 			}
 			
 
 		}
+		
+		// On modifie les variables InTheAir ,xBefore,yBefore et on inverse la vitesse si besoin
 		enemy.setTimeInAir(enemy.getTimeInAir()+1);
 		enemy.setInTheAir(varInTheAir);
 		enemy.setxBefore(enemy.x);enemy.setyBefore(enemy.y);		
@@ -904,7 +911,7 @@ public class FC {
 		
 		// S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-			
+	
 			// Détermine le portail d'entrée et de sortie
 			Portal portalIn, portalOut;
 			if (hitbox.collision(portal1.getHitbox())) {

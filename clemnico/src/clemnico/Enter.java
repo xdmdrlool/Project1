@@ -19,5 +19,6 @@ public class Enter extends Entity {
 	@Override
 	public void useDefaultAnimations() {
 		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));		
+		setCurrentAnimation(NameAnimation.DEFAULT);
 	}
 }

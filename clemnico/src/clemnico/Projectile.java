@@ -100,6 +100,7 @@ public class Projectile extends Entity{
 	@Override
 	public void useDefaultAnimations() {
 		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationProjectileDefault,width,height));		
+		setCurrentAnimation(NameAnimation.DEFAULT);
 	}
 	
 	

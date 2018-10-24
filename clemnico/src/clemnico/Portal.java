@@ -81,6 +81,7 @@ public class Portal extends Entity{
 		if (color==Color.BLUE) {
 		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPortal1Default,width,height));}
 		else {addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPortal2Default,width,height));}
+		setCurrentAnimation(NameAnimation.DEFAULT);
 	}
 	
 

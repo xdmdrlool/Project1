@@ -151,7 +151,7 @@ public class Player extends Entity {
 		
 		
 	// Action de joueur pour un pas de la boucle
-	public void step(Panel panel,Portal portal1, Portal portal2,ArrayList<Enemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
+	public void step(Window window,Portal portal1, Portal portal2,ArrayList<Enemy> enemies,ArrayList<Obstacle> obstacles) {
 		
 		
 		// Déplacement du joueur
@@ -163,7 +163,7 @@ public class Player extends Entity {
 		fc.obstacleInteraction(this, obstacles);
 		//fc.obstacleInteraction(this, obstaclesMoving); 
 		// Tir du joueur
-		projectileOperation(panel, portal1, portal2, enemies, width, height, obstacles);
+		projectileOperation(window.panel, portal1, portal2, enemies, window.getWidth(), window.getHeight(), obstacles);
 		
 		getCurrentAnimation().update();	
 		chooseAnimation();
@@ -194,7 +194,7 @@ public class Player extends Entity {
 		addAnimation(NameAnimation.FALLL,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
 		addAnimation(NameAnimation.FALLR,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));
 
-		
+		setCurrentAnimation(NameAnimation.DEFAULT);
 	}
 	
 	
