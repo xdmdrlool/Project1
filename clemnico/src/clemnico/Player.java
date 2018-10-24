@@ -112,10 +112,16 @@ public class Player extends Entity {
 		
 	}
 	
+
+	
+	public void touched(int vx2, int vy2) {
+		// TODO Auto-generated method stub
+		System.out.println("touche!");
+		
+	}
 	
 	
-	
-	public void projectileOperation(Panel panel,Portal portal1, Portal portal2,ArrayList<Enemy> enemies, int width,int height,ArrayList<Obstacle> obstacles) {
+	public void projectileOperation(Panel panel,Portal portal1, Portal portal2,ArrayList<Entity> entities, int width,int height) {
 		
 		setTimeShoot(timeShoot+1);
 		
@@ -136,8 +142,8 @@ public class Player extends Entity {
 		//Refresh des projectiles et enregistrement de ceux à détruire
 		ArrayList<Projectile> toRemove = new ArrayList<>();
 		for (Projectile projectile : projectiles) {
-			projectile.step(portal1,portal2,enemies);
-			if(projectile.isOut(width, height,panel.getxOffset(),panel.getyOffset(), obstacles, enemies)) {
+			projectile.step(portal1,portal2);
+			if(projectile.isOut(width, height,panel.getxOffset(),panel.getyOffset(), entities, this)) {
 				toRemove.add(projectile);
 			}
 		}
@@ -151,7 +157,7 @@ public class Player extends Entity {
 		
 		
 	// Action de joueur pour un pas de la boucle
-	public void step(Window window,Portal portal1, Portal portal2,ArrayList<Enemy> enemies,ArrayList<Obstacle> obstacles) {
+	public void step(Window window,Portal portal1, Portal portal2,ArrayList<Entity> entities,ArrayList<Obstacle> obstacles) {
 		
 		
 		// Déplacement du joueur
@@ -163,7 +169,7 @@ public class Player extends Entity {
 		fc.obstacleInteraction(this, obstacles);
 		//fc.obstacleInteraction(this, obstaclesMoving); 
 		// Tir du joueur
-		projectileOperation(window.panel, portal1, portal2, enemies, window.getWidth(), window.getHeight(), obstacles);
+		projectileOperation(window.panel, portal1, portal2, entities, window.getWidth(), window.getHeight());
 		
 		getCurrentAnimation().update();	
 		chooseAnimation();
@@ -434,7 +440,6 @@ public class Player extends Entity {
 	public void setBulletSize(int bulletSize) {
 		this.bulletSize = bulletSize;
 	}
-
 
 
 }

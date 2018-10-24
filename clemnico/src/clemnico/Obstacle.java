@@ -19,6 +19,11 @@ public abstract class Obstacle extends Entity {
 		
 	}
 	
+	public void touched(int vx2, int vy2) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	
 	public void chooseAnimation() {
 		NameAnimation name=NameAnimation.DEFAULT;

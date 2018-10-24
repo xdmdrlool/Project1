@@ -18,7 +18,20 @@ public class Level {
 	private ArrayList<Projectile> listProjectile=new ArrayList<Projectile>();
 	private ArrayList<Enemy> listEnemy=new ArrayList<Enemy>();
 	
-	
+	/*public ArrayList<Entity> enemy2Entity(ArrayList<Enemy> enemies){
+		ArrayList<Entity> entities = new ArrayList<>();
+		for (Enemy enemy : enemies) {
+			entities.add(enemy);
+		}
+		return entities;
+	}
+	public ArrayList<Entity> player2Entity(ArrayList<Enemy> enemies){
+		ArrayList<Entity> entities = new ArrayList<>();
+		for (Enemy enemy : enemies) {
+			entities.add(enemy);
+		}
+		return entities;
+	}*/
 	
 	public Level(String name, Window window) throws IOException {
 		setWindow(window);
@@ -31,7 +44,7 @@ public class Level {
 	
 	
 	public void gameloop() {
-		player.step(window,listPortal.get(0),listPortal.get(1),player.getLayerIn().listEnemy,player.getLayerIn().listObstacle);
+		player.step(window,listPortal.get(0),listPortal.get(1),player.getLayerIn().listEntity,player.getLayerIn().listObstacle);
 		
 		window.calculCameraOffset(window.panel, player);
 		for (Obstacle obstacle : listObstacle) {
@@ -63,7 +76,6 @@ public class Level {
 	}
 	
 	public void addToMainLayer(Entity e) {
-		addEntityToList(e);
 		addToLayer(indexMainLayer, e);
 	}
 	

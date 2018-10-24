@@ -37,9 +37,9 @@ public class Projectile extends Entity{
 		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
-	public void directionThrow(Player player, int xClic, int yClic) {
-		int xp=player.getX()+player.getWidth()/2;
-		int yp=player.getY()+player.getHeight()/2;
+	public void directionThrow(Entity entity, int xClic, int yClic) {
+		int xp=entity.getX()+entity.getWidth()/2;
+		int yp=entity.getY()+entity.getHeight()/2;
 		int xc=xClic-width/2;
 		int yc=yClic-height/2;
 		
@@ -61,21 +61,16 @@ public class Projectile extends Entity{
 	
 	
 	//Détermine si le projectile doit être détruit ou non
-	public boolean isOut(int w, int h,int xoff,int yoff, ArrayList<Obstacle> obstacles,ArrayList<Enemy> enemies) {
+	public boolean isOut(int w, int h,int xoff,int yoff,ArrayList<Entity> entitiesTouchable, Entity shooter) {
 		//Hors des limites du terrain
 		if (x+xoff+width+xLimit<0 || y+yoff+height+yLimit<0 || x+xoff-xLimit>w || y+yoff-yLimit>h) {
 			return true;
 		}
-		//Percute un obstacle
-		for(Obstacle obstacle : obstacles) {
-			if(this.isInCollisionWith(obstacle)) {
-				return true;
-			}
-		}
-		//Percute un ennemi
-		for(Enemy enemy : enemies) {
-			if (this.isInCollisionWith(enemy)) {
-				enemy.touched(vx,vy);
+		//Percute quelque chose
+		for(Entity entity : entitiesTouchable) {
+			if (this.isInCollisionWith(entity) && shooter.hashCode()!=entity.hashCode()) {
+				System.out.println("toto");
+				entity.touched(vx,vy);
 				return true;
 			}
 		}
@@ -83,8 +78,12 @@ public class Projectile extends Entity{
 		return false;
 	}
 	
+	public void touched(int vx2, int vy2) {
+		// TODO Auto-generated method stub
+		
+	}
 	
-	public void step(Portal portal1, Portal portal2,ArrayList<Enemy> enemies) {
+	public void step(Portal portal1, Portal portal2) {
 		fc.portalInteractionRect(this, portal1, portal2);
 		setFlyTime(flyTime+1);
 		setxBefore(x);

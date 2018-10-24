@@ -39,7 +39,7 @@ public class Window extends JFrame {
 		try {
 			setLevel(new Level("test", this));} catch (IOException e) {e.printStackTrace();}
 		
-		Player p=new Player(100, 100, 100, 100, "", 1, 6);
+		Player p=new Player(100, 100, 50, 50, "Player1", 1, 6);
 		p.useDefaultAnimations();
 		level.addToMainLayer(p);
 		level.player=p;

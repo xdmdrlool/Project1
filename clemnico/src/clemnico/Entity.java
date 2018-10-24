@@ -51,6 +51,11 @@ public abstract class Entity {
 	
 	public abstract void useDefaultAnimations();
 	
+
+	public void touched(int vx2, int vy2) {
+		
+	}
+	
 	public void display(Graphics2D gg,int xOffset,int yOffset) {
 		Sprite sprite = getCurrentAnimation().getSprite();
 		sprite.render(gg,xOffset+ x + width / 2,yOffset+ y + height / 2);
@@ -273,7 +278,6 @@ public abstract class Entity {
 	public void setVyMax(int vyMax) {
 		this.vyMax = vyMax;
 	}
-	
-	
+
 	
 }
