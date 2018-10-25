@@ -11,7 +11,7 @@ public class Projectile extends Entity{
 	
 	
 	////Attributs////
-	private int vNorm=10;
+	private int vNorm=15;
 	private double angle=0;
 	private int xLimit=1000;
 	private int yLimit=1000;
@@ -22,13 +22,17 @@ public class Projectile extends Entity{
 
 	
 	////Constructeur////
-	public Projectile(int x, int y, int width, int height, double angle, int size) {
+	public Projectile(int x, int y, int width, int height, double angle, int size, Entity owner, int vNorm) {
 		super("nom a la con",x,y,width,height);
+		setvNorm(vNorm);
 		setAngle(angle);
 		setVx(1);
 		setVy(1);
+		setVxMax(vNorm);
+		setVyMax(vNorm);
 		setHeight(size);
 		setWidth(size);
+		setOwner(owner);
 	}
 	
 	////Méthodes////
@@ -37,9 +41,9 @@ public class Projectile extends Entity{
 		sprite.render(gg, x+width/2, y+height/2);
 	}
 	
-	public void directionThrow(Entity entity, int xClic, int yClic) {
-		int xp=entity.getX()+entity.getWidth()/2;
-		int yp=entity.getY()+entity.getHeight()/2;
+	public void directionThrow(int xClic, int yClic) {
+		int xp=owner.getX()+owner.getWidth()/2;
+		int yp=owner.getY()+owner.getHeight()/2;
 		int xc=xClic-width/2;
 		int yc=yClic-height/2;
 		
@@ -61,15 +65,20 @@ public class Projectile extends Entity{
 	
 	
 	//Détermine si le projectile doit être détruit ou non
-	public boolean isOut(int w, int h,int xoff,int yoff,ArrayList<Entity> entitiesTouchable, Entity shooter) {
+	public boolean isOut(int w, int h,int xoff,int yoff,ArrayList<Entity> entities) {
 		//Hors des limites du terrain
 		if (x+xoff+width+xLimit<0 || y+yoff+height+yLimit<0 || x+xoff-xLimit>w || y+yoff-yLimit>h) {
 			return true;
 		}
+		
 		//Percute quelque chose
-		for(Entity entity : entitiesTouchable) {
-			if (this.isInCollisionWith(entity) && shooter.hashCode()!=entity.hashCode()) {
-				System.out.println("toto");
+		for(Entity entity : entities) {
+			
+			//Variable rassemblant les éléments non touchables
+			boolean untouchable = (owner.hashCode()!=entity.getOwner().hashCode() && !(entity instanceof Portal) && entity.getClass().getSuperclass()!=owner.getClass().getSuperclass());
+			
+			if (this.isInCollisionWith(entity) && untouchable) {
+				
 				entity.touched(vx,vy);
 				return true;
 			}
@@ -98,7 +107,11 @@ public class Projectile extends Entity{
 	
 	@Override
 	public void useDefaultAnimations() {
-		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationProjectileDefault,width,height));		
+		if (owner instanceof Player) {
+			addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationProjectileDefault,width,height));
+		}else {
+			addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationProjectileEnemy,width,height));
+		}
 		setCurrentAnimation(NameAnimation.DEFAULT);
 	}
 	

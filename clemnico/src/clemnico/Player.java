@@ -27,23 +27,35 @@ public class Player extends Entity {
 	private int vxMax = 15;
 	private int vyMax = 30;
 	private int vJump = 30;
-	Sound sound=new Sound("saut.wav");
-	Sound sound1=new Sound("pan.wav");
+	
 	
 	private boolean shooting=false;
 	private int reloadShoot=10;	//fréquence de tir (0=max)
 	private int timeShoot=0;	//durée depuis le dernier tir
 	private int bulletSize=30;
+	private int bulletSpeed=20;
+	
+	private Portal portal1=new Portal(airControl, airControl, airControl, airControl, name, null);
+	private Portal portal2=new Portal(airControl, airControl, airControl, airControl, name, null);
+	
+	
 	
 	private int xMouse;
 	private int yMouse;
 	
 	public ArrayList<Projectile> projectiles=new ArrayList<>();
 	
+	//Son
+	Sound sound=new Sound("saut.wav");
+	Sound sound1=new Sound("pan.wav");
+	Sound sound2=new Sound("hitplayer.wav");
+	
 	////Constructeur////
 	public Player(int x, int y, int width, int height, String name, int direction, int vxOnGround) {
 		super(name, x, y, width, height);
 		setDirectionX(direction);
+		portal1.setOwner(this);
+		portal2.setOwner(this);
 	}
 
 	
@@ -116,7 +128,7 @@ public class Player extends Entity {
 	
 	public void touched(int vx2, int vy2) {
 		// TODO Auto-generated method stub
-		System.out.println("touche!");
+		sound2.play();
 		
 	}
 	
@@ -127,11 +139,11 @@ public class Player extends Entity {
 		
 		//Creation des projectiles
 		if (shooting && timeShoot>=reloadShoot) {
-			Projectile projectile=new Projectile(x+this.width/2-bulletSize/2,y+this.height/2-bulletSize/2,10,20,0, bulletSize);
+			Projectile projectile=new Projectile(x+this.width/2-bulletSize/2,y+this.height/2-bulletSize/2,10,20,0, bulletSize, this, bulletSpeed);
 			projectile.useDefaultAnimations();
 			projectile.setCurrentAnimation(NameAnimation.DEFAULT);
 			panel.addToMainLayer(projectile);
-			projectile.directionThrow(this, xMouse, yMouse);
+			projectile.directionThrow(xMouse, yMouse);
 			projectiles.add(projectile);
 			sound1.play();
 	
@@ -143,7 +155,7 @@ public class Player extends Entity {
 		ArrayList<Projectile> toRemove = new ArrayList<>();
 		for (Projectile projectile : projectiles) {
 			projectile.step(portal1,portal2);
-			if(projectile.isOut(width, height,panel.getxOffset(),panel.getyOffset(), entities, this)) {
+			if(projectile.isOut(width, height,panel.getxOffset(),panel.getyOffset(), entities)) {
 				toRemove.add(projectile);
 			}
 		}
@@ -439,6 +451,36 @@ public class Player extends Entity {
 
 	public void setBulletSize(int bulletSize) {
 		this.bulletSize = bulletSize;
+	}
+
+
+	public Portal getPortal1() {
+		return portal1;
+	}
+
+
+	public void setPortal1(Portal portal1) {
+		this.portal1 = portal1;
+	}
+
+
+	public Portal getPortal2() {
+		return portal2;
+	}
+
+
+	public void setPortal2(Portal portal2) {
+		this.portal2 = portal2;
+	}
+
+
+	public int getBulletSpeed() {
+		return bulletSpeed;
+	}
+
+
+	public void setBulletSpeed(int bulletSpeed) {
+		this.bulletSpeed = bulletSpeed;
 	}
 
 

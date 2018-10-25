@@ -25,6 +25,7 @@ public abstract class Entity {
 	protected boolean inTheAir=false;
 	protected boolean InCollisionRight=false;
 	protected boolean InCollisionLeft=false;
+	protected Entity owner;
 	protected Layer layerIn =null;
 	protected String name;
 	protected FormRect form =new FormRect(Color.RED, 0, 0, 0, 0, 0);
@@ -43,6 +44,7 @@ public abstract class Entity {
 		setWidth(width);
 		setHeight(height);
 		setName(name);
+		setOwner(this);
 	}
 	
 	
@@ -225,7 +227,6 @@ public abstract class Entity {
 		return this.currentAnimation;
 	}
 
-	@Override
 	public String toString() {
 		return "Entity [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + "]";
 	}
@@ -277,6 +278,15 @@ public abstract class Entity {
 
 	public void setVyMax(int vyMax) {
 		this.vyMax = vyMax;
+	}
+	
+	public Entity getOwner() {
+		return owner;
+	}
+
+
+	public void setOwner(Entity owner) {
+		this.owner = owner;
 	}
 
 	

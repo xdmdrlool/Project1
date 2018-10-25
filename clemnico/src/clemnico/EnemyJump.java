@@ -33,12 +33,12 @@ public class EnemyJump extends Enemy{
 		setvRecoil((int) Math.signum(vxProjectile)*Math.abs(getvRecoil()));
 		
 	}
-
-	public void step(Portal portal1, Portal portal2, ArrayList<Obstacle> obstacles) {
+	
+	public void movement() {
 		//Mouvement vertical du joueur
 		if (inTheAir) {fall();}
 		else {setVy(-vJump);setY(y-10);}
-		
+				
 		if (recoil) {
 			setX(x+getvRecoil());
 			setTimeRecoil(getTimeRecoil() + 1);
@@ -50,12 +50,22 @@ public class EnemyJump extends Enemy{
 		if (getTimeRecoil()==30) {
 			setRecoil(false);
 		}
+		
+	}
+
+	public void step(Window window,Portal portal1, Portal portal2,ArrayList<Obstacle> obstacles,ArrayList<Entity> entities, Player player) {
+		
+		movement();
 			
 		fc.portalInteractionRect(this, portal1, portal2);	// Gestion portails teleportations
 		fc.obstacleInteractionEnemy(this, obstacles);		// Gestion obstacle
 		getCurrentAnimation().update();	
 		chooseAnimation();
 	}
+	
+	////////////////////////////////
+	/////// GETTER AND SETTER //////
+	////////////////////////////////
 
 	public int getvJump() {
 		return vJump;

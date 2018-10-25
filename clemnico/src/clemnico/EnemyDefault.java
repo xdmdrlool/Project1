@@ -26,6 +26,24 @@ public class EnemyDefault extends Enemy {
 
 
 	////Methodes////
+	public void movement() {
+		//Mouvement vertical du joueur
+		if (inTheAir) {fall();}
+		//S'il se fait toucher
+		if (isRecoil()) {
+			setX(x+getvRecoil());
+			setTimeRecoil(getTimeRecoil() + 1);
+		}
+		//Sinon mouvement normal
+		else{
+			setVx((int)(vx+Math.signum(vx)*ax));
+			setX(x+vx);
+		}
+		//Temps de recul
+		if (timeRecoil==timeEndRecoil) {
+			setRecoil(false);
+		}
+	}
 	
 	public void touched(int vxProjectile, int vyProjectile) {
 		sound.play();
@@ -34,21 +52,9 @@ public class EnemyDefault extends Enemy {
 		setvRecoil((int) Math.signum(vxProjectile)*Math.abs(getvRecoil()));
 	}
 	
-	public void step(Portal portal1, Portal portal2, ArrayList<Obstacle> obstacles) {
-		//Mouvement vertical du joueur
-		if (inTheAir) {fall();}
-		if (isRecoil()) {
-			setX(x+getvRecoil());
-			setTimeRecoil(getTimeRecoil() + 1);
-		}
-		else{
-			setVx((int)(vx+Math.signum(vx)*ax));
-			setX(x+vx);
-		}
-		if (timeRecoil==timeEndRecoil) {
-			setRecoil(false);
-		}
+	public void step(Window window,Portal portal1, Portal portal2,ArrayList<Obstacle> obstacles,ArrayList<Entity> entities, Player player) {
 		
+		movement();
 				
 		fc.portalInteractionRect(this, portal1, portal2);	// Gestion portails teleportations
 		fc.obstacleInteractionEnemy(this, obstacles);		// Gestion obstacle

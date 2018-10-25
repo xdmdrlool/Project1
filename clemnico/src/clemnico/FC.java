@@ -911,7 +911,10 @@ public class FC {
 		
 		// S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-	
+			
+			
+			
+			
 			// Détermine le portail d'entrée et de sortie
 			Portal portalIn, portalOut;
 			if (hitbox.collision(portal1.getHitbox())) {

@@ -70,6 +70,14 @@ public enum Animations {
 		
 		},new int[] {1,1,1,1,1,1,1,1}),
 	
+	
+	
+	AnimationProjectileEnemy("SpriteSheet_ProjectilesPurple.png",64, new int[][] {
+		{0 , 0 , 15 , 15 , 0 }, {1 , 0 , 15 , 15 , 0 }, {2 , 0 , 15 , 15 , 0 }, {3 , 0 , 15 , 15 , 0 },
+		{0 , 1 , 15 , 15 , 0 }, {1 , 1 , 15 , 15 , 0 }, {2 , 1 , 15 , 15 , 0 }, {3 , 1 , 15 , 15 , 0 },
+		
+		},new int[] {1,1,1,1,1,1,1,1}),
+	
 	;
 	
 	

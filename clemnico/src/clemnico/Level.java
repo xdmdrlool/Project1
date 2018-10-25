@@ -51,7 +51,7 @@ public class Level {
 			obstacle.update();
 		}
 		for (Enemy enemy : listEnemy) {
-			enemy.step(listPortal.get(0), listPortal.get(1), enemy.getLayerIn().listObstacle);
+			enemy.step(window, listPortal.get(0), listPortal.get(1), enemy.getLayerIn().listObstacle, enemy.getLayerIn().listEntity,player);
 		}
 	}
 	

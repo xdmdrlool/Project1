@@ -40,7 +40,7 @@ public abstract class Enemy extends Entity{
 	}
 	
 	//Action de joueur pour un pas de la boucle
-	public abstract void step(Portal portal1, Portal portal2, ArrayList<Obstacle> obstacles);
+	public abstract void step(Window window,Portal portal1, Portal portal2,ArrayList<Obstacle> obstacles,ArrayList<Entity> entities, Player player);
 	
 	public void useDefaultAnimations() {
 		addAnimation(NameAnimation.DEFAULT,ACreator.createAnimation(Animations.AnimationPlayerDefault,width,height));

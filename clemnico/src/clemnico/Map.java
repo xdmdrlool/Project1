@@ -20,6 +20,7 @@ public class Map {
 	int[] obstacleMovingParcoursPix= {200,200,200};	//Gris clair
 	int[] enemyDefaultPix= {255,0,0};  	//Rouge
 	int[] enemyJumpPix= {255,100,0};	//Orange
+	int[] enemyShootPix= {255,0,200};	//Rose
 	
 	
 	public Map(String name) {
@@ -112,6 +113,10 @@ public class Map {
 				}
 				if (equal(pixel,enemyJumpPix)) {
 					EnemyJump enemy = new EnemyJump(i*blocSize, j*blocSize, 50, 50, "Enemy1",false);
+					mapObject.add(enemy);
+				}
+				if (equal(pixel,enemyShootPix)) {
+					EnemyShoot enemy = new EnemyShoot(i*blocSize, j*blocSize, 50, 50, "Enemy1",false);
 					mapObject.add(enemy);
 				}
 				
