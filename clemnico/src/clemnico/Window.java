@@ -117,7 +117,8 @@ public class Window extends JFrame {
 	
 	
 	public void calculCameraOffset(Panel panel,Player player) {
-		Boolean centreX=true;
+		Boolean fixe=true;
+		Boolean milieu=true;
 		
 		int w0=this.getWidth();int h0=this.getHeight();
 		int xOff=panel.getxOffset();int yOff=panel.getyOffset();
@@ -128,7 +129,7 @@ public class Window extends JFrame {
 		int a=5;
 		int b=12;
 		// c/d : vitesse de la camera ; c/d=0 : mvt instantané   ;c/d=1 : pas de mvt
-		int c=93;
+		int c=90;
 		int d=100;
 		int p=yOff;
 		if (y+yOff<a*h0*1./b) {p=a*h0/b-y;}
@@ -137,7 +138,11 @@ public class Window extends JFrame {
 		panel.setyOffset(p+(c*(yOff-p))/d);handler.setyOffset(p+(c*(yOff-p))/d);
 		
 		p=xOff;
-		if (centreX) {if(level.player.getDirectionX()==1){p=w0/3-x;} else {{p=(2*w0)/3-x;}}}
+		if (fixe) {
+			if (milieu) {p=w0/2-x;}
+			else if(level.player.getDirectionX()==1){p=w0/3-x;} 
+			else {{p=(2*w0)/3-x;}}}
+		
 		else if (x+xOff<a*w0*1./b) {p=a*w0/b-x;}
 		else if (x+w+xOff>(b-a)*w0*1./b) {p=(b-a)*w0/b-x-w;}
 		
