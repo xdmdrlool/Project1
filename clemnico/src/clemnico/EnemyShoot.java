@@ -71,7 +71,7 @@ public class EnemyShoot extends Enemy {
 	
 	
 	public void movement() {
-		setvRecoil(10);
+//		setvRecoil(10);
 		
 		//Mouvement vertical du joueur
 		if (inTheAir) {fall();}

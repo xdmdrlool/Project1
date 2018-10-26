@@ -228,7 +228,7 @@ public abstract class Entity {
 	}
 
 	public String toString() {
-		return "Entity [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + "]";
+		return this.getClass()+" [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + "]";
 	}
 
 

@@ -44,9 +44,11 @@ public class FC {
 			A.x = A.x / r;
 			A.y = A.y / r;
 		}
-
+	
 	}
 
+	public float prod_sca(Vecteur a,Vecteur b) {return a.x*b.x+a.y*b.y;}
+	
 	public Box RectDroit2Box(FormRect rect) {
 		Box box = new Box();
 		box.x = rect.getX();
@@ -126,11 +128,19 @@ public class FC {
 	public boolean Collision(FormRect rect1, FormRect rect2) {
 		Point[] list1 = Rect2Array(rect1);
 		Point[] list2 = Rect2Array(rect2);
+		
 		for (int i = 0; i <= 3; i++) {
-			if (Collision(list1, 4, list2[i]) || Collision(list2, 4, list1[i])) {
-				return true;
+			for (int j = 0; j <= 3; j++) {
+				if (CollisionSegSeg(list1[i], list1[(i+1)%4], list2[j], list2[(j+1)%4]) ) {
+					return true;}
 			}
 		}
+		
+//		for (int i = 0; i <= 3; i++) {
+//			if (Collision(list1, 4, list2[i]) || Collision(list2, 4, list1[i])) {
+//				return true;
+//			}
+//		}
 		return false;
 	}
 
@@ -699,7 +709,7 @@ public class FC {
 		AP.y = P.y - A.y;
 		AO.x = O.x - A.x;
 		AO.y = O.y - A.y;
-		if ((AB.x * AP.y - AB.y * AP.x) * (AB.x * AO.y - AB.y * AO.x) <= 0)
+		if ((determinant(AB, AP)) * (determinant(AB, AO)) <= 0)
 			return true;
 		else
 			return false;
@@ -710,14 +720,22 @@ public class FC {
 		if (CollisionDroiteSeg(A, B, O, P) == false) {
 			return false; // inutile d'aller plus loin si le segment [OP] ne touche pas la droite (AB)
 		}
-		Vecteur AB = new Vecteur(), OP = new Vecteur();
-		AB.x = B.x - A.x;
-		AB.y = B.y - A.y;
-		OP.x = P.x - O.x;
-		OP.y = P.y - O.y;
-		float k = -(A.x * OP.y - O.x * OP.y - OP.x * A.y + OP.x * O.y) / (AB.x * OP.y - AB.y * OP.x);
+		if (CollisionDroiteSeg(O, P, A, B) == false) {
+			return false; // inutile d'aller plus loin si le segment [OP] ne touche pas la droite (AB)
+		}
+
+		
+		Vecteur AB = new Vecteur(), OP = new Vecteur(),AO = new Vecteur(),AP = new Vecteur(),OB = new Vecteur(),PB = new Vecteur();
+		AB.x = B.x - A.x;AB.y = B.y - A.y;
+		OP.x = P.x - O.x;OP.y = P.y - O.y;
+		AO.x = O.x - A.x;AO.y = O.y - A.y;
+		AP.x = P.x - A.x;AP.y = P.y - A.y;
+		OB.x = B.x - O.x;OB.y = B.y - O.y;
+		PB.x = B.x - P.x;PB.y = B.y - P.y;
+		float det=determinant(AB, OP);
+		if (det==0) {return determinant(AB, AO)==0 && ( prod_sca(AO, OB)>=0 || prod_sca(AP, PB)>=0)  ;}
+		float k = -(A.x * OP.y - O.x * OP.y - OP.x * A.y + OP.x * O.y) / det;
 		if (k < 0 || k > 1) {
-			;
 			return false;
 		} else
 			return true;
@@ -767,7 +785,6 @@ public class FC {
 	
 	////PLAYER////
 	public boolean obstacleInteraction(Entity entity, ArrayList<Obstacle> obstacles) {
-		
 		boolean collision=false;
 		
 		Vecteur vecteurCorrection=null;
@@ -790,7 +807,8 @@ public class FC {
 				// vecteurCorrection=[x,y] : vecteur a appliquer a l'entité pour lui donner sa position correcte apres collision
 				directionCollision=tab[1];
 				// directionCollision=[x,y] : vecteur qui indique la direction de la collision (orienté du joueur vers l'obstacle)
-				
+
+//				System.out.println(obstacle.toString());
 				
 				// On verifie si l'entité et en l'air, si il y a collision a gauche ou a droite
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
@@ -911,7 +929,7 @@ public class FC {
 		
 		// S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-			
+			System.out.println("toto");
 			
 			
 			

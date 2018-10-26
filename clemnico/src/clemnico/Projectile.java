@@ -78,7 +78,8 @@ public class Projectile extends Entity{
 			boolean untouchable = (owner.hashCode()!=entity.getOwner().hashCode() && !(entity instanceof Portal) && entity.getClass().getSuperclass()!=owner.getClass().getSuperclass());
 			
 			if (this.isInCollisionWith(entity) && untouchable) {
-				
+//				System.out.println(this.toString());
+//				System.out.println(entity.toString());
 				entity.touched(vx,vy);
 				return true;
 			}

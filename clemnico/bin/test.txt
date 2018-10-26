@@ -1,6 +1,6 @@
 background : 'nom.png'
 nombre de layers :1
-carte,0
+carte2,0
 .
 .
 

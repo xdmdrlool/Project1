@@ -18,6 +18,12 @@ public class Layer {
 	
 	////Constructeur////
 	public Layer(int distance) {
+		synchronized(listEntity) {};
+		synchronized(listPlayer) {};
+		synchronized(listPortal) {};
+		synchronized(listObstacle) {};
+		synchronized(listProjectile) {};
+		synchronized(listEnemy) {};
 		setDistance(distance);
 		
 	}
@@ -26,7 +32,7 @@ public class Layer {
 	
 	////Méthodes////
 	
-	public void display(Graphics2D gg,int xoff, int yoff) {
+	public synchronized void display(Graphics2D gg,int xoff, int yoff) {
 		double calibrage=0.1;
 		for(Entity e:listEntity) {
 			e.display(gg,((int)( xoff/(1+Math.abs(distance)*calibrage))),((int)( yoff/(1+Math.abs(distance)*calibrage))));

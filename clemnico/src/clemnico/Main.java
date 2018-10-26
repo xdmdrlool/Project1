@@ -1,5 +1,6 @@
 package clemnico;
 
+import java.awt.Color;
 import java.io.IOException;
 
 public class Main {
@@ -19,13 +20,13 @@ public class Main {
 		
 		
 		
-//		FC fc=new FC();
+		FC fc=new FC();
 //		FormRect obs= new FormRect(Color.BLACK, 900, 500, 200, 250,0);
 //		
 //		
-//		FormRect rect0= new FormRect(Color.BLACK, 800, 485, 100, 100, 0);
-//		FormRect rect= new FormRect(Color.BLACK, 803, 500, 100, 100, 0);
-//		
+//		FormRect rect0= new FormRect(Color.BLACK, 170, 964, 30, 30, 0);
+//		FormRect rect= new FormRect(Color.BLACK, 0, 1100, 200, 100, 0);
+//		System.out.println(fc.Collision(rect0, rect));
 //		Vecteur[] tab = fc.calculVecteurCollisionRectDroitObstacleDroit(rect0, rect, obs);
 //		Vecteur vec = tab[0];
 //		Vecteur dir = tab[1];
