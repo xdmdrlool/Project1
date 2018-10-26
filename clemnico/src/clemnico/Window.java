@@ -117,21 +117,31 @@ public class Window extends JFrame {
 	
 	
 	public void calculCameraOffset(Panel panel,Player player) {
+		Boolean centreX=true;
+		
 		int w0=this.getWidth();int h0=this.getHeight();
 		int xOff=panel.getxOffset();int yOff=panel.getyOffset();
 		int x=player.getX();int y=player.getY();int w=player.getWidth();int h=player.getHeight();
-		int p;
+		
 		
 		// la camera bouge quand le joueur à a/b du bord
 		int a=5;
 		int b=12;
 		// c/d : vitesse de la camera ; c/d=0 : mvt instantané   ;c/d=1 : pas de mvt
-		int c=18;
-		int d=20;
-		if (x+xOff<a*w0*1./b) {p=a*w0/b-x;panel.setxOffset(p+(c*(xOff-p))/d);handler.setxOffset(p+(c*(xOff-p))/d);}
-		else if (x+w+xOff>(b-a)*w0*1./b) {p=(b-a)*w0/b-x-w;panel.setxOffset(p+(c*(xOff-p))/d);handler.setxOffset(p+(c/(xOff-p))/d);}
-		if (y+yOff<a*h0*1./b) {p=a*h0/b-y;panel.setyOffset(p+(c*(yOff-p))/d);handler.setyOffset(p+(c*(yOff-p))/d);}
-		else if (y+h+yOff>(b-a)*h0*1./b) {p=(b-a)*h0/b-y-h;panel.setyOffset(p+(c*(yOff-p))/d);handler.setyOffset(p+(c*(yOff-p))/d);}
+		int c=93;
+		int d=100;
+		int p=yOff;
+		if (y+yOff<a*h0*1./b) {p=a*h0/b-y;}
+		else if (y+h+yOff>(b-a)*h0*1./b) {p=(b-a)*h0/b-y-h;}
+		
+		panel.setyOffset(p+(c*(yOff-p))/d);handler.setyOffset(p+(c*(yOff-p))/d);
+		
+		p=xOff;
+		if (centreX) {if(level.player.getDirectionX()==1){p=w0/3-x;} else {{p=(2*w0)/3-x;}}}
+		else if (x+xOff<a*w0*1./b) {p=a*w0/b-x;}
+		else if (x+w+xOff>(b-a)*w0*1./b) {p=(b-a)*w0/b-x-w;}
+		
+		panel.setxOffset(p+(c*(xOff-p))/d);handler.setxOffset(p+(c*(xOff-p))/d);
 	}
 	
 	
