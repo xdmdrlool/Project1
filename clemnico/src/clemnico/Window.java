@@ -139,7 +139,7 @@ public class Window extends JFrame {
 		
 		p=xOff;
 		if (fixe) {
-			if (milieu) {p=w0/2-x;}
+			if (milieu) {p=w0/2-x;c=0;}
 			else if(level.player.getDirectionX()==1){p=w0/3-x;} 
 			else {{p=(2*w0)/3-x;}}}
 		
