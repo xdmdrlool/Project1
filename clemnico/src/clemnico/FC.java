@@ -815,7 +815,7 @@ public class FC {
 				if (directionCollision.x<0) {varCollisonLeft=true;}
 				if (directionCollision.x>0) {varCollisonRight=true;}
 				
-				if (directionCollision.x!=0 ||directionCollision.y>0) {entity.setVx(0);}
+//				if (directionCollision.x!=0 ||directionCollision.y>0) {entity.setVx(0);}
 				if (directionCollision.y!=0) {entity.setVy(0);}
 				if (directionCollision.y!=0) {entity.setVy(0);entity.setX(entity.getX()+obstacle.getVx());}
 

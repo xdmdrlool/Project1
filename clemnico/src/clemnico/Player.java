@@ -95,6 +95,7 @@ public class Player extends Entity {
 			setY(y - 1);
 			sound.play();
 		}
+		
 		if (leftKey) {setDirectionX(-1);}
 		if (rightKey) {setDirectionX(1);}
 		
@@ -122,6 +123,7 @@ public class Player extends Entity {
 		if (!((isInCollisionLeft() && vx<0)|| (isInCollisionRight() && vx>0))) {setX(x + vx);}
 		setY(y + vy);
 		
+		if (!inTheAir && !(leftKey || rightKey)) {setVx((int)(vx*0.5));}
 	}
 	
 
