@@ -27,6 +27,7 @@ public abstract class Entity {
 	protected boolean InCollisionLeft=false;
 	protected Entity owner;
 	protected Layer layerIn =null;
+	protected Level levelIn =null;
 	protected String name;
 	protected FormRect form =new FormRect(Color.RED, 0, 0, 0, 0, 0);
 	protected Hitbox hitbox=new Hitbox("RECT", 0, 0, 10,0, 0, 0);
@@ -261,6 +262,16 @@ public abstract class Entity {
 		this.layerIn = layerIn;
 	}
 	
+	public Level getLevelIn() {
+		return levelIn;
+	}
+
+
+	public void setLevelIn(Level levelIn) {
+		this.levelIn = levelIn;
+	}
+
+
 	public int getVxMax() {
 		return vxMax;
 	}

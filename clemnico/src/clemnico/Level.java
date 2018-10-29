@@ -35,6 +35,11 @@ public class Level {
 	
 	public Level(String name, Window window) throws IOException {
 		setWindow(window);
+		synchronized(listEntity) {};
+		synchronized(listPortal) {};
+		synchronized(listObstacle) {};
+		synchronized(listProjectile) {};
+		synchronized(listEnemy) {};
 		ArrayList<Layer> list= LLoader.load(name);
 		for(Layer layer :list) {
 			addLayer(layer);
@@ -65,18 +70,20 @@ public class Level {
 	
 	
 	public void addLayer(Layer l) {
-		for (Entity e :l.getListEntity()) {addEntityToList(e);}
+		for (Entity e :l.getListEntity()) {addEntityToList(e);e.setLevelIn(this);}
 		listLayer.add(l);
 		triLayer();
 	}
 	
 	public void addToLayer(int i,Entity e) {
 		addEntityToList(e);
+		e.setLevelIn(this);
 		listLayer.get(i).add(e);
 	}
 	
 	public void addToMainLayer(Entity e) {
 		addToLayer(indexMainLayer, e);
+		e.setLevelIn(this);
 	}
 	
 	public boolean deleteEntity(Entity e) {

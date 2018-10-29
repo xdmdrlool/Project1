@@ -16,7 +16,7 @@ public class Panel extends JPanel {
 	
 	
 	private ArrayList<Layer> listLayer=new ArrayList<Layer>();
-	private int indexMainLayer;
+
 	
 	////Constructeur////
 	public Panel() {
@@ -50,31 +50,12 @@ public class Panel extends JPanel {
 				j-=1;
 			}
 		}
-		updateIndexMainLayer();
 	}
 	
 	
-	public void addToLayer(int i,Entity e) {
-		listLayer.get(i).add(e);
-	}
+
 	
-	public void addToMainLayer(Entity e) {
-		addToLayer(indexMainLayer, e);
-	}
-	
-	public boolean deleteEntity(Entity e) {
-		boolean bool=false;
-		for (Layer layer :listLayer) {
-			bool=layer.remove(e) || bool;
-		}
-		return bool;
-	}
-	
-	public void updateIndexMainLayer() {
-		for (int i=0;i<listLayer.size();i++) {
-			if (listLayer.get(i).getDistance()==0) {setIndexMainLayer(i);break;};
-		}
-	}
+
 	
 	
 	////////////////////////////////
@@ -120,13 +101,7 @@ public class Panel extends JPanel {
 		triLayer();
 	}
 
-	public int getIndexMainLayer() {
-		return indexMainLayer;
-	}
-
-	public void setIndexMainLayer(int indexMainLayer) {
-		this.indexMainLayer = indexMainLayer;
-	}        
+       
 
 	
 }

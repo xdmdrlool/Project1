@@ -929,7 +929,6 @@ public class FC {
 		
 		// S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-			System.out.println("toto");
 			
 			
 			

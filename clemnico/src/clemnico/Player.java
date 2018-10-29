@@ -144,8 +144,7 @@ public class Player extends Entity {
 		if (shooting && timeShoot>=reloadShoot) {
 			Projectile projectile=new Projectile(x+this.width/2-bulletSize/2,y+this.height/2-bulletSize/2,10,20,0, bulletSize, this, bulletSpeed);
 			projectile.useDefaultAnimations();
-			projectile.setCurrentAnimation(NameAnimation.DEFAULT);
-			panel.addToMainLayer(projectile);
+			this.levelIn.addToMainLayer(projectile);
 			projectile.directionThrow(xMouse, yMouse);
 			projectiles.add(projectile);
 			sound1.play();
@@ -166,7 +165,7 @@ public class Player extends Entity {
 		//Destruction des projectiles
 		for (Projectile projectile : toRemove) {
 			projectiles.remove(projectile);
-			panel.deleteEntity(projectile);
+			this.levelIn.deleteEntity(projectile);
 		}
 	}
 		
@@ -194,6 +193,7 @@ public class Player extends Entity {
 	
 	@Override
 	public void chooseAnimation() {
+		
 		NameAnimation name=NameAnimation.DEFAULT;
 		if (inTheAir) {
 			if (vy<=0) {if (vx>=0) {name=NameAnimation.JUMPR;}else {name=NameAnimation.JUMPL;}}

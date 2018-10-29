@@ -44,7 +44,7 @@ public class EnemyShoot extends Enemy {
 			Projectile projectile=new Projectile(x+this.width/2-bulletSize/2,y+this.height/2-bulletSize/2,10,20,0, bulletSize, this, bulletSpeed);
 			projectile.useDefaultAnimations();
 			projectile.setCurrentAnimation(NameAnimation.DEFAULT);
-			panel.addToMainLayer(projectile);
+			this.levelIn.addToMainLayer(projectile);
 			projectile.directionThrow(player.getX(), player.getY());
 			projectiles.add(projectile);
 	
@@ -64,7 +64,7 @@ public class EnemyShoot extends Enemy {
 		//Destruction des projectiles
 		for (Projectile projectile : toRemove) {
 			projectiles.remove(projectile);
-			panel.deleteEntity(projectile);
+			this.levelIn.deleteEntity(projectile);
 		}
 	}
 	
