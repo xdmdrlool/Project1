@@ -2,7 +2,6 @@ package clemnico;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +34,8 @@ public class LevelLoader {
 	    ArrayList<Entity> list;
 	    Layer layer;
 
-
+//	    line =br.readLine();
+//	    parts=line.split(":");
 
 	    ////////// Background
 	    

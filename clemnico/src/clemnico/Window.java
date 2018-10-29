@@ -129,7 +129,7 @@ public class Window extends JFrame {
 		int a=5;
 		int b=12;
 		// c/d : vitesse de la camera ; c/d=0 : mvt instantané   ;c/d=1 : pas de mvt
-		int c=90;
+		int c=93;
 		int d=100;
 		int p=yOff;
 		if (y+yOff<a*h0*1./b) {p=a*h0/b-y;}

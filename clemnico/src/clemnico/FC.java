@@ -27,6 +27,9 @@ public class FC {
 
 	public class Vecteur {
 		float x, y;
+		public Vecteur(float a,float b) {
+			x=a;y=b;
+		}
 	};
 
 	// Calcule la distance euclidienne entre deux points
@@ -99,26 +102,23 @@ public class FC {
 
 	public boolean Collision(Form form1, Form form2) {
 		if (form1.getType() == "RECT") {
-			FormRect rect1 = new FormRect(Color.BLACK, form1.getX(), form1.getY(), form1.getWidth(), form1.getHeight(),
-					form1.getAngle());
+			FormRect rect1 = (FormRect) form1;
 			if (form2.getType() == "RECT") {
-				FormRect rect2 = new FormRect(Color.BLACK, form2.getX(), form2.getY(), form2.getWidth(),
-						form2.getHeight(), form2.getAngle());
+				FormRect rect2 = (FormRect) form2;
 				return Collision(rect1, rect2);
 			} else {
-				FormCircle circle2 = new FormCircle(Color.BLACK, form2.getX(), form2.getY(), form2.getRadius());
+				FormCircle circle2 = (FormCircle) form2;
 				return Collision(rect1, circle2);
 			}
 		}
 
 		else {
-			FormCircle circle1 = new FormCircle(Color.BLACK, form1.getX(), form1.getY(), form1.getRadius());
+			FormCircle circle1 = (FormCircle) form1;
 			if (form2.getType() == "RECT") {
-				FormRect rect2 = new FormRect(Color.BLACK, form2.getX(), form2.getY(), form2.getWidth(),
-						form2.getHeight(), form2.getAngle());
+				FormRect rect2 = (FormRect) form2;
 				return Collision(circle1, rect2);
 			} else {
-				FormCircle circle2 = new FormCircle(Color.BLACK, form2.getX(), form2.getY(), form2.getRadius());
+				FormCircle circle2 = (FormCircle) form2;
 				return Collision(circle1, circle2);
 			}
 
@@ -270,8 +270,8 @@ public class FC {
 		Point[] rect0 = Rect2Array(rectangle0);
 		Point[] rect = Rect2Array(rectangle);
 		Point[] obs = Rect2Array(obstacle);
-		Vecteur vec = new Vecteur();
-		Vecteur direction = new Vecteur();
+		Vecteur vec = new Vecteur(0,0);
+		Vecteur direction = new Vecteur(0,0);
 		Vecteur[] tab = new Vecteur[2];
 		tab[0] = vec;
 		tab[1] = direction;
@@ -330,17 +330,9 @@ public class FC {
 					n = j;
 				}
 			}
-			Vecteur BB0 = new Vecteur(), BP = new Vecteur();
-			BB0.x = B0.x - B.x;
-			BB0.y = B0.y - B.y;
-			BP.x = P.x - B.x;
-			BP.y = P.y - B.y;
+			Vecteur BB0 = new Vecteur( B0.x - B.x,B0.y - B.y), BP = new Vecteur(P.x - B.x,P.y - B.y);
 			Point S = obs[(n + 2) % 4];
-			Vecteur SB = new Vecteur(), SP = new Vecteur();
-			SB.x = B.x - S.x;
-			SB.y = B.y - S.y;
-			SP.x = S.x - P.x;
-			SP.y = S.y - P.y;
+			Vecteur SB = new Vecteur(B.x - S.x,B.y - S.y), SP = new Vecteur( S.x - P.x,S.y - P.y);
 			Point P2 = null;
 			float det = determinant(BP, BB0);
 			float det2 = determinant(SB, SP);
@@ -436,11 +428,7 @@ public class FC {
 			;
 			Point S = obs[t];
 			Point Sprime = obs[(t + 2) % 4];
-			Vecteur CS = new Vecteur(), CSprime = new Vecteur();
-			CS.x = S.x - C.x;
-			CS.y = S.y - C.y;
-			CSprime.x = Sprime.x - C.x;
-			CSprime.y = Sprime.y - C.y;
+			Vecteur CS = new Vecteur(S.x - C.x,S.y - C.y), CSprime = new Vecteur(Sprime.x - C.x,Sprime.y - C.y);
 			Point I = new Point();
 			Point S2 = new Point();
 			if (determinant(CS, CSprime) > 0) {
@@ -451,15 +439,12 @@ public class FC {
 				S2 = obs[(t + 1) % 4];
 			}
 
-			Vecteur IC = new Vecteur();
-			IC.x = C.x - I.x;
-			IC.y = C.y - I.y;
-			Vecteur IS = new Vecteur();
-			IS.x = S.x - S.x;
-			IS.y = C.y - S.y;
+			Vecteur IC = new Vecteur(C.x - I.x,C.y - I.y);
+
+			Vecteur IS = new Vecteur(S.x - S.x, C.y - S.y);
 			normalize(IC);
 			float normIS = norm(IS);
-			Vecteur vec = new Vecteur();
+			Vecteur vec = new Vecteur(0,0);
 			float normIC = norm(IC);
 			normalize(IC);
 
@@ -488,13 +473,10 @@ public class FC {
 			Point S1 = obs[t1], S3 = obs[(t1 + 1) % 4];
 			Point C1 = new Point(C.x, C.y);
 			Point I1 = projectionPointSeg(S1, S3, C1);
-			Vecteur I1C = new Vecteur();
-			I1C.x = C.x - I1.x;
-			I1C.y = C.y - I1.y;
+			Vecteur I1C = new Vecteur(C.x - I1.x,C.y - I1.y);
 			float normI1C = norm(I1C);
-			Vecteur vec2 = new Vecteur();
-			vec2.x = I1C.x * (C.radius / normI1C - 1);
-			vec2.y = I1C.y * (C.radius / normI1C - 1);
+			Vecteur vec2 = new Vecteur(I1C.x * (C.radius / normI1C - 1),I1C.y * (C.radius / normI1C - 1));
+
 
 			return vec2;
 
@@ -578,12 +560,9 @@ public class FC {
 				B = tab[0];
 			else // sinon on relie au suivant.
 				B = tab[i + 1];
-			Vecteur D = new Vecteur(), T = new Vecteur();
-			D.x = B.x - A.x;
-			D.y = B.y - A.y;
-			T.x = P.x - A.x;
-			T.y = P.y - A.y;
-			float d = D.x * T.y - D.y * T.x;
+			Vecteur D = new Vecteur(B.x - A.x,B.y - A.y), T = new Vecteur(P.x - A.x,P.y - A.y);
+
+			float d =determinant(D, T);
 			if (d < 0)
 				return false; // un point à droite et on arrête tout.
 		}
@@ -591,17 +570,11 @@ public class FC {
 	}
 
 	public int intersectsegment(Point A, Point B, Point I, Point P) {
-		Vecteur D = new Vecteur(), E = new Vecteur();
+		Vecteur D = new Vecteur(B.x - A.x,B.y - A.y), E = new Vecteur(P.x - I.x,P.y - I.y);
 
-		D.x = B.x - A.x;
 
-		D.y = B.y - A.y;
 
-		E.x = P.x - I.x;
-
-		E.y = P.y - I.y;
-
-		double denom = D.x * E.y - D.y * E.x;
+		double denom =determinant(D, E);
 
 		if (denom == 0)
 
@@ -624,13 +597,9 @@ public class FC {
 	}
 
 	public boolean CollisionDroite(Point A, Point B, Cercle C) {
-		Vecteur u = new Vecteur();
-		u.x = B.x - A.x;
-		u.y = B.y - A.y;
-		Vecteur AC = new Vecteur();
-		AC.x = C.x - A.x;
-		AC.y = C.y - A.y;
-		float numerateur = u.x * AC.y - u.y * AC.x; // norme du vecteur v
+		Vecteur u = new Vecteur(B.x - A.x, B.y - A.y);
+		Vecteur AC = new Vecteur(C.x - A.x,C.y - A.y);
+		float numerateur = determinant(u, AC); // norme du vecteur v
 		if (numerateur < 0)
 			numerateur = -numerateur; // valeur absolue ; si c'est négatif, on prend l'opposé.
 		float denominateur = (float) Math.sqrt(u.x * u.x + u.y * u.y); // norme de u s
@@ -645,15 +614,10 @@ public class FC {
 		if (CollisionDroite(A, B, C) == false) {
 			return false; // si on ne touche pas la droite, on ne touchera jamais le segment
 		}
-		Vecteur AB = new Vecteur(), AC = new Vecteur(), BC = new Vecteur();
-		AB.x = B.x - A.x;
-		AB.y = B.y - A.y;
-		AC.x = C.x - A.x;
-		AC.y = C.y - A.y;
-		BC.x = C.x - B.x;
-		BC.y = C.y - B.y;
-		float pscal1 = AB.x * AC.x + AB.y * AC.y; // produit scalaire
-		float pscal2 = (-AB.x) * BC.x + (-AB.y) * BC.y; // produit scalaire
+		Vecteur AB = new Vecteur(B.x - A.x,B.y - A.y), AC = new Vecteur(C.x - A.x,C.y - A.y), BC = new Vecteur(C.x - B.x,C.y - B.y);
+
+		float pscal1 = prod_sca(AB, AC); // produit scalaire
+		float pscal2 = -prod_sca(AB, BC); // produit scalaire
 		if (pscal1 >= 0 && pscal2 >= 0)
 			return true; // I entre A et B, ok.
 		// dernière possibilité, A ou B dans le cercle
@@ -665,11 +629,7 @@ public class FC {
 	}
 
 	public Point ProjectionI(Point A, Point B, Point C) {
-		Vecteur u = new Vecteur(), AC = new Vecteur();
-		u.x = B.x - A.x;
-		u.y = B.y - A.y;
-		AC.x = C.x - A.x;
-		AC.y = C.y - A.y;
+		Vecteur u = new Vecteur(B.x - A.x,B.y - A.y), AC = new Vecteur(C.x - A.x,C.y - A.y);
 		float ti = (u.x * AC.x + u.y * AC.y) / (u.x * u.x + u.y * u.y);
 		Point I = new Point();
 		I.x = (int) (A.x + ti * u.x);
@@ -678,11 +638,7 @@ public class FC {
 	}
 
 	public Vecteur GetNormale(Point A, Point B, Point C) {
-		Vecteur AC = new Vecteur(), u = new Vecteur(), N = new Vecteur();
-		u.x = B.x - A.x;
-		u.y = B.y - A.y;
-		AC.x = C.x - A.x;
-		AC.y = C.y - A.y;
+		Vecteur AC = new Vecteur(C.x - A.x,C.y - A.y), u = new Vecteur(B.x - A.x,B.y - A.y), N = new Vecteur(0,0); 
 		float parenthesis = u.x * AC.y - u.y * AC.x; // calcul une fois pour les deux
 		N.x = -u.y * (parenthesis);
 		N.y = u.x * (parenthesis);
@@ -694,21 +650,13 @@ public class FC {
 	}
 
 	public Vecteur CalculerVecteurV2(Vecteur v, Vecteur N) {
-		Vecteur v2 = new Vecteur();
 		float pscal = (v.x * N.x + v.y * N.y);
-		v2.x = v.x - 2 * pscal * N.x;
-		v2.y = v.y - 2 * pscal * N.y;
+		Vecteur v2 = new Vecteur( v.x - 2 * pscal * N.x,v.y - 2 * pscal * N.y);
 		return v2;
 	}
 
 	public boolean CollisionDroiteSeg(Point A, Point B, Point O, Point P) {
-		Vecteur AO = new Vecteur(), AP = new Vecteur(), AB = new Vecteur();
-		AB.x = B.x - A.x;
-		AB.y = B.y - A.y;
-		AP.x = P.x - A.x;
-		AP.y = P.y - A.y;
-		AO.x = O.x - A.x;
-		AO.y = O.y - A.y;
+		Vecteur AO = new Vecteur(O.x - A.x,O.y - A.y), AP = new Vecteur(P.x - A.x,P.y - A.y), AB = new Vecteur(B.x - A.x,B.y - A.y);
 		if ((determinant(AB, AP)) * (determinant(AB, AO)) <= 0)
 			return true;
 		else
@@ -725,13 +673,7 @@ public class FC {
 		}
 
 		
-		Vecteur AB = new Vecteur(), OP = new Vecteur(),AO = new Vecteur(),AP = new Vecteur(),OB = new Vecteur(),PB = new Vecteur();
-		AB.x = B.x - A.x;AB.y = B.y - A.y;
-		OP.x = P.x - O.x;OP.y = P.y - O.y;
-		AO.x = O.x - A.x;AO.y = O.y - A.y;
-		AP.x = P.x - A.x;AP.y = P.y - A.y;
-		OB.x = B.x - O.x;OB.y = B.y - O.y;
-		PB.x = B.x - P.x;PB.y = B.y - P.y;
+		Vecteur AB = new Vecteur(B.x - A.x,B.y - A.y), OP = new Vecteur(P.x - O.x,P.y - O.y),AO = new Vecteur(O.x - A.x,O.y - A.y),AP = new Vecteur(P.x - A.x,P.y - A.y),OB = new Vecteur(B.x - O.x,B.y - O.y),PB = new Vecteur(B.x - P.x,B.y - P.y);
 		float det=determinant(AB, OP);
 		if (det==0) {return determinant(AB, AO)==0 && ( prod_sca(AO, OB)>=0 || prod_sca(AP, PB)>=0)  ;}
 		float k = -(A.x * OP.y - O.x * OP.y - OP.x * A.y + OP.x * O.y) / det;

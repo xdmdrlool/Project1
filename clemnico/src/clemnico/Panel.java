@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
-import clemnico.FC.Vecteur;
  
 public class Panel extends JPanel { 
 	
