@@ -29,7 +29,7 @@ public class LevelLoader {
 
 	    String line ;
 	    String layerPath;
-	    int distance;
+	    float distance;
 	    Map map;
 	    ArrayList<Entity> list;
 	    Layer layer;
@@ -53,7 +53,8 @@ public class LevelLoader {
 	    	line =br.readLine();
 	    	parts=line.split(",");
 	    	layerPath=parts[0];
-	    	distance=Integer.parseInt(parts[1]);
+	    	distance=Float.parseFloat((parts[1]));
+//	    	distance=Integer.parseInt(parts[1]);
 	    	map = new Map(layerPath);
 	    	list = map.load();
 

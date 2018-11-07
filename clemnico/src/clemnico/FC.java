@@ -34,7 +34,9 @@ public class FC {
 
 	// Calcule la distance euclidienne entre deux points
 	public double distance(Point A, Point B) {
-		return Math.sqrt((A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y));
+		float x = A.x - B.x;
+		float y = A.y - B.y;
+		return Math.sqrt(x*x + y*y);
 	}
 
 	public float norm(Vecteur A) {
@@ -126,6 +128,11 @@ public class FC {
 	}
 
 	public boolean Collision(FormRect rect1, FormRect rect2) {
+		int x1=rect1.getX();int y1=rect1.getY();int t1=Math.max(rect1.getWidth(),rect1.getHeight());
+		int x2=rect2.getX();int y2=rect2.getY();int t2=Math.max(rect2.getWidth(),rect2.getHeight());
+		
+		if (x2+t2*2<x1 ||x1+t1*2<x2 || y2+t2*2<y1 ||y1+t1*2<y2) {return false;}
+		
 		Point[] list1 = Rect2Array(rect1);
 		Point[] list2 = Rect2Array(rect2);
 		
@@ -136,11 +143,6 @@ public class FC {
 			}
 		}
 		
-//		for (int i = 0; i <= 3; i++) {
-//			if (Collision(list1, 4, list2[i]) || Collision(list2, 4, list1[i])) {
-//				return true;
-//			}
-//		}
 		return false;
 	}
 
@@ -656,17 +658,7 @@ public class FC {
 	}
 
 	public boolean CollisionDroiteSeg(Point A, Point B, Point O, Point P) {
-<<<<<<< HEAD
-		Vecteur AO = new Vecteur(), AP = new Vecteur(), AB = new Vecteur();
-		AB.x = B.x - A.x;
-		AB.y = B.y - A.y;
-		AP.x = P.x - A.x;
-		AP.y = P.y - A.y;
-		AO.x = O.x - A.x;
-		AO.y = O.y - A.y;
-=======
 		Vecteur AO = new Vecteur(O.x - A.x,O.y - A.y), AP = new Vecteur(P.x - A.x,P.y - A.y), AB = new Vecteur(B.x - A.x,B.y - A.y);
->>>>>>> c049023a0df98956f50c24aef1252cfa4d003faa
 		if ((determinant(AB, AP)) * (determinant(AB, AO)) <= 0)
 			return true;
 		else
@@ -683,17 +675,7 @@ public class FC {
 		}
 
 		
-<<<<<<< HEAD
-		Vecteur AB = new Vecteur(), OP = new Vecteur(),AO = new Vecteur(),AP = new Vecteur(),OB = new Vecteur(),PB = new Vecteur();
-		AB.x = B.x - A.x;AB.y = B.y - A.y;
-		OP.x = P.x - O.x;OP.y = P.y - O.y;
-		AO.x = O.x - A.x;AO.y = O.y - A.y;
-		AP.x = P.x - A.x;AP.y = P.y - A.y;
-		OB.x = B.x - O.x;OB.y = B.y - O.y;
-		PB.x = B.x - P.x;PB.y = B.y - P.y;
-=======
 		Vecteur AB = new Vecteur(B.x - A.x,B.y - A.y), OP = new Vecteur(P.x - O.x,P.y - O.y),AO = new Vecteur(O.x - A.x,O.y - A.y),AP = new Vecteur(P.x - A.x,P.y - A.y),OB = new Vecteur(B.x - O.x,B.y - O.y),PB = new Vecteur(B.x - P.x,B.y - P.y);
->>>>>>> c049023a0df98956f50c24aef1252cfa4d003faa
 		float det=determinant(AB, OP);
 		if (det==0) {return determinant(AB, AO)==0 && ( prod_sca(AO, OB)>=0 || prod_sca(AP, PB)>=0)  ;}
 		float k = -(A.x * OP.y - O.x * OP.y - OP.x * A.y + OP.x * O.y) / det;
@@ -746,15 +728,20 @@ public class FC {
 	////////////////////////////////////
 	
 	////PLAYER////
+	@SuppressWarnings("rawtypes")
 	public boolean obstacleInteraction(Entity entity, ArrayList<Obstacle> obstacles) {
 		boolean collision=false;
-		
+		boolean verifCol=true;
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
 		boolean varInTheAir=true;
 		boolean varCollisonLeft=false;
 		boolean varCollisonRight=false;
 		for (Obstacle obstacle: obstacles) {
+			verifCol=true;
+			for ( Class cla : entity.listeNoCollisonWith) {if (cla.isInstance(obstacle)) {verifCol=false;break;};}
+			if (!verifCol) {continue;}
+			
 			FormRect rect0=new FormRect(Color.RED, entity.xBefore, entity.yBefore, entity.width, entity.height, 0);
 			FormRect rect=(FormRect) entity.getHitbox().getForm();
 			FormRect obs=(FormRect) obstacle.getHitbox().getForm();
@@ -774,8 +761,8 @@ public class FC {
 				
 				// On verifie si l'entité et en l'air, si il y a collision a gauche ou a droite
 				if (vecteurCorrection.y<0||directionCollision.y>0) {varInTheAir=false;}
-				if (directionCollision.x<0) {varCollisonLeft=true;}
-				if (directionCollision.x>0) {varCollisonRight=true;}
+				if (directionCollision.x<0) {varCollisonLeft=true;entity.setVx(0);}
+				if (directionCollision.x>0) {varCollisonRight=true;entity.setVx(0);}
 				
 //				if (directionCollision.x!=0 ||directionCollision.y>0) {entity.setVx(0);}
 				if (directionCollision.y!=0) {entity.setVy(0);}
@@ -821,6 +808,7 @@ public class FC {
 	////ENNEMIS////
 	public void obstacleInteractionEnemy(Enemy enemy, ArrayList<Obstacle> obstacles) {
 		
+		boolean verifCol=true;
 		
 		Vecteur vecteurCorrection=null;
 		Vecteur directionCollision=null;
@@ -829,6 +817,10 @@ public class FC {
 		boolean inverseVx=false;
 		
 		for (Obstacle obstacle: obstacles) {
+			
+			verifCol=true;
+			for ( @SuppressWarnings("rawtypes") Class cla : enemy.listeNoCollisonWith) {if (cla.isInstance(obstacle)) {verifCol=false;break;};}
+			if (!verifCol) {continue;}
 			
 			FormRect rect0=new FormRect(Color.RED, enemy.xBefore, enemy.yBefore, enemy.width, enemy.height, 0);
 			FormRect rect=(FormRect) enemy.getHitbox().getForm();
@@ -891,7 +883,7 @@ public class FC {
 		
 		// S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-			System.out.println("toto");
+			
 			
 			
 			// Détermine le portail d'entrée et de sortie

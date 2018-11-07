@@ -2,6 +2,7 @@ package clemnico;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ public abstract class Entity {
 	protected Hitbox hitbox=new Hitbox("RECT", 0, 0, 10,0, 0, 0);
 	protected Animation currentAnimation;
 	protected Map<NameAnimation, Animation> ListAnimation = new HashMap<>();
+	protected Class[] listeNoCollisonWith=new Class[] {};
 	
 
 
@@ -59,9 +61,10 @@ public abstract class Entity {
 		
 	}
 	
-	public void display(Graphics2D gg,int xOffset,int yOffset) {
-		Sprite sprite = getCurrentAnimation().getSprite();
-		sprite.render(gg,xOffset+ x + width / 2,yOffset+ y + height / 2);
+	public void display(Graphics2D gg,int xOffset,int yOffset,int w,int h) {
+		if (xOffset+ x + width*2 / 2<0 || xOffset+ x >w ||yOffset+ y + height*2 / 2<0 ||yOffset+ y >h) {}
+		else {Sprite sprite = getCurrentAnimation().getSprite();
+		sprite.render(gg,xOffset+ x + width / 2,yOffset+ y + height / 2);}
 	}
 	
 	

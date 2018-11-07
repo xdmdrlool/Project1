@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Layer {
 	
 	////Attrbiuts////
-	int distance =0;
+	float distance =0;
 	public ArrayList<Entity> listEntity=new ArrayList<Entity>();
 	public ArrayList<Player> listPlayer=new ArrayList<Player>();
 	public ArrayList<Portal> listPortal=new ArrayList<Portal>();
@@ -17,7 +17,7 @@ public class Layer {
 	
 	
 	////Constructeur////
-	public Layer(int distance) {
+	public Layer(float distance) {
 		synchronized(listEntity) {};
 		synchronized(listPlayer) {};
 		synchronized(listPortal) {};
@@ -32,10 +32,10 @@ public class Layer {
 	
 	////Méthodes////
 	
-	public synchronized void display(Graphics2D gg,int xoff, int yoff) {
+	public synchronized void display(Graphics2D gg,int xoff, int yoff,int w,int h) {
 		double calibrage=0.1;
 		for(Entity e:listEntity) {
-			e.display(gg,((int)( xoff/(1+Math.abs(distance)*calibrage))),((int)( yoff/(1+Math.abs(distance)*calibrage))));
+			e.display(gg,((int)( xoff/(1+Math.abs(distance)*calibrage))),((int)( yoff/(1+Math.abs(distance)*calibrage))),w,h);
 		}
 	}
 	
@@ -65,7 +65,7 @@ public class Layer {
 	/////// GETTER AND SETTER //////
 	////////////////////////////////
 	
-	public int getDistance() {
+	public float getDistance() {
 		return distance;
 	}
 
@@ -73,7 +73,7 @@ public class Layer {
 		return listEntity;
 	}
 
-	public void setDistance(int distance) {
+	public void setDistance(float distance) {
 		this.distance = distance;
 	}
 

@@ -26,6 +26,7 @@ public abstract class Enemy extends Entity{
 	////Constructeur////
 	public Enemy(String name, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
+		listeNoCollisonWith= new Class[] {ObstacleFixSurfaceNoPortal.class};
 		
 	}
 	

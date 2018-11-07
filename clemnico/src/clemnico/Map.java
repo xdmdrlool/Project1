@@ -23,6 +23,7 @@ public class Map {
 	int[] enemyShootPix= {255,0,200};	//Rose
 	int[] enemyFollowPix= {255,200,0};	//jaune
 	int[] enemyLoopPix= {255,200,100};	//Beige
+	int[] obstacleFixSurfaceNoPortalPix= {0,0,255};	//Bleu
 	
 	
 	public Map(String name) {
@@ -107,6 +108,10 @@ public class Map {
 					
 				}
 				
+				if (equal(pixel,obstacleFixSurfaceNoPortalPix)) {
+					ObstacleFixSurfaceNoPortal obstacleFixSurfaceNoPortal =new ObstacleFixSurfaceNoPortal(i*blocSize, j*blocSize, blocSize, blocSize,"Obs1", 0);
+					mapObject.add(obstacleFixSurfaceNoPortal);
+				}
 				
 				//Affichage des ennemis
 				if (equal(pixel,enemyDefaultPix)) {

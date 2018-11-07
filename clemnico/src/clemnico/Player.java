@@ -56,6 +56,9 @@ public class Player extends Entity {
 		setDirectionX(direction);
 		portal1.setOwner(this);
 		portal2.setOwner(this);
+		listeNoCollisonWith= new Class[] {ObstacleFixSurfaceNoPortal.class};
+		
+		
 	}
 
 	
@@ -123,8 +126,8 @@ public class Player extends Entity {
 		if (!((isInCollisionLeft() && vx<0)|| (isInCollisionRight() && vx>0))) {setX(x + vx);}
 		setY(y + vy);
 		
-		if (!inTheAir && !(leftKey || rightKey)) {setVx((int)(vx*0.9));}
-//		if (!inTheAir && !(leftKey || rightKey)) {setVx(0);}
+//		if (!inTheAir && !(leftKey || rightKey)) {setVx((int)(vx*0.9));}
+		if (!inTheAir && !(leftKey || rightKey)) {setVx(0);}
 	}
 	
 

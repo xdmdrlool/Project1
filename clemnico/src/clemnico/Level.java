@@ -9,14 +9,14 @@ public class Level {
 	private Window window;
 	public Player player=null;
 	
-	private ArrayList<Layer> listLayer=new ArrayList<>();
-	private int indexMainLayer=0;
-	private ArrayList<Entity> listEntity=new ArrayList<Entity>();
+	public ArrayList<Layer> listLayer=new ArrayList<>();
+	public int indexMainLayer=0;
+	public ArrayList<Entity> listEntity=new ArrayList<Entity>();
 //	private ArrayList<Player> listPlayer=new ArrayList<Player>();
-	private ArrayList<Portal> listPortal=new ArrayList<Portal>();
-	private ArrayList<Obstacle> listObstacle=new ArrayList<Obstacle>();
-	private ArrayList<Projectile> listProjectile=new ArrayList<Projectile>();
-	private ArrayList<Enemy> listEnemy=new ArrayList<Enemy>();
+	public ArrayList<Portal> listPortal=new ArrayList<Portal>();
+	public ArrayList<Obstacle> listObstacle=new ArrayList<Obstacle>();
+	public ArrayList<Projectile> listProjectile=new ArrayList<Projectile>();
+	public ArrayList<Enemy> listEnemy=new ArrayList<Enemy>();
 	
 	/*public ArrayList<Entity> enemy2Entity(ArrayList<Enemy> enemies){
 		ArrayList<Entity> entities = new ArrayList<>();

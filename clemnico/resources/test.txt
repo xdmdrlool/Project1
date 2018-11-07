@@ -4,4 +4,4 @@ carte,0
 .
 .
 
-Note : Ne pas rajouter d'espace AVANT ou APRES un entier.
+Note : Ne pas rajouter d'espace AVANT ou APRES un nombre !

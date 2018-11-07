@@ -72,12 +72,14 @@ public class Window extends JFrame {
 	private void initPanel() {
 		
 		panel = new Panel();
+		panel.setW(width);
+		panel.setH(height);
 		panel.setBackground(Color.WHITE);
 		add(panel, BorderLayout.CENTER);
-
+		
 		statusBar = new JLabel("default");
 		add(statusBar, BorderLayout.SOUTH);
-		Handlerclass handler = new Handlerclass(panel, statusBar, level.player, portal1, portal2, level.getListLayer().get(level.getIndexMainLayer()).listObstacle);
+		Handlerclass handler = new Handlerclass(panel, statusBar, level.player, portal1, portal2);
 		panel.addMouseListener(handler);
 		panel.addMouseMotionListener(handler);
 		addKeyListener(handler);
@@ -117,12 +119,8 @@ public class Window extends JFrame {
 	
 	
 	public void calculCameraOffset(Panel panel,Player player) {
-<<<<<<< HEAD
-		Boolean centreX=true;
-=======
 		Boolean fixe=true;
 		Boolean milieu=true;
->>>>>>> c049023a0df98956f50c24aef1252cfa4d003faa
 		
 		int w0=this.getWidth();int h0=this.getHeight();
 		int xOff=panel.getxOffset();int yOff=panel.getyOffset();
@@ -142,16 +140,12 @@ public class Window extends JFrame {
 		panel.setyOffset(p+(c*(yOff-p))/d);handler.setyOffset(p+(c*(yOff-p))/d);
 		
 		p=xOff;
-<<<<<<< HEAD
-		if (centreX) {if(level.player.getDirectionX()==1){p=w0/3-x;} else {{p=(2*w0)/3-x;}}}
-=======
 		if (fixe) {
 			if (milieu) {p=w0/2-x;c=0;}
 			else if(level.player.getDirectionX()==1){p=w0/3-x;} 
 			else {p=(2*w0)/3-x;}
 			}
 		
->>>>>>> c049023a0df98956f50c24aef1252cfa4d003faa
 		else if (x+xOff<a*w0*1./b) {p=a*w0/b-x;}
 		else if (x+w+xOff>(b-a)*w0*1./b) {p=(b-a)*w0/b-x-w;}
 		

@@ -12,6 +12,8 @@ public class Panel extends JPanel {
 	////Attributs////
 	private int xOffset=0;
 	private int yOffset=0;
+	private int w;
+	private int h;
 	
 	
 	private ArrayList<Layer> listLayer=new ArrayList<Layer>();
@@ -28,7 +30,7 @@ public class Panel extends JPanel {
 		super.paintComponent(g);
 		Graphics2D gg= (Graphics2D) g;				
 		for (Layer layer :listLayer) {
-			layer.display(gg,xOffset,yOffset);
+			layer.display(gg,xOffset,yOffset,w,h);
 		}
 	
 
@@ -88,6 +90,22 @@ public class Panel extends JPanel {
 	}
 
 
+
+	public int getW() {
+		return w;
+	}
+
+	public int getH() {
+		return h;
+	}
+
+	public void setW(int w) {
+		this.w = w;
+	}
+
+	public void setH(int h) {
+		this.h = h;
+	}
 
 	public ArrayList<Layer> getListLayer() {
 		return listLayer;

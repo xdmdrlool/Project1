@@ -33,6 +33,7 @@ public class Projectile extends Entity{
 		setHeight(size);
 		setWidth(size);
 		setOwner(owner);
+		listeNoCollisonWith= new Class[] {ObstacleFixSurfaceNoPortal.class};
 	}
 	
 	////Méthodes////
@@ -76,7 +77,7 @@ public class Projectile extends Entity{
 			
 			//Variable rassemblant les éléments non touchables
 			boolean untouchable = (owner.hashCode()!=entity.getOwner().hashCode() && !(entity instanceof Portal) && entity.getClass().getSuperclass()!=owner.getClass().getSuperclass());
-			
+			for (@SuppressWarnings("rawtypes") Class cla :this.listeNoCollisonWith) {if(cla.isInstance(entity)){untouchable=false;}}
 			if (this.isInCollisionWith(entity) && untouchable) {
 //				System.out.println(this.toString());
 //				System.out.println(entity.toString());

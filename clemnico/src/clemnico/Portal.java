@@ -41,8 +41,13 @@ public class Portal extends Entity{
 		Point B=new Point(xClic, yClic);
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a interaction avec un obstacle
-			if (isInCollisionWith(obstacle) || fc.CollisionLineRect(A,B,obstacle.getForm())) {
-				return true;
+			
+			if (obstacle instanceof ObstacleFixSurfaceNoPortal ) {
+				if (isInCollisionWith(obstacle)) {return true;}
+			}
+			
+			else if ( this.layerIn==obstacle.layerIn &&  ((isInCollisionWith(obstacle) || fc.CollisionLineRect(A,B,obstacle.getForm()) ))  ) {
+				return true;		
 			}
 		}
 		return false;
@@ -50,16 +55,18 @@ public class Portal extends Entity{
 	
 	
 	//Déplace le portail que s'il n'est pas en contact avec un obstacle
-	public void movePortal(ArrayList<Obstacle> obstacles,Player player, int xClic, int yClic) {
+	public void movePortal(int xClic, int yClic) {
 		int xBefore=x;
 		int yBefore=y;
 		double angleBefore=angle;
+		Player player=this.levelIn.player;
+		ArrayList<Obstacle> obstacles =this.levelIn.listObstacle;
 		
 		setX(xClic-width/2);
 		setY(yClic-height/2);
 		setAngle(angleRotation(player.getX()+player.getWidth()/2, player.getY()+player.getHeight()/2,xClic,yClic));
 		
-		setAngle(angle);
+
 		if(obstacleInteraction(obstacles,player,xClic,yClic)) {
 			setX(xBefore);
 			setY(yBefore);

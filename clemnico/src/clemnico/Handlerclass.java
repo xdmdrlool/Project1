@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 
 public class Handlerclass implements MouseListener, MouseMotionListener, KeyListener {
 	
-	////Attributs////
+	////Attributs////yyy
 	private Panel 	panel;
 	private JLabel 	statusBar;
 	
@@ -25,17 +25,16 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 	private Player 	player;
 	private Portal portal1;
 	private Portal portal2;
-	private ArrayList<Obstacle> obstacles;
 	private Projectile projectile;
 	
 	////Constructeur////
-	public  Handlerclass(Panel panel, JLabel statusBar, Player player, Portal portal1, Portal portal2, ArrayList<Obstacle> obstacles) {
+	public  Handlerclass(Panel panel, JLabel statusBar, Player player, Portal portal1, Portal portal2) {
 		this.panel=panel;
 		this.statusBar=statusBar;
 		this.player=player;
 		this.portal1=portal1;
 		this.portal2=portal2;
-		this.obstacles=obstacles;
+
 		
 	}
 	
@@ -49,7 +48,7 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 		int xClic=event.getX();
 		int yClic=event.getY();
 		
-		statusBar.setText("Click en "+ xClic +" "+ yClic);
+		statusBar.setText("Click en "+ (xClic-xOffset) +" "+ (yClic-yOffset));
 		
 		
 	}
@@ -89,10 +88,10 @@ public class Handlerclass implements MouseListener, MouseMotionListener, KeyList
 		
 		//Commandes portail
 		if (event.getButton()==MouseEvent.BUTTON1) {
-			portal1.movePortal(obstacles,player,xClic,yClic);
+			portal1.movePortal(xClic,yClic);
 		}
 		else if (event.getButton()==MouseEvent.BUTTON3) {
-			portal2.movePortal(obstacles,player,xClic,yClic);
+			portal2.movePortal(xClic,yClic);
 		}
 	}
 
