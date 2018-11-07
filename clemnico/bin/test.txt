@@ -1,7 +1,0 @@
-background : 'nom.png'
-nombre de layers :1
-carte,0
-.
-.
-
-Note : Ne pas rajouter d'espace AVANT ou APRES un entier.

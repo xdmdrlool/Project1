@@ -656,17 +656,7 @@ public class FC {
 	}
 
 	public boolean CollisionDroiteSeg(Point A, Point B, Point O, Point P) {
-<<<<<<< HEAD
-		Vecteur AO = new Vecteur(), AP = new Vecteur(), AB = new Vecteur();
-		AB.x = B.x - A.x;
-		AB.y = B.y - A.y;
-		AP.x = P.x - A.x;
-		AP.y = P.y - A.y;
-		AO.x = O.x - A.x;
-		AO.y = O.y - A.y;
-=======
 		Vecteur AO = new Vecteur(O.x - A.x,O.y - A.y), AP = new Vecteur(P.x - A.x,P.y - A.y), AB = new Vecteur(B.x - A.x,B.y - A.y);
->>>>>>> c049023a0df98956f50c24aef1252cfa4d003faa
 		if ((determinant(AB, AP)) * (determinant(AB, AO)) <= 0)
 			return true;
 		else
@@ -683,17 +673,7 @@ public class FC {
 		}
 
 		
-<<<<<<< HEAD
-		Vecteur AB = new Vecteur(), OP = new Vecteur(),AO = new Vecteur(),AP = new Vecteur(),OB = new Vecteur(),PB = new Vecteur();
-		AB.x = B.x - A.x;AB.y = B.y - A.y;
-		OP.x = P.x - O.x;OP.y = P.y - O.y;
-		AO.x = O.x - A.x;AO.y = O.y - A.y;
-		AP.x = P.x - A.x;AP.y = P.y - A.y;
-		OB.x = B.x - O.x;OB.y = B.y - O.y;
-		PB.x = B.x - P.x;PB.y = B.y - P.y;
-=======
 		Vecteur AB = new Vecteur(B.x - A.x,B.y - A.y), OP = new Vecteur(P.x - O.x,P.y - O.y),AO = new Vecteur(O.x - A.x,O.y - A.y),AP = new Vecteur(P.x - A.x,P.y - A.y),OB = new Vecteur(B.x - O.x,B.y - O.y),PB = new Vecteur(B.x - P.x,B.y - P.y);
->>>>>>> c049023a0df98956f50c24aef1252cfa4d003faa
 		float det=determinant(AB, OP);
 		if (det==0) {return determinant(AB, AO)==0 && ( prod_sca(AO, OB)>=0 || prod_sca(AP, PB)>=0)  ;}
 		float k = -(A.x * OP.y - O.x * OP.y - OP.x * A.y + OP.x * O.y) / det;
@@ -891,7 +871,7 @@ public class FC {
 		
 		// S'il y a interaction avec l'un des deux portails
 		if (hitbox.collision(portal1.getHitbox()) || hitbox.collision(portal2.getHitbox())) {
-			System.out.println("toto");
+			
 			
 			
 			// Détermine le portail d'entrée et de sortie
