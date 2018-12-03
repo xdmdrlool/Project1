@@ -738,9 +738,7 @@ public class FC {
 		boolean varCollisonLeft=false;
 		boolean varCollisonRight=false;
 		for (Obstacle obstacle: obstacles) {
-			verifCol=true;
-			for ( Class cla : entity.listeNoCollisonWith) {if (cla.isInstance(obstacle)) {verifCol=false;break;};}
-			if (!verifCol) {continue;}
+			if (obstacle.classIn(entity.listeNoCollisonWith)) {continue;}
 			
 			FormRect rect0=new FormRect(Color.RED, entity.xBefore, entity.yBefore, entity.width, entity.height, 0);
 			FormRect rect=(FormRect) entity.getHitbox().getForm();
@@ -829,9 +827,7 @@ public class FC {
 		
 		for (Obstacle obstacle: obstacles) {
 			
-			verifCol=true;
-			for ( @SuppressWarnings("rawtypes") Class cla : enemy.listeNoCollisonWith) {if (cla.isInstance(obstacle)) {verifCol=false;break;};}
-			if (!verifCol) {continue;}
+			if (obstacle.classIn(enemy.listeNoCollisonWith)) {continue;}
 			
 			FormRect rect0=new FormRect(Color.RED, enemy.xBefore, enemy.yBefore, enemy.width, enemy.height, 0);
 			FormRect rect=(FormRect) enemy.getHitbox().getForm();

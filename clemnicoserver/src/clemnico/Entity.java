@@ -81,6 +81,14 @@ public abstract class Entity {
 		moveIn(this.x+dx, this.y+dy);
 	}
 	
+
+	// Verifie si l'entity est une instance d'une classe (ou sous-classe) de la liste
+	public boolean classIn(Class[] listClass) {
+		for (Class cla :listClass) {
+			if (cla.isInstance(this)) {return true;}
+		}
+		return false;
+	}
 	
 	
 	////////////////////////////////

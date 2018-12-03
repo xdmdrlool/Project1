@@ -78,10 +78,11 @@ public enum Animations {
 		
 		},new int[] {1,1,1,1,1,1,1,1},15),
 	
+	
+	
+	
+	AnimationObstacleFixGateNoPlayer("SpriteSheet_GateNoPlayer.png" , 64 , new int[][]  { { 0 , 0 , 64 , 64 , 0 } } ,  new int[] {1},16   ),
 	;
-	
-	
-	
 	
 	
 

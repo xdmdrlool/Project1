@@ -59,7 +59,7 @@ public abstract class Player extends Entity {
 		
 		
 		
-		listeNoCollisonWith= new Class[] {ObstacleFixSurfaceNoPortal.class};
+		listeNoCollisonWith= new Class[] {ObstacleFixSurfaceNoPortal.class,ObstacleFixGateNoPortal.class};
 		
 	}
 

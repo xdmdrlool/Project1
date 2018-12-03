@@ -12,7 +12,8 @@ public class PlayerWeb extends Player {
 	
 	////Attributs////
 	//private byte[] address = new byte[]{(byte)25, (byte)58, (byte) 163, 90};	//PC portable
-	private byte[] address = new byte[]{(byte)25, (byte)78, (byte) 152, (byte)219};	//PC Clement
+//	private byte[] address = new byte[]{(byte)25, (byte)78, (byte) 152, (byte)219};	//PC Clement
+	private byte[] address = new byte[]{(byte)25, (byte)57, (byte) 89, (byte)96};	//PC Nico
 	////Constructeur////
 	public PlayerWeb(int x, int y, int width, int height, String name, int direction, int vxOnGround) {
 		super(x, y, width, height, name, direction, vxOnGround);

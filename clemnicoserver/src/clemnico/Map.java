@@ -14,6 +14,12 @@ public class Map {
 	private int width;
 	private int height;
 	
+	
+	@SuppressWarnings("rawtypes")
+	
+	// Liste des entity à fusionner horizontalement et verticalement
+	Class [] listClassFusion=new Class[] {ObstacleFix.class};
+	
 	//Triplet d'un meme nombre pour les obstacles
 	int[] obstacleFixPix= {0,0,0};	//Noir
 	int[] obstacleMovingPix= {100,100,100};	//Gris foncé
@@ -24,6 +30,8 @@ public class Map {
 	int[] enemyFollowPix= {255,200,0};	//jaune
 	int[] enemyLoopPix= {255,200,100};	//Beige
 	int[] obstacleFixSurfaceNoPortalPix= {0,0,255};	//Bleu
+	int[] obstacleFixGateNoPlayer= {0,200,255};	//Bleu clair
+	int[] obstacleFixGateNoPortal= {100,200,255};	//Bleu tres clair
 	int[] player1Pix= {0,100,0};		//vert foncé
 	int[] player2Pix= {0,200,0};		//vert clair
 	
@@ -115,6 +123,16 @@ public class Map {
 					mapObject.add(obstacleFixSurfaceNoPortal);
 				}
 				
+				if (equal(pixel,obstacleFixGateNoPlayer)) {
+					ObstacleFixGateNoPlayer obstacleFixGateNoPlayer =new ObstacleFixGateNoPlayer(i*blocSize, j*blocSize, blocSize, blocSize,"Obs1", 0);
+					mapObject.add(obstacleFixGateNoPlayer);
+				}
+				
+				if (equal(pixel,obstacleFixGateNoPortal)) {
+					ObstacleFixGateNoPortal obstacleFixGateNoPortal =new ObstacleFixGateNoPortal(i*blocSize, j*blocSize, blocSize, blocSize,"Obs1", 0);
+					mapObject.add(obstacleFixGateNoPortal);
+				}
+				
 				//Affichage des joueurs
 				if (equal(pixel,player1Pix)) {
 					PlayerLocal playerLocal = new PlayerLocal(i*blocSize, j*blocSize, 50, 50, "Player1", 1, 6);
@@ -154,18 +172,100 @@ public class Map {
 			
 		}
 		
-		
+		fusionX(mapObject);
+		fusionY(mapObject);
 		for (Entity e :mapObject) {e.useDefaultAnimations();}
+		
 		
 		return mapObject;
 	}
 	
-	public boolean equal(int[] l1,int[] l2) {
+	private boolean equal(int[] l1,int[] l2) {
 		for (int k=0;k<l1.length;k++) {
 			if(l1[k]!=l2[k]) {return false;}
 		}
 		return true;
 	}
+	
+	
+	
+	// Fusionne les obstacle selon X
+	private void fusionX(ArrayList<Entity> list) { 
+		int n=1000000;
+		Entity e1;
+		Entity e2;
+		while (n>1 && n!=list.size()) {
+			n=list.size();
+			for (int i=0;i<list.size();i++) {
+				e1=list.get(i);
+				for(int j=0;j<list.size();j++) {
+					e2=list.get(j);
+					if (j!=i && tryfusionX(e1, e2)) {list.remove(e2);}
+				}
+				
+			}
+			
+		}
+	}
+	
+	// Fusionne les obstacle selon Y
+	private void fusionY(ArrayList<Entity> list) {
+		int n=1000000;
+		Entity e1;
+		Entity e2;
+		while (n>1 && n!=list.size()) {
+			n=list.size();
+			for (int i=0;i<list.size();i++) {
+				e1=list.get(i);
+				
+				for(int j=0;j<list.size();j++) {
+					e2=list.get(j);
+					if (j!=i) {
+						if(tryfusionY(e1, e2)) {list.remove(e2);}}
+					}
+				}
+				
+			}
+			
+	}
+	
+	
+	
+	
+	// Verifie que la class de e est dans la liste
+	@SuppressWarnings("rawtypes")
+	private boolean classIn(Entity e,Class[] listClass) { 
+		for (Class cla :listClass) {
+			if (cla==e.getClass()) {return true;}
+		}
+		return false;
+	}
+	
+	// Essai de fusionner les entite si entity2 est a droite de entity1
+	private boolean tryfusionX(Entity entity1, Entity entity2) { 
+		if(!(classIn(entity1, listClassFusion))){return false;}
+		if (entity1.getClass()!=entity2.getClass()) {return false;}
+		
+		if (entity1.y==entity2.y && entity1.height==entity2.height && entity1.x+entity1.width==entity2.x) {
+			entity1.setWidth(entity1.width+entity2.width);
+			return true;
+		}
+		return false;
+	}
+	
+	// Essai de fusionner les entite si entity2 est en dessous de entity1
+	private boolean tryfusionY(Entity entity1, Entity entity2) { 
+		if(!(classIn(entity1, listClassFusion))){return false;}
+		if (entity1.getClass()!=entity2.getClass()) {return false;}
+
+		if (entity1.x==entity2.x && entity1.width==entity2.width && entity1.y+entity1.height==entity2.y) {
+			entity1.setHeight(entity1.height+entity2.height);
+			return true;
+			
+		}
+		return false;
+	}
+	
 	
 	////////////////////////////////
 	/////// GETTER AND SETTER //////

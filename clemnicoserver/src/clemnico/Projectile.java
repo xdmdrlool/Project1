@@ -33,7 +33,7 @@ public class Projectile extends Entity{
 		setHeight(size);
 		setWidth(size);
 		setOwner(owner);
-		listeNoCollisonWith= new Class[] {ObstacleFixSurfaceNoPortal.class};
+		listeNoCollisonWith= new Class[] {ObstacleFixSurfaceNoPortal.class,ObstacleFixGateNoPlayer.class};
 	}
 	
 	////Méthodes////

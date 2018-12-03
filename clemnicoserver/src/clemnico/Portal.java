@@ -10,12 +10,15 @@ public class Portal extends Entity{
 	private double angle=0;
 	private boolean moved;
 	private Color color;
+	private Class[] listPassThrough;
 	
 	////Constructeur////
 	public Portal(int x, int y, int width, int height,String name,Color color){
 		super(name, x,y, width, height);
 		this.setColor(color);
 		useDefaultAnimations();
+		listeNoCollisonWith= new Class[] {};
+		listPassThrough=new Class[] {ObstacleFixSurfaceNoPortal.class,ObstacleFixGateNoPlayer.class};
 
 	}
 	
@@ -43,17 +46,15 @@ public class Portal extends Entity{
 		for (Obstacle obstacle: obstacles) {
 			//S'il y a interaction avec un obstacle
 			
-			if (obstacle instanceof ObstacleFixSurfaceNoPortal ) {
-				if (isInCollisionWith(obstacle)) {return true;}
+			if ( this.layerIn==obstacle.layerIn) {
+				if (!(obstacle.classIn(listPassThrough)) && fc.CollisionLineRect(A,B,obstacle.getForm())  ) {return true;}
+				if (!(obstacle.classIn(listeNoCollisonWith)) && isInCollisionWith(obstacle)  ) {return true;}
 			}
-			
-			else if ( this.layerIn==obstacle.layerIn &&  ((isInCollisionWith(obstacle) || fc.CollisionLineRect(A,B,obstacle.getForm()) ))  ) {
-				return true;		
-			}
+				
 		}
+		
 		return false;
 	}
-	
 	
 	//Déplace le portail que s'il n'est pas en contact avec un obstacle
 	public void movePortal(int xClic, int yClic) {
