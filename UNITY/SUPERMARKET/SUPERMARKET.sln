@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SUPERMARKET", "SUPERMARKET.csproj", "{1D5E80D0-2FD8-97E9-8833-39D925B51BA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SUPERMARKET.Plugins", "SUPERMARKET.Plugins.csproj", "{C4976A47-5D0E-D3CE-83BF-5FFCF8850150}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SUPERMARKET.Editor", "SUPERMARKET.Editor.csproj", "{9CF40BAB-627F-B7EF-86CD-EDFD5413CD10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SUPERMARKET.Editor.Plugins", "SUPERMARKET.Editor.Plugins.csproj", "{0B54081C-2C8A-0F39-E8CB-B74A94D632DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D5E80D0-2FD8-97E9-8833-39D925B51BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D5E80D0-2FD8-97E9-8833-39D925B51BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D5E80D0-2FD8-97E9-8833-39D925B51BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D5E80D0-2FD8-97E9-8833-39D925B51BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4976A47-5D0E-D3CE-83BF-5FFCF8850150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4976A47-5D0E-D3CE-83BF-5FFCF8850150}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4976A47-5D0E-D3CE-83BF-5FFCF8850150}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4976A47-5D0E-D3CE-83BF-5FFCF8850150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CF40BAB-627F-B7EF-86CD-EDFD5413CD10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CF40BAB-627F-B7EF-86CD-EDFD5413CD10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CF40BAB-627F-B7EF-86CD-EDFD5413CD10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CF40BAB-627F-B7EF-86CD-EDFD5413CD10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B54081C-2C8A-0F39-E8CB-B74A94D632DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B54081C-2C8A-0F39-E8CB-B74A94D632DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B54081C-2C8A-0F39-E8CB-B74A94D632DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B54081C-2C8A-0F39-E8CB-B74A94D632DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
